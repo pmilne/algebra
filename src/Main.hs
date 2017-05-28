@@ -26,10 +26,10 @@ dexpr :: Expr Int
 dexpr = Const 6 Ring.* Var 'x' -- 6x
 
 assert :: Bool -> a -> a
-assert False x = error "*** assertion failed! ***"
+assert False _ = error "*** assertion failed! ***"
 assert _     x = x
 
-test :: (Show a, Eq a) => [Char] -> a -> a -> IO ()
+test :: (Show a, Eq a) => String -> a -> a -> IO ()
 test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
 
 main :: IO ()
