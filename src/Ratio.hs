@@ -11,9 +11,6 @@ data Ratio a = !a :/ !a deriving (Eq, Show, Read)
 frac :: (Ring a) => a -> a -> Ratio a
 frac n d = let g = gcd n d in quo n g :/ quo d  g
 
---frac1 :: a -> a -> Ratio a
---frac1 n d = n :/ d
-
 (/) = (:/)
 
 instance  (Ring a) => Ring (Ratio a) where
@@ -27,7 +24,4 @@ instance  (Ring a) => Ring (Ratio a) where
 
 instance  (Field a) => Field (Ratio a) where
     inv (n :/ d)              =  d :/ n
---    zero     = zero :/ one
---    one     = one :/ one
---    promote a = a :/ 0
 
