@@ -104,8 +104,10 @@ derivative expr              = error "I'm not a part of your system!" -- unsuppo
 ddx :: (Ring a, Exponentiable a, Field a, Eq a) => Expr a -> Expr a
 ddx = fullSimplify . derivative
 
+{-
 ddxs :: (Ring a, Exponentiable a, Field a, Eq a) => Expr a -> [Expr a]
 ddxs = iterate ddx
 
 nthDerivative :: (Ring a, Exponentiable a, Field a, Eq a) => Int -> Expr a -> Expr a
 nthDerivative n = foldr1 (.) (replicate n ddx)
+-}
