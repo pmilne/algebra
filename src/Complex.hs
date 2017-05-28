@@ -5,7 +5,8 @@ import Ring
 
 infix  6  :+
 
-data Complex a = !a :+ !a deriving (Eq, Show, Read)
+data Complex a = !a :+ !a    -- ^ forms a complex number from its real and imaginary parts.
+        deriving (Eq, Show, Read)
 
 conjugate        :: Num a => Complex a -> Complex a
 conjugate (x:+y) =  x :+ (-y)
