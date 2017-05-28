@@ -89,8 +89,8 @@ evalExpr :: (Ring a, Exponentiable a, Field a, Eq a) => Char -> a -> Expr a -> E
 evalExpr c val exp = fullSimplify (mapExpr (\e -> (substitute c val e)) exp)
 
 derivative :: (Ring a) => Expr a -> Expr a
-derivative (Var c)           = Const one
-derivative (Const x)         = Const zero
+derivative (Const c)         = Const zero
+derivative (Var x)           = Const one
 derivative (a :+: b)         = derivative a :+: derivative b
 --product rule (ab' + a'b)
 derivative (a :*: b)         = (a :*: (derivative b)) :+: (b :*: (derivative a)) -- product rule
