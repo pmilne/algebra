@@ -24,10 +24,10 @@ ff :: Int
 ff = 6
 
 expr :: Expr Int
-expr = Const 3 Ring.* (Var 'x' :^: Const 2) -- 3x^2
+expr = Const 3 * (Var 'x' :^: Const 2) -- 3x^2
 
 dexpr :: Expr Int
-dexpr = Const 6 Ring.* Var 'x' -- 6x
+dexpr = Const 6 * Var 'x' -- 6x
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"
