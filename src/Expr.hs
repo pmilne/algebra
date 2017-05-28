@@ -43,7 +43,7 @@ instance (Show a) => Show (Expr a) where
  show (a :^: b) = "(" ++ (show a) ++ " ^ " ++ (show b) ++ ")"
  show (a :/: b) = "(" ++ (show a) ++ " / " ++ (show b) ++ ")"
 
-simplify :: (Eq a, Exponentiable a, Field a, Field a, Ring a) => Expr a -> Expr a
+simplify :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 --additive identities
 simplify (Const a :+: Const b) = Const (a + b)
 simplify (e@(Const a :+: b)) = if a == zero then b else e
@@ -78,14 +78,14 @@ mapExpr f (a :*: b)  = f ((mapExpr f a) :*: (mapExpr f b))
 mapExpr f (a :/: b)  = f ((mapExpr f a) :/: (mapExpr f b))
 mapExpr f (a :^: b)  = f ((mapExpr f a) :^: (mapExpr f b))
 
-fullSimplify :: (Ring t, Exponentiable t, Field t, Eq t) => Expr t -> Expr t
+fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
 fullSimplify = mapExpr simplify
 
 substitute :: Char -> a -> Expr a -> Expr a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute c val exp = exp
 
-evalExpr :: (Ring a, Exponentiable a, Field a, Eq a) => Char -> a -> Expr a -> Expr a
+evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expr a -> Expr a
 evalExpr c val exp = fullSimplify (mapExpr (\e -> (substitute c val e)) exp)
 
 derivative :: (Field a) => Expr a -> Expr a
@@ -101,7 +101,7 @@ derivative (a :/: b)         = ((derivative a * b) + (Negate (derivative b * a))
 derivative expr              = error "I'm not a part of your system!" -- unsupported operation
 
 
-ddx :: (Ring a, Exponentiable a, Field a, Eq a) => Expr a -> Expr a
+ddx :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 ddx = fullSimplify . derivative
 
 {-
