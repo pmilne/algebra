@@ -14,7 +14,7 @@ import Expr
 import Ring
 
 fr :: Ratio Int
-fr = (1::Int) / (2::Int)
+fr = 1 / 2
 
 g :: Complex (Ratio Int)
 g = (1 / 2) :+ (5 / 7)
