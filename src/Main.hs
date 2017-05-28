@@ -26,10 +26,10 @@ x :: Expr Double
 x = Var 'x'
 
 expr :: Expr Double
-expr = Const 3.0 * (x :^: Const 2.0) -- 3x^2
+expr = Const 3 * (x :^: Const 2) -- 3x^2
 
 dexpr :: Expr Double
-dexpr = Const 6.0 * x -- 6x
+dexpr = Const 6 * x -- 6x
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"
