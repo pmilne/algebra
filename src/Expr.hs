@@ -3,7 +3,7 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
 module Expr where
 
-import Prelude hiding ((+), (-), negate, (*), (^))
+import Prelude hiding ((+), (-), negate, (*), (^), exp)
 import Ring
 
 infixl 4 :+:
@@ -39,28 +39,25 @@ instance (Show a) => Show (Expr a) where
 simplify :: (Eq a, Ring a) => Expr a -> Expr a
 --additive identities
 simplify (Const a :+: Const b) = Const (a + b)
-simplify (a       :+: Const zero) = a
-simplify (Const zero :+: a      ) = a
+simplify (e@(Const a :+: b)) = if a == zero then b else e
+simplify (e@(a :+: Const b)) = if b == zero then a else e
 --multiplicative identities
 simplify (Const a :*: Const b) = Const (a * b)
-simplify (a       :*: Const zero) = Const zero
-simplify (Const zero :*: a)       = Const zero
-simplify (a       :*: Const one) = a
-simplify (Const one :*: a)       = a
---power identities
-simplify (a :^: Const zero)       = Const one
-simplify (a :^: Const one)       = a
-simplify (Const a :^: Const b) = Const (a ^ b)
-simplify ((c :^: Const b) :^: Const a) = c :^: Const (a*b)
-
+--associativity identities
 simplify (Const a :*: (Const b :*: expr)) = Const (a * b) :*: expr
 simplify (Const a :*: expr :*: Const b)   = Const (a * b) :*: expr
 simplify (expr :*: Const a :*: Const b)   = Const (a * b) :*: expr
+simplify (e@(Const a :*: b)) | a == zero = zero | a == one = b | otherwise = e
+simplify (e@(a :*: Const b)) | b == zero = zero | b == one = a | otherwise = e
+--power identities
+simplify (Const a :^: Const b) = Const (a ^ b)
+simplify (e@(a :^: Const b)) | b == zero = one | b == one = a | otherwise = e
+simplify (e@(Const a :^: b)) | a == zero = zero | a == one = one | otherwise = e -- order is important!
 
-simplify (Const zero :/: a        ) = Const zero
-simplify (Const a :/: Const zero)   = error "Division by zero!"
-simplify (a       :/: Const one)   = a
-simplify (Const a :/: Const b)   | a == b = Const one -- only when a == b
+--simplify (Const zero :/: a        ) = Const zero
+--simplify (Const a :/: Const zero)   = error "Division by zero!"
+--simplify (a       :/: Const one)   = a
+--simplify (Const a :/: Const b)   | a == b = Const one -- only when a == b
 
 simplify (Negate (Const a))  = Const (negate a)
 
@@ -88,7 +85,7 @@ evalExpr c val exp = fullSimplify (mapExpr (\e -> (substitute c val e)) exp)
 derivative :: (Ring a) => Expr a -> Expr a
 derivative (Var c)           = Const one
 derivative (Const x)         = Const zero
-derivative (a :+: b)         = (derivative a) :+: (derivative b)
+derivative (a :+: b)         = derivative a :+: derivative b
 --product rule (ab' + a'b)
 derivative (a :*: b)         = (a :*: (derivative b)) :+: (b :*: (derivative a)) -- product rule
  --power rule (xa^(x-1) * a')
