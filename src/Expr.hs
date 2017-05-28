@@ -22,7 +22,10 @@ data Expr a = Var Char
 instance (Ring a) => Ring (Expr a) where
   (+) = (:+:)
   (*) = (:*:)
+  (^) = (:^:)
   negate = Negate
+  zero = Const zero
+  one = Const one
 
 instance (Show a) => Show (Expr a) where
  show (Var a) = show a
@@ -35,15 +38,15 @@ instance (Show a) => Show (Expr a) where
 
 simplify :: (Eq a, Ring a) => Expr a -> Expr a
 --additive identities
+simplify (Const a :+: Const b) = Const (a + b)
 simplify (a       :+: Const zero) = a
 simplify (Const zero :+: a      ) = a
-simplify (Const a :+: Const b) = Const (a + b)
 --multiplicative identities
+simplify (Const a :*: Const b) = Const (a * b)
 simplify (a       :*: Const zero) = Const zero
 simplify (Const zero :*: a)       = Const zero
 simplify (a       :*: Const one) = a
 simplify (Const one :*: a)       = a
-simplify (Const a :*: Const b) = Const (a * b)
 --power identities
 simplify (a :^: Const zero)       = Const one
 simplify (a :^: Const one)       = a
