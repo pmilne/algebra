@@ -5,6 +5,7 @@ module Expr where
 
 import Prelude hiding ((+), (-), negate, (*), (^), exp)
 import Ring
+import Field
 
 infixl 4 :+:
 infixl 5 :*:, :/:
@@ -26,6 +27,9 @@ instance (Ring a) => Ring (Expr a) where
   negate = Negate
   zero = Const zero
   one = Const one
+
+instance (Field a) => Field (Expr a) where
+  (/) = (:/:)
 
 instance (Show a) => Show (Expr a) where
  show (Var a) = show a
