@@ -20,7 +20,17 @@ ff :: Int
 ff = 6
 
 expr :: Expr Int
-expr = Const 3 Ring.* (Var 'x' :^: Const 2) --3x^2
+expr = Const 3 Ring.* (Var 'x' :^: Const 2) -- 3x^2
+
+dexpr :: Expr Int
+dexpr = Const 6 Ring.* Var 'x' -- 6x
+
+assert :: Bool -> a -> a
+assert False x = error "*** assertion failed! ***"
+assert _     x = x
+
+test :: (Show a, Eq a) => [Char] -> a -> a -> IO ()
+test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
 
 main :: IO ()
 main = do
@@ -39,7 +49,7 @@ main = do
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
           putStrLn ("expr = " ++ show expr)
           putStrLn ("derivative expr = " ++ show (derivative expr))
-          putStrLn ("ddx expr = " ++ show (ddx expr))
+          test "ddx expr" dexpr (ddx expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (ddx expr)))
 
 
