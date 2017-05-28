@@ -60,7 +60,7 @@ simplify (e@(a :*: Const b)) | b == zero = zero | b == one = a | otherwise = e
 --power identities
 simplify (Const a :^: Const b) = Const (a ^ b)
 simplify (e@(a :^: Const b)) | b == zero = one | b == one = a | otherwise = e
-simplify (e@(Const a :^: b)) | a == zero = zero | a == one = one | otherwise = e -- order is important!
+simplify (e@(Const a :^: b)) | a == one = one | otherwise = e
 
 simplify (Const a :/: Const b) = Const (a / b)
 simplify (e@(a :/: Const b)) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
