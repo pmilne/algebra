@@ -73,7 +73,7 @@ mapExpr f (a :/: b)  = f ((mapExpr f a) :/: (mapExpr f b))
 mapExpr f (a :^: b)  = f ((mapExpr f a) :^: (mapExpr f b))
 
 fullSimplify :: (Ring t, Eq t) => Expr t -> Expr t
-fullSimplify expr = mapExpr simplify expr
+fullSimplify = mapExpr simplify
 
 substitute :: Char -> a -> Expr a -> Expr a
 substitute c val (Var x) = if x == c then Const val else Var x
