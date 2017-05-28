@@ -5,25 +5,34 @@ module Ring where
 
 infixl 6 +, -
 infixl 7 *
-infixr 8 ^
+infixr 8 ^, /
 
 class Ring a where
     (+)      :: a -> a -> a
     (-)      :: a -> a -> a
     (*)      :: a -> a -> a
+    (/)      :: a -> a -> a
     (^)      :: a -> a -> a
     zero     :: a
     one      :: a
     negate   :: a -> a
+    inv      :: a -> a
 --    promote  :: b -> a
     x - y               = x Ring.+ Ring.negate y
---    negate x            = Ring.zero Ring.- x
+    x / y               = x Ring.* Ring.inv y
+    negate x            = Ring.zero Ring.- x
+    inv x               = Ring.one Ring./ x
+    gcd      :: a -> a -> a
+    gcd       = undefined
 
 instance Ring Int where
     (+)       = (Prelude.+)
     (*)       = (Prelude.*)
     (^)       = (Prelude.^)
+    (/)       = undefined
     zero      = 0
     one       = 1
     negate    = Prelude.negate
+    inv       = undefined
+    gcd       = Prelude.gcd
 
