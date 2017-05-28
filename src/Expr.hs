@@ -67,7 +67,7 @@ simplify (e@(a :/: Const b)) | b == zero = error "Divide by zero!" | b == one = 
 
 simplify (Negate (Const a))  = Const (negate a)
 
-simplify x          = id x
+simplify x          = x
 
 mapExpr :: ((Expr t) -> (Expr t)) -> (Expr t) -> (Expr t)
 mapExpr f (Var a)  = f (Var a)
