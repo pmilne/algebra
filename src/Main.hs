@@ -22,11 +22,14 @@ ff :: Int
 --ff = 2 ^ 27
 ff = 6
 
+x :: Expr Int
+x = Var 'x'
+
 expr :: Expr Int
-expr = Const 3 * (Var 'x' ^ Const 2) -- 3x^2
+expr = Const 3 * (x ^ Const 2) -- 3x^2
 
 dexpr :: Expr Int
-dexpr = Const 6 * Var 'x' -- 6x
+dexpr = Const 6 * x -- 6x
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"
@@ -44,7 +47,7 @@ main = do
           putStrLn ("(plus1 two three) = " ++ show (unchurch (plus1 two three)))
           putStrLn ("(times1 two three) = " ++ show (unchurch (times1 two three)))
           putStrLn ("(expt1 two three) = " ++ show (unchurch (expt1 two three)))
-          putStrLn ("(2 % 3) = " ++ show (2 / 3))
+          putStrLn ("(1 / 2) = " ++ show fr)
           putStrLn ("g = " ++ show g)
           test "g + g" ((1 / 1) :+ (10 / 7)) (g + g)
           test "g * g" (((-51) / 196) :+ (5 / 7)) (g * g)

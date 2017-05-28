@@ -23,6 +23,6 @@ instance  (Ring a, Euclidean a) => Ring (Ratio a) where
     one     = one :/ one
 --    promote a = a :/ 0
 
-instance  (Euclidean a, Field a) => Field (Ratio a) where
+instance  (Euclidean a, Ring a) => Field (Ratio a) where
     inv (n :/ d)              =  d :/ n
 
