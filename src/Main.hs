@@ -4,6 +4,7 @@ module Main where
 stack build && .stack-work/install/x86_64-osx/lts-8.15/8.0.2/bin/woot
 -}
 
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ratio
 --import Data.Int
 import Factorial
@@ -12,8 +13,11 @@ import Numeral
 import Expr
 import Ring
 
+fr :: Ratio Int
+fr = (1::Int) / (2::Int)
+
 g :: Complex (Ratio Int)
-g = (1 :/ 2) :+ (5 :/ 7)
+g = (1 / 2) :+ (5 / 7)
 
 ff :: Int
 --ff = 2 ^ 27
