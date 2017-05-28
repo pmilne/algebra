@@ -24,7 +24,7 @@ ff :: Int
 ff = 6
 
 expr :: Expr Int
-expr = Const 3 * (Var 'x' :^: Const 2) -- 3x^2
+expr = Const 3 * (Var 'x' ^ Const 2) -- 3x^2
 
 dexpr :: Expr Int
 dexpr = Const 6 * Var 'x' -- 6x
@@ -45,10 +45,10 @@ main = do
           putStrLn ("(plus1 two three) = " ++ show (unchurch (plus1 two three)))
           putStrLn ("(times1 two three) = " ++ show (unchurch (times1 two three)))
           putStrLn ("(expt1 two three) = " ++ show (unchurch (expt1 two three)))
-          putStrLn ("(2 % 3) = " ++ show ((2::Int) :/ (3::Int)))
+          putStrLn ("(2 % 3) = " ++ show (2 / 3))
           putStrLn ("g = " ++ show g)
-          test "g + g" ((1 / 1) :+ (10 / 7)) (g Ring.+ g)
-          test "g * g" (((-51) / 196) :+ (5 / 7)) (g Ring.* g)
+          test "g + g" ((1 / 1) :+ (10 / 7)) (g + g)
+          test "g * g" (((-51) / 196) :+ (5 / 7)) (g * g)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
           putStrLn ("expr = " ++ show expr)
