@@ -22,8 +22,12 @@ class Ring a where
     x / y               = x Ring.* Ring.inv y
     negate x            = Ring.zero Ring.- x
     inv x               = Ring.one Ring./ x
+    quo      :: a -> a -> a
+    rem      :: a -> a -> a
     gcd      :: a -> a -> a
     gcd       = undefined
+    quo       = undefined
+    rem       = undefined
 
 instance Ring Int where
     (+)       = (Prelude.+)
@@ -33,6 +37,8 @@ instance Ring Int where
     zero      = 0
     one       = 1
     negate    = Prelude.negate
+    quo       = Prelude.quot
+    rem       = Prelude.rem
     inv       = undefined
     gcd       = Prelude.gcd
 
