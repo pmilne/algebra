@@ -6,7 +6,6 @@ stack build && .stack-work/install/x86_64-osx/lts-8.15/8.0.2/bin/woot
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ratio
---import Data.Int
 import Factorial
 import Complex
 import Numeral
