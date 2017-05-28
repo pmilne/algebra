@@ -14,7 +14,7 @@ cabal-version:       >=1.10
 extra-source-files:  README.md
 
 executable woot
-  other-modules:       Factorial, Complex, Numeral, Expr, Ring, Ratio, Field
+  other-modules:       Factorial, Complex, Numeral, Expr, Ring, Ratio, Field, Euclidean
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010

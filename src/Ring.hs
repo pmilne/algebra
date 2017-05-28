@@ -15,12 +15,6 @@ class Ring a where
 --    promote  :: b -> a
     x - y               = x Ring.+ Ring.negate y
     negate x            = Ring.zero Ring.- x
-    quo      :: a -> a -> a
-    rem      :: a -> a -> a
-    gcd      :: a -> a -> a
-    gcd       = undefined
-    quo       = undefined
-    rem       = undefined
 
 instance Ring Int where
     (+)       = (Prelude.+)
@@ -29,7 +23,4 @@ instance Ring Int where
     zero      = 0
     one       = 1
     negate    = Prelude.negate
-    quo       = Prelude.quot
-    rem       = Prelude.rem
-    gcd       = Prelude.gcd
 
