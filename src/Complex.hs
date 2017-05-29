@@ -23,5 +23,5 @@ instance (Ring a) => Ring (Complex a) where
 --    promote a = a :+ 0
 
 instance (Field a) => Field (Complex a) where
-    inv c             =  let m2 = modulus2 c in case c of (a :+ b) -> a / m2 :+ negate b / m2
+    inv (a :+ b)             =  let d = a * a + b * b in a / d :+ negate b / d
 
