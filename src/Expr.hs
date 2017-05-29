@@ -11,7 +11,7 @@ import Exponentiable
 data Expr a = Var Char
             | Const a
             | Sum (Expr a) (Expr a)
-            | Negate (Expr a)
+            | Neg (Expr a)
             | Prd (Expr a) (Expr a)
             | Pow (Expr a) (Expr a)
             | Div (Expr a) (Expr a)
@@ -20,7 +20,7 @@ data Expr a = Var Char
 instance (Ring a) => Ring (Expr a) where
   (+) = Sum
   (*) = Prd
-  negate = Negate
+  negate = Neg
   zero = Const zero
   one = Const one
 
@@ -34,7 +34,7 @@ instance (Show a) => Show (Expr a) where
  show (Var a) = show a
  show (Const a) = show a
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
- show (Negate a) = "(" ++ "-" ++ show a ++ ")"
+ show (Neg a) = "(" ++ "-" ++ show a ++ ")"
  show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
@@ -61,14 +61,14 @@ simplify (e@(Pow (Const a) _)) | a == one = one | otherwise = e
 simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
 
-simplify (Negate (Const a))  = Const (negate a)
+simplify (Neg (Const a))  = Const (negate a)
 
 simplify x          = x
 
 mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
 mapExpr f (Var a)  = f (Var a)
 mapExpr f (Const a)  = f (Const a)
-mapExpr f (Negate a) = f (Negate (mapExpr f a))
+mapExpr f (Neg a) = f (Neg (mapExpr f a))
 mapExpr f (Sum a b)  = f (Sum (mapExpr f a) (mapExpr f b))
 mapExpr f (Prd a b)  = f (Prd (mapExpr f a) (mapExpr f b))
 mapExpr f (Div a b)  = f (Div (mapExpr f a) (mapExpr f b))
@@ -87,7 +87,7 @@ evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 derivative :: (Field a) => Expr a -> Expr a
 derivative (Const _)       = zero
 derivative (Var _)         = one
-derivative (Negate f)      = Negate (derivative f)
+derivative (Neg f)      = Neg (derivative f)
 derivative (Sum a b)       = derivative a + derivative b
 derivative (Prd a b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)       = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
