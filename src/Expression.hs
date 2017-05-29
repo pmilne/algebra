@@ -13,8 +13,8 @@ data Expression a = Const a
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
-                  | Pow (Expression a) (Expression a)
                   | Div (Expression a) (Expression a)
+                  | Pow (Expression a) (Expression a)
                   | Log (Expression a)
                   deriving (Eq)
 
