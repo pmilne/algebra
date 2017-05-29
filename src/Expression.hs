@@ -90,7 +90,7 @@ substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
 evalExpr :: (Eq a, Field a, Powerable a) => Char -> a -> Expression a -> Expression a
-evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
+evalExpr c val = mapExpr (simplify . substitute c val)
 
 derivative :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
 derivative (Const _)         = zero
@@ -104,7 +104,7 @@ derivative (Pow f g)         = f ^ g * (derivative f * g / f + derivative g * lo
 derivative (Log a)           = derivative a / a
 
 ddx :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
-ddx = fullSimplify . derivative
+ddx = derivative
 
 {-
 ddxs :: (Ring a, Powerable a, Field a, Eq a) => Expr a -> [Expr a]
