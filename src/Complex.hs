@@ -8,7 +8,7 @@ infix  6  :+
 
 data Complex a = !a :+ !a deriving (Eq, Show, Read)
 
-conjugate        :: Ring a => Complex a -> Complex a
+conjugate :: Ring a => Complex a -> Complex a
 conjugate (x :+ y) =  x :+ negate y
 
 instance (Ring a) => Ring (Complex a) where
