@@ -94,7 +94,7 @@ derivative (Var _)         = one
 derivative (Negate f)      = Negate (derivative f)
 derivative (a :+: b)       = derivative a + derivative b
 derivative (a :*: b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
-derivative (a :/: b)       = ((derivative a * b) - (a * derivative b)) / (b :^: Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
+derivative (a :/: b)       = (derivative a * b - a * derivative b) / (b :^: Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (a :^: Const x) = Const x * derivative a * (a :^: Const (x - one)) --power rule (xa^(x-1) * a')
 derivative (_ :^: _) = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
