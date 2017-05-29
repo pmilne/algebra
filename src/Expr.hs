@@ -67,15 +67,15 @@ simplify x          = x
 
 mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
 mapExpr f exp =
-  let simp e = case e of
+  let applyTo e = case e of
         (Const a) -> f (Const a)
         (Var a)   -> f (Var a)
-        (Neg a)   -> f (Neg (simp a))
-        (Sum a b) -> f (Sum (simp a) (simp b))
-        (Prd a b) -> f (Prd (simp a) (simp b))
-        (Div a b) -> f (Div (simp a) (simp b))
-        (Pow a b) -> f (Pow (simp a) (simp b))
-   in simp exp
+        (Neg a)   -> f (Neg (applyTo a))
+        (Sum a b) -> f (Sum (applyTo a) (applyTo b))
+        (Prd a b) -> f (Prd (applyTo a) (applyTo b))
+        (Div a b) -> f (Div (applyTo a) (applyTo b))
+        (Pow a b) -> f (Pow (applyTo a) (applyTo b))
+   in applyTo exp
 
 fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
 fullSimplify = mapExpr simplify
