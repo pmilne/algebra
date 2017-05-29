@@ -66,15 +66,14 @@ simplify x          = x
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
-  let walk e = case e of
-        (Const a) -> f (Const a)
-        (Var a)   -> f (Var a)
-        (Neg a)   -> f (Neg (walk a))
-        (Sum a b) -> f (Sum (walk a) (walk b))
-        (Prd a b) -> f (Prd (walk a) (walk b))
-        (Div a b) -> f (Div (walk a) (walk b))
-        (Pow a b) -> f (Pow (walk a) (walk b))
-   in walk exp
+  let walk e = case e of (Const a) -> f (Const a)
+                         (Var a)   -> f (Var a)
+                         (Neg a)   -> f (Neg (walk a))
+                         (Sum a b) -> f (Sum (walk a) (walk b))
+                         (Prd a b) -> f (Prd (walk a) (walk b))
+                         (Div a b) -> f (Div (walk a) (walk b))
+                         (Pow a b) -> f (Pow (walk a) (walk b))
+  in walk exp
 
 fullSimplify :: (Eq t, Field t, Exponentiable t) => Expression t -> Expression t
 fullSimplify = mapExpr simplify
