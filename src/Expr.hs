@@ -95,9 +95,9 @@ derivative (a :+: b)         = derivative a + derivative b
 --product rule (ab' + a'b)
 derivative (a :*: b)         = a * derivative b + b * derivative a -- product rule
  --power rule (xa^(x-1) * a')
-derivative (a :^: (Const x)) = ((Const x) * (a :^: (Const (x - one)))) * (derivative a)
+derivative (a :^: Const x) = Const x * derivative a * (a :^: Const (x - one))
  -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (a :/: b)         = ((derivative a * b) - (a * derivative b)) / (b :^: (Const (one + one)))
+derivative (a :/: b)         = ((derivative a * b) - (a * derivative b)) / (b :^: Const (one + one))
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 ddx = fullSimplify . derivative
