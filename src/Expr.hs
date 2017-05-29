@@ -86,7 +86,7 @@ substitute c val (Var x) = if x == c then Const val else Var x
 substitute c val exp = exp
 
 evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expr a -> Expr a
-evalExpr c val exp = fullSimplify (mapExpr (\e -> (substitute c val e)) exp)
+evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
 derivative :: (Field a) => Expr a -> Expr a
 derivative (Const c)         = Const zero
