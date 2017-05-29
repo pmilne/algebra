@@ -19,11 +19,11 @@ data Expression a = Const a
                   deriving (Eq)
 
 instance (Eq a, Field a, Powerable a) => Ring (Expression a) where
-  a + b = simplify (Sum a b)
-  a * b = simplify (Prd a b)
+  a + b    = simplify (Sum a b)
+  a * b    = simplify (Prd a b)
   negate a = simplify (Neg a)
-  zero = Const zero
-  one = Const one
+  zero     = Const zero
+  one      = Const one
 
 instance (Eq a, Field a, Powerable a) => Field (Expression a) where
   a / b = simplify (Div a b)
