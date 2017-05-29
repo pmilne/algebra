@@ -4,13 +4,13 @@ infixr 8 ^
 
 class Exponentiable a where
     (^)      :: a -> a -> a
-    log      :: a -> a
+    ln       :: a -> a
 
 instance Exponentiable Int where
     (^)       = (Prelude.^)
-    log       = undefined
+    ln        = undefined
 
 instance Exponentiable Double where
     (^)       = (Prelude.**)
-    log       = Prelude.log
+    ln        = Prelude.log
 

@@ -30,7 +30,7 @@ instance (Field a) => Field (Expression a) where
 
 instance (Exponentiable a) => Exponentiable (Expression a) where
   (^) = Pow
-  log = Log
+  ln  = Log
 
 instance (Show a) => Show (Expression a) where
  show (Var a) = show a
@@ -66,7 +66,7 @@ simplify e@(Div (Var a) (Var b)) = if a == b then one else e
 
 simplify (Neg (Const a))  = Const (negate a)
 
-simplify (Log (Const a))  = Const (log a)
+simplify (Log (Const a))  = Const (ln a)
 
 simplify x          = x
 
@@ -100,7 +100,7 @@ derivative (Sum a b)         = derivative a + derivative b
 derivative (Prd a b)         = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)         = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --specialised power rule (xa^(x-1) * a')
-derivative (Pow f g)         = Pow f g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Pow f g)         = Pow f g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Log a)           = derivative a / a
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
