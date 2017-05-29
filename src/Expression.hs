@@ -8,8 +8,8 @@ import Ring
 import Field
 import Exponentiable
 
-data Expression a = Var Char
-                  | Const a
+data Expression a = Const a
+                  | Var Char
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
