@@ -10,14 +10,14 @@ import Exponentiable
 
 infixl 4 :+:
 infixl 5 :*:, :/:
-infixr 6 :^:
+--infixr 6 :^:
 
 data Expr a = Var Char
             | Const a
             | (Expr a) :+: (Expr a)
             | Negate (Expr a)
             | (Expr a) :*: (Expr a)
-            | (Expr a) :^: (Expr a)
+            | Pow (Expr a) (Expr a)
             | (Expr a) :/: (Expr a)
             deriving (Eq)
 
@@ -32,7 +32,7 @@ instance (Field a) => Field (Expr a) where
   (/) = (:/:)
 
 instance (Exponentiable a) => Exponentiable (Expr a) where
-  (^) = (:^:)
+  (^) = Pow
 
 instance (Show a) => Show (Expr a) where
  show (Var a) = show a
@@ -40,7 +40,7 @@ instance (Show a) => Show (Expr a) where
  show (a :+: b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Negate a) = "(" ++ "-" ++ show a ++ ")"
  show (a :*: b) = "(" ++ show a ++ " * " ++ show b ++ ")"
- show (a :^: b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
+ show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (a :/: b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
 simplify :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
@@ -58,9 +58,9 @@ simplify (expr :*: Const a :*: Const b)   = Const (a * b) :*: expr
 simplify (e@(Const a :*: b)) | a == zero = zero | a == one = b | otherwise = e
 simplify (e@(a :*: Const b)) | b == zero = zero | b == one = a | otherwise = e
 --power identities
-simplify (Const a :^: Const b) = Const (a ^ b)
-simplify (e@(a :^: Const b)) | b == zero = one | b == one = a | otherwise = e
-simplify (e@(Const a :^: _)) | a == one = one | otherwise = e
+simplify (Pow (Const a) (Const b)) = Const (a ^ b)
+simplify (e@(Pow a (Const b))) | b == zero = one | b == one = a | otherwise = e
+simplify (e@(Pow (Const a) _)) | a == one = one | otherwise = e
 
 simplify (Const a :/: Const b) = Const (a / b)
 simplify (e@(a :/: Const b)) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
@@ -76,7 +76,7 @@ mapExpr f (Negate a)  = f (Negate (mapExpr f a))
 mapExpr f (a :+: b)  = f (mapExpr f a :+: mapExpr f b)
 mapExpr f (a :*: b)  = f (mapExpr f a :*: mapExpr f b)
 mapExpr f (a :/: b)  = f (mapExpr f a :/: mapExpr f b)
-mapExpr f (a :^: b)  = f (mapExpr f a :^: mapExpr f b)
+mapExpr f (Pow a b)  = f (Pow (mapExpr f a) (mapExpr f b))
 
 fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
 fullSimplify = mapExpr simplify
@@ -94,9 +94,9 @@ derivative (Var _)         = one
 derivative (Negate f)      = Negate (derivative f)
 derivative (a :+: b)       = derivative a + derivative b
 derivative (a :*: b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
-derivative (a :/: b)       = (derivative a * b - a * derivative b) / (b :^: Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (a :^: Const x) = Const x * derivative a * (a :^: Const (x - one)) --power rule (xa^(x-1) * a')
-derivative (_ :^: _) = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (a :/: b)       = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
+derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --power rule (xa^(x-1) * a')
+derivative (Pow _ _) = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 ddx = fullSimplify . derivative
