@@ -15,8 +15,8 @@ instance (Ring a) => Ring (Complex a) where
     (r1 :+ i1) + (r2 :+ i2)   =  (r1 + r2) :+ (i1 + i2)
     (r1 :+ i1) * (r2 :+ i2)   =  (r1 * r2 - i1 * i2) :+ (r1 * i2 + i1 * r2)
     negate (r :+ i)           =  negate r :+ negate i
-    zero     = zero :+ zero
-    one      = one  :+ zero
+    zero                      = zero :+ zero
+    one                       = one  :+ zero
 --    promote a = a :+ 0
 
 instance (Field a) => Field (Complex a) where
