@@ -89,8 +89,9 @@ evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expr a -> Expr a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
 derivative :: (Field a) => Expr a -> Expr a
-derivative (Const c)         = zero
-derivative (Var x)           = one
+derivative (Const _)         = zero
+derivative (Var _)           = one
+derivative (Negate f)        = Negate (derivative f)
 derivative (a :+: b)         = derivative a + derivative b
 --product rule (ab' + a'b)
 derivative (a :*: b)         = a * derivative b + b * derivative a -- product rule
