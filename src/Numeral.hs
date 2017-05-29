@@ -15,7 +15,7 @@ instance (Show s, Num s) => Show (Numeral s) where
 instance  (Ring a) => Ring (Numeral a) where
     (Numeral n1) + (Numeral n2) = Numeral (\f x -> (n1 f (n2 f x)))
     (Numeral n1) * (Numeral n2) = Numeral (n1 . n2)
-    negate (Numeral _)         =  undefined
+    negate (Numeral _)          = undefined
     zero                        = Numeral (\_ x -> x)
-    one                        = Numeral id
+    one                         = Numeral id
 
