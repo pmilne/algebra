@@ -1,5 +1,7 @@
 module Numeral where
 
+import Ring
+
 -- The Church Numeral type
 newtype Numeral t
   = Numeral ((t -> t) -> (t -> t))
@@ -26,7 +28,7 @@ newtype Numeral t
 --   show (Numeral1 n1) = show (unchurch3 n1)
 
 instance (Show s, Num s) => Show (Numeral s) where
-   show (Numeral n1) = show (n1 (+1) 0)
+   show (Numeral n1) = show (n1 (Prelude.+1) 0)
 
 --instance (Show a, Num a) => Show ((a -> a) -> a -> a) where
 --    show n = show $ n (+1) 0
@@ -39,15 +41,21 @@ instance  (Num a) => Num (Numeral a) where
     signum z                    =  undefined
     fromInteger n               =  undefined
 
+instance  (Ring a) => Ring (Numeral a) where
+    (Numeral n1) + (Numeral n2) = Numeral (\f x -> (n1 f (n2 f x)))
+    (Numeral n1) * (Numeral n2) = Numeral (\f -> n1 (n2 f))
+    negate (Numeral n1)         =  undefined
+    zero                        = Numeral (church 0)
+    one                        = Numeral (church 1)
 
 type Numeral2 a = (a -> a) -> (a -> a)
 
 church :: Integer -> Numeral2 a
 church 0 = \ _ x -> x
-church n = \ f x -> f (church (n - 1) f x)
+church n = \ f x -> f (church (n Prelude.- 1) f x)
 
 cinc :: Integer -> Integer
-cinc x = x + 1
+cinc x = x Prelude.+ 1
 
 ident :: a -> a
 ident x = x
@@ -55,41 +63,8 @@ ident x = x
 unchurch :: Numeral2 Integer -> Integer
 unchurch n = n cinc 0 :: Integer
 
--- zero :: Church a = \f -> \x -> x
-zero :: Numeral2 a
-zero = church 0
-
 s :: Numeral2 a -> Numeral2 a
 s n f x = f (n f x)
-
-{-
-unchurch2 :: Church a -> Integer
-unchurch2 nn = unchurch nn
--}
-
-{-
-instance (Num a) => Num (Numeral a) where
-    x + y                  = plus1 x y
-    x - y                  = zero
-    x * y                  = times1 x y
-    negate x               = zero
-    abs x                  = x
-    signum x               = 1
-    fromInteger            = church
--}
-
-
-one, two, three, eight :: Numeral2 a
-one = s zero
-two = s one
-three = s two
-eight = three two
-
-n0, n1, n2, n3 :: Numeral t
-n0 = Numeral zero
-n1 = Numeral one
-n2 = Numeral two
-n3 = Numeral three
 
 --plus1 :: (t3 -> t2 -> t1) -> (t3 -> t -> t2) -> t3 -> t -> t1
 --plus1 :: (t3 -> t2 -> t1) -> (t3 -> t -> t2) -> t3 -> t -> t1

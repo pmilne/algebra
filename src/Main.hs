@@ -39,15 +39,19 @@ assert _     x = x
 test :: (Show a, Eq a) => String -> a -> a -> IO ()
 test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
 
+n0, n1, n2, n3 :: Numeral Int
+n0 = Numeral (church 0)
+n1 = Numeral (church 1)
+n2 = Numeral (church 2)
+n3 = Numeral (church 3)
+
 main :: IO ()
 main = do
           putStrLn ("factorial1 " ++ show ff ++ " = " ++ show (factorial1 ff))
           putStrLn ("factorial2 " ++ show ff ++ " = " ++ show (factorial2 ff))
-          putStrLn ("three = " ++ show (unchurch three))
-          putStrLn ("eight = " ++ show (unchurch eight))
-          putStrLn ("(plus1 two three) = " ++ show (unchurch (plus1 two three)))
-          putStrLn ("(times1 two three) = " ++ show (unchurch (times1 two three)))
-          putStrLn ("(expt1 two three) = " ++ show (unchurch (expt1 two three)))
+          putStrLn ("1 + 2 = " ++ show (n1 + n2))
+          putStrLn ("2 * 3 = " ++ show (n2 * n3))
+--          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
           putStrLn ("(1 / 2) = " ++ show fr)
           putStrLn ("g = " ++ show g)
           test "g + g" ((1 :/ 1) :+ (10 :/ 7)) (g + g)
