@@ -9,7 +9,7 @@ import Ratio
 import Factorial
 import Complex
 import Numeral
-import Expr
+import Expression
 import Ring
 
 fr :: Ratio Int
@@ -22,14 +22,14 @@ ff :: Int
 --ff = 2 ^ 27
 ff = 6
 
-var :: Expr Double
+var :: Expression Double
 var = Var 'x'
 
-expr :: Expr Double
+expr :: Expression Double
 expr = Const 3 * Pow var (Const 2) -- 3x^2
 --expr = x :^: x -- x ^ x
 
-dexpr :: Expr Double
+dexpr :: Expression Double
 dexpr = Const 6 * var -- 6x
 
 assert :: Bool -> a -> a

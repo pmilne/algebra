@@ -1,36 +1,36 @@
 {-
 From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
-module Expr where
+module Expression where
 
 import Prelude hiding ((+), (-), negate, (*), (/), (^), exp)
 import Ring
 import Field
 import Exponentiable
 
-data Expr a = Var Char
+data Expression a = Var Char
             | Const a
-            | Sum (Expr a) (Expr a)
-            | Neg (Expr a)
-            | Prd (Expr a) (Expr a)
-            | Pow (Expr a) (Expr a)
-            | Div (Expr a) (Expr a)
+            | Sum (Expression a) (Expression a)
+            | Neg (Expression a)
+            | Prd (Expression a) (Expression a)
+            | Pow (Expression a) (Expression a)
+            | Div (Expression a) (Expression a)
             deriving (Eq)
 
-instance (Ring a) => Ring (Expr a) where
+instance (Ring a) => Ring (Expression a) where
   (+) = Sum
   (*) = Prd
   negate = Neg
   zero = Const zero
   one = Const one
 
-instance (Field a) => Field (Expr a) where
+instance (Field a) => Field (Expression a) where
   (/) = Div
 
-instance (Exponentiable a) => Exponentiable (Expr a) where
+instance (Exponentiable a) => Exponentiable (Expression a) where
   (^) = Pow
 
-instance (Show a) => Show (Expr a) where
+instance (Show a) => Show (Expression a) where
  show (Var a) = show a
  show (Const a) = show a
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
@@ -39,7 +39,7 @@ instance (Show a) => Show (Expr a) where
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
-simplify :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
+simplify :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
 --additive identities
 simplify (Sum (Const a) (Const b)) = Const (a + b)
 simplify (e@(Sum (Const a) b)) = if a == zero then b else e
@@ -64,7 +64,7 @@ simplify (Neg (Const a))  = Const (negate a)
 
 simplify x          = x
 
-mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
+mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
   let applyTo e = case e of
         (Const a) -> f (Const a)
@@ -76,17 +76,17 @@ mapExpr f exp =
         (Pow a b) -> f (Pow (applyTo a) (applyTo b))
    in applyTo exp
 
-fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
+fullSimplify :: (Eq t, Field t, Exponentiable t) => Expression t -> Expression t
 fullSimplify = mapExpr simplify
 
-substitute :: Char -> a -> Expr a -> Expr a
+substitute :: Char -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
-evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expr a -> Expr a
+evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expression a -> Expression a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
-derivative :: (Field a) => Expr a -> Expr a
+derivative :: (Field a) => Expression a -> Expression a
 derivative (Const _)         = zero
 derivative (Var _)           = one
 derivative (Neg f)           = Neg (derivative f)
@@ -96,7 +96,7 @@ derivative (Div a b)         = (derivative a * b - a * derivative b) / Pow b (Co
 derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --power rule (xa^(x-1) * a')
 derivative (Pow _ _)         = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
-ddx :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
+ddx :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
 ddx = fullSimplify . derivative
 
 {-
