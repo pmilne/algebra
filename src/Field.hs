@@ -13,4 +13,3 @@ class Ring a => Field a where
 
 instance Field Double where
     (/)       = (Prelude./)
-
