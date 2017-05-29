@@ -1,8 +1,8 @@
-name:                woot
+name:                algebra
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/woot#readme
+homepage:            https://github.com/githubuser/algebra#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Author name here
@@ -13,7 +13,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable woot
+executable algebra
   other-modules:       Factorial, Complex, Numeral, Numeral2, Expression, Ring, Ratio, Field, Euclidean, Exponentiable
   hs-source-dirs:      src
   main-is:             Main.hs

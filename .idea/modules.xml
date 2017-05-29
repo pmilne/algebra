@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/woot.iml" filepath="$PROJECT_DIR$/woot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/algebra.iml" filepath="$PROJECT_DIR$/algebra.iml" />
     </modules>
   </component>
 </project>
