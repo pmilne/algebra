@@ -100,5 +100,3 @@ derivative (Pow a (Const x)) = Const x * derivative a * a ^ Const (x - one) --sp
 derivative (Pow f g)         = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Log a)           = derivative a / a
 
-ddx :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
-ddx = derivative

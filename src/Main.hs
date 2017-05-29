@@ -67,8 +67,7 @@ main = do
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
           putStrLn ("expr = " ++ show expr)
-          putStrLn ("derivative expr = " ++ show (derivative expr))
-          test "ddx expr" dexpr (ddx expr)
-          putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (ddx expr)))
+          test "derivative expr" dexpr (derivative expr)
+          putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
 
 

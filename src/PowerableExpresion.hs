@@ -46,22 +46,15 @@ mapExpr f exp =
                          (Pow a b) -> f (Pow (walk a) (walk b))
   in walk exp
 
-fullSimplify :: (Eq t, Field t, Powerable t) => PowerableExpresion t -> PowerableExpresion t
-fullSimplify = mapExpr simplify
-
 substitute :: Char -> a -> PowerableExpresion a -> PowerableExpresion a
 --substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
 evalExpr :: (Eq a, Field a, Powerable a) => Char -> a -> PowerableExpresion a -> PowerableExpresion a
-evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
+evalExpr c val = mapExpr (simplify . substitute c val)
 
 derivative :: (Field a, Powerable a) => PowerableExpresion a -> PowerableExpresion a
 derivative (Const _)         = zero
 derivative (Pow a (Const x)) = Const x * derivative a * a ^ Const (x - one) --specialised power rule (xa^(x-1) * a')
 derivative (Pow f g)         = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Log a)           = derivative a / a
-
-ddx :: (Eq a, Field a, Powerable a) => PowerableExpresion a -> PowerableExpresion a
-ddx = fullSimplify . derivative
-
