@@ -21,6 +21,13 @@ instance Ring Int where
     one       = 1
     negate    = Prelude.negate
 
+instance Ring Integer where
+    (+)       = (Prelude.+)
+    (*)       = (Prelude.*)
+    zero      = 0
+    one       = 1
+    negate    = Prelude.negate
+
 instance Ring Double where
     (+)       = (Prelude.+)
     (*)       = (Prelude.*)

@@ -22,15 +22,15 @@ ff :: Int
 --ff = 2 ^ 27
 ff = 6
 
-x :: Expr Double
-x = Var 'x'
+var :: Expr Double
+var = Var 'x'
 
 expr :: Expr Double
-expr = Const 3 * Pow x (Const 2) -- 3x^2
+expr = Const 3 * Pow var (Const 2) -- 3x^2
 --expr = x :^: x -- x ^ x
 
 dexpr :: Expr Double
-dexpr = Const 6 * x -- 6x
+dexpr = Const 6 * var -- 6x
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"
@@ -39,7 +39,7 @@ assert _     x = x
 test :: (Show a, Eq a) => String -> a -> a -> IO ()
 test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
 
-n0, n1, n2, n3 :: Numeral Int
+n0, n1, n2, n3 :: Numeral Integer
 n0 = numeral 0
 n1 = numeral 1
 n2 = numeral 2
