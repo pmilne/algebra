@@ -36,7 +36,7 @@ ident :: a -> a
 ident x = x
 
 unchurch :: Numeral2 Integer -> Integer
-unchurch n = n (Prelude.+1) 0 :: Integer
+unchurch n = n (Prelude.+1) 0
 
 s :: Numeral2 a -> Numeral2 a
 s n f x = f (n f x)
