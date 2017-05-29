@@ -6,7 +6,7 @@ module Expression where
 import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
 import Ring
 import Field
-import Exponentiable
+import Powerable
 
 data Expression a = Const a
                   | Var Char
@@ -28,7 +28,7 @@ instance (Ring a) => Ring (Expression a) where
 instance (Field a) => Field (Expression a) where
   (/) = Div
 
-instance (Exponentiable a) => Exponentiable (Expression a) where
+instance (Powerable a) => Powerable (Expression a) where
   (^) = Pow
   log = Log
 
@@ -42,7 +42,7 @@ instance (Show a) => Show (Expression a) where
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
-simplify :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
+simplify :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
 --additive identities
 simplify (Sum (Const a) (Const b)) = Const (a + b)
 simplify (e@(Sum (Const a) b)) = if a == zero then b else e
@@ -82,17 +82,17 @@ mapExpr f exp =
                          (Pow a b) -> f (Pow (walk a) (walk b))
   in walk exp
 
-fullSimplify :: (Eq t, Field t, Exponentiable t) => Expression t -> Expression t
+fullSimplify :: (Eq t, Field t, Powerable t) => Expression t -> Expression t
 fullSimplify = mapExpr simplify
 
 substitute :: Char -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
-evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expression a -> Expression a
+evalExpr :: (Eq a, Field a, Powerable a) => Char -> a -> Expression a -> Expression a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
-derivative :: (Field a, Exponentiable a) => Expression a -> Expression a
+derivative :: (Field a, Powerable a) => Expression a -> Expression a
 derivative (Const _)         = zero
 derivative (Var _)           = one
 derivative (Neg f)           = Neg (derivative f)
@@ -103,13 +103,13 @@ derivative (Pow a (Const x)) = Const x * derivative a * a ^ Const (x - one) --sp
 derivative (Pow f g)         = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Log a)           = derivative a / a
 
-ddx :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
+ddx :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
 ddx = fullSimplify . derivative
 
 {-
-ddxs :: (Ring a, Exponentiable a, Field a, Eq a) => Expr a -> [Expr a]
+ddxs :: (Ring a, Powerable a, Field a, Eq a) => Expr a -> [Expr a]
 ddxs = iterate ddx
 
-nthDerivative :: (Ring a, Exponentiable a, Field a, Eq a) => Int -> Expr a -> Expr a
+nthDerivative :: (Ring a, Powerable a, Field a, Eq a) => Int -> Expr a -> Expr a
 nthDerivative n = foldr1 (.) (replicate n ddx)
 -}

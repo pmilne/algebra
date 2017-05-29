@@ -1,16 +1,16 @@
-module Exponentiable where
+module Powerable where
 
 infixr 8 ^
 
-class Exponentiable a where
+class Powerable a where
     (^)      :: a -> a -> a
     log      :: a -> a
 
-instance Exponentiable Int where
+instance Powerable Int where
     (^)       = (Prelude.^)
     log       = undefined
 
-instance Exponentiable Double where
+instance Powerable Double where
     (^)       = (Prelude.**)
     log       = Prelude.log
 

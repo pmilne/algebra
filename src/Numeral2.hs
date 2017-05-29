@@ -4,7 +4,7 @@
 module Numeral2 where
 
 import Ring
-import Exponentiable
+import Powerable
 
 type Numeral2 a = (a -> a) -> (a -> a)
 

@@ -3,6 +3,7 @@ module Ring where
 infixl 6 +, -
 infixl 7 *
 
+-- https://en.wikipedia.org/wiki/Ring_(mathematics)
 class Ring a where
     (+)      :: a -> a -> a
     (-)      :: a -> a -> a
