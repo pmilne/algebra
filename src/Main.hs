@@ -11,12 +11,15 @@ import Complex
 import Numeral
 import Expression
 import Ring
+import Field
 
 fr :: Ratio Int
 fr = 1 :/ 2
 
-g :: Complex (Ratio Int)
-g = (1 :/ 2) :+ (5 :/ 7)
+c :: Complex (Ratio Int)
+c = (1 :/ 2) :+ (5 :/ 7)
+--c :: Complex Double
+--c = 0.5 :+ 0.25
 
 ff :: Int
 --ff = 2 ^ 27
@@ -38,7 +41,9 @@ assert False _ = error "*** assertion failed! ***"
 assert _     x = x
 
 test :: (Show a, Eq a) => String -> a -> a -> IO ()
-test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
+test name expected actual = do
+                                putStrLn (name ++ " = " ++ show actual)
+                                assert (expected == actual) putStr "" -- oh dear
 
 n0, n1, n2, n3 :: Numeral Integer
 n0 = numeral 0
@@ -54,9 +59,11 @@ main = do
           putStrLn ("2 * 3 = " ++ show (n2 * n3))
 --          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
           putStrLn ("(1 / 2) = " ++ show fr)
-          putStrLn ("g = " ++ show g)
-          test "g + g" ((1 :/ 1) :+ (10 :/ 7)) (g + g)
-          test "g * g" (((-51) :/ 196) :+ (5 :/ 7)) (g * g)
+          putStrLn ("c = " ++ show c)
+          test "c + c" ((1 :/ 1) :+ (10 :/ 7)) (c + c)
+          test "c - c" ((0 :/ 1) :+ (0 :/ 1)) (c - c)
+          test "c * c" (((-51) :/ 196) :+ (5 :/ 7)) (c * c)
+          test "c / c" ((1 :/ 1) :+ (0 :/ 1)) (c / c)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
           putStrLn ("expr = " ++ show expr)
