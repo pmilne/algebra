@@ -33,11 +33,11 @@ instance (Exponentiable a) => Exponentiable (Expression a) where
   log = Log
 
 instance (Show a) => Show (Expression a) where
- show (Var a) = show a
+ show (Var a)   = show a
  show (Const a) = show a
- show (Log a) = "(log " ++ show a ++ ")"
+ show (Log a)   = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
- show (Neg a) = "(" ++ "-" ++ show a ++ ")"
+ show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
  show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
