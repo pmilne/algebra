@@ -97,7 +97,7 @@ derivative (a :*: b)         = a * derivative b + b * derivative a -- product ru
  --power rule (xa^(x-1) * a')
 derivative (a :^: (Const x)) = ((Const x) * (a :^: (Const (x - one)))) * (derivative a)
  -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (a :/: b)         = ((derivative a * b) + (Negate (derivative b * a))) / (b :^: (Const (one + one)))
+derivative (a :/: b)         = ((derivative a * b) - (a * derivative b)) / (b :^: (Const (one + one)))
 derivative expr              = error "I'm not a part of your system!" -- unsupported operation
 
 
