@@ -4,16 +4,19 @@
 module Numeral2 where
 
 import Ring
+import Exponentiable
 
 type Numeral2 a = (a -> a) -> (a -> a)
 
 instance Ring (Numeral2 a) where
-    n1 + n2   = \ f x -> (n1 f (n2 f x))
-    n1 * n2   = n1 . n2
+    (+)   = plus1
+    (*)   = times1
     negate _  = undefined
     zero      = church 0
     one       = church 1
 
+--instance Exponentiable (Numeral2 a) where
+--    a ^ b   = b a
 
 church :: Integer -> Numeral2 a
 church 0 = \ _ x -> x
