@@ -18,19 +18,19 @@ data Expression a = Const a
                   | Log (Expression a)
                   deriving (Eq)
 
-instance (Ring a) => Ring (Expression a) where
-  (+) = Sum
-  (*) = Prd
-  negate = Neg
+instance (Eq a, Field a, Powerable a) => Ring (Expression a) where
+  a + b = simplify (Sum a b)
+  a * b = simplify (Prd a b)
+  negate a = simplify (Neg a)
   zero = Const zero
   one = Const one
 
-instance (Field a) => Field (Expression a) where
-  (/) = Div
+instance (Eq a, Field a, Powerable a) => Field (Expression a) where
+  a / b = simplify (Div a b)
 
-instance (Powerable a) => Powerable (Expression a) where
-  (^) = Pow
-  log = Log
+instance (Eq a, Field a, Powerable a) => Powerable (Expression a) where
+  a ^ b = simplify (Pow a b)
+  log a = simplify (Log a)
 
 instance (Show a) => Show (Expression a) where
  show (Var a)   = show a
@@ -92,7 +92,7 @@ substitute _ _ exp = exp
 evalExpr :: (Eq a, Field a, Powerable a) => Char -> a -> Expression a -> Expression a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
-derivative :: (Field a, Powerable a) => Expression a -> Expression a
+derivative :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
 derivative (Const _)         = zero
 derivative (Var _)           = one
 derivative (Neg f)           = Neg (derivative f)
