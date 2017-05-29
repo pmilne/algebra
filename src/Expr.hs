@@ -8,13 +8,11 @@ import Ring
 import Field
 import Exponentiable
 
-infixl 4 :+:
 infixl 5 :*:, :/:
---infixr 6 :^:
 
 data Expr a = Var Char
             | Const a
-            | (Expr a) :+: (Expr a)
+            | Sum (Expr a) (Expr a)
             | Negate (Expr a)
             | (Expr a) :*: (Expr a)
             | Pow (Expr a) (Expr a)
@@ -22,7 +20,7 @@ data Expr a = Var Char
             deriving (Eq)
 
 instance (Ring a) => Ring (Expr a) where
-  (+) = (:+:)
+  (+) = Sum
   (*) = (:*:)
   negate = Negate
   zero = Const zero
@@ -37,7 +35,7 @@ instance (Exponentiable a) => Exponentiable (Expr a) where
 instance (Show a) => Show (Expr a) where
  show (Var a) = show a
  show (Const a) = show a
- show (a :+: b) = "(" ++ show a ++ " + " ++ show b ++ ")"
+ show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Negate a) = "(" ++ "-" ++ show a ++ ")"
  show (a :*: b) = "(" ++ show a ++ " * " ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
@@ -45,9 +43,9 @@ instance (Show a) => Show (Expr a) where
 
 simplify :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 --additive identities
-simplify (Const a :+: Const b) = Const (a + b)
-simplify (e@(Const a :+: b)) = if a == zero then b else e
-simplify (e@(a :+: Const b)) = if b == zero then a else e
+simplify (Sum (Const a) (Const b)) = Const (a + b)
+simplify (e@(Sum (Const a) b)) = if a == zero then b else e
+simplify (e@(Sum a (Const b))) = if b == zero then a else e
 --multiplicative identities
 simplify (Const a :*: Const b) = Const (a * b)
 --associativity identities
@@ -73,7 +71,7 @@ mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
 mapExpr f (Var a)  = f (Var a)
 mapExpr f (Const a)  = f (Const a)
 mapExpr f (Negate a)  = f (Negate (mapExpr f a))
-mapExpr f (a :+: b)  = f (mapExpr f a :+: mapExpr f b)
+mapExpr f (Sum a b)  = f (Sum (mapExpr f a) (mapExpr f b))
 mapExpr f (a :*: b)  = f (mapExpr f a :*: mapExpr f b)
 mapExpr f (a :/: b)  = f (mapExpr f a :/: mapExpr f b)
 mapExpr f (Pow a b)  = f (Pow (mapExpr f a) (mapExpr f b))
@@ -92,7 +90,7 @@ derivative :: (Field a) => Expr a -> Expr a
 derivative (Const _)       = zero
 derivative (Var _)         = one
 derivative (Negate f)      = Negate (derivative f)
-derivative (a :+: b)       = derivative a + derivative b
+derivative (Sum a b)       = derivative a + derivative b
 derivative (a :*: b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (a :/: b)       = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --power rule (xa^(x-1) * a')
