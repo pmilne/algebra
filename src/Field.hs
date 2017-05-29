@@ -3,7 +3,7 @@ module Field where
 import Prelude hiding ((*))
 import Ring
 
-infixr 7 /
+infixl 7 /
 
 class Ring a => Field a where
     (/)      :: a -> a -> a

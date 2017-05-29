@@ -26,11 +26,12 @@ var :: Expression Double
 var = Var 'x'
 
 expr :: Expression Double
-expr = Const 3 * Pow var (Const 2) -- 3x^2
---expr = x :^: x -- x ^ x
+--expr = Const 3 * Pow var (Const 2) -- 3x^2
+expr = Pow var var -- x ^ x
 
 dexpr :: Expression Double
-dexpr = Const 6 * var -- 6x
+--dexpr = Const 6 * var -- 6x
+dexpr = Pow var var * (Const 1.0 + Log var)
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"

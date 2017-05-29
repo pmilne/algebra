@@ -3,7 +3,7 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
 module Expression where
 
-import Prelude hiding ((+), (-), negate, (*), (/), (^), exp)
+import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
 import Ring
 import Field
 import Exponentiable
@@ -15,6 +15,7 @@ data Expression a = Var Char
                   | Prd (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
                   | Div (Expression a) (Expression a)
+                  | Log (Expression a)
                   deriving (Eq)
 
 instance (Ring a) => Ring (Expression a) where
@@ -29,10 +30,12 @@ instance (Field a) => Field (Expression a) where
 
 instance (Exponentiable a) => Exponentiable (Expression a) where
   (^) = Pow
+  log = Log
 
 instance (Show a) => Show (Expression a) where
  show (Var a) = show a
  show (Const a) = show a
+ show (Log a) = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a) = "(" ++ "-" ++ show a ++ ")"
  show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
@@ -59,8 +62,11 @@ simplify (e@(Pow (Const a) _)) | a == one = one | otherwise = e
 
 simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
+simplify e@(Div (Var a) (Var b)) = if a == b then one else e
 
 simplify (Neg (Const a))  = Const (negate a)
+
+simplify (Log (Const a))  = Const (log a)
 
 simplify x          = x
 
@@ -69,6 +75,7 @@ mapExpr f exp =
   let walk e = case e of (Const a) -> f (Const a)
                          (Var a)   -> f (Var a)
                          (Neg a)   -> f (Neg (walk a))
+                         (Log a)   -> f (Log (walk a))
                          (Sum a b) -> f (Sum (walk a) (walk b))
                          (Prd a b) -> f (Prd (walk a) (walk b))
                          (Div a b) -> f (Div (walk a) (walk b))
@@ -85,7 +92,7 @@ substitute _ _ exp = exp
 evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expression a -> Expression a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
 
-derivative :: (Field a) => Expression a -> Expression a
+derivative :: (Field a, Exponentiable a) => Expression a -> Expression a
 derivative (Const _)         = zero
 derivative (Var _)           = one
 derivative (Neg f)           = Neg (derivative f)
@@ -93,7 +100,8 @@ derivative (Sum a b)         = derivative a + derivative b
 derivative (Prd a b)         = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)         = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --specialised power rule (xa^(x-1) * a')
-derivative (Pow _ _)         = undefined --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Pow f g)         = Pow f g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Log a)           = derivative a / a
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
 ddx = fullSimplify . derivative
