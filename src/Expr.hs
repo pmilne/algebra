@@ -98,8 +98,6 @@ derivative (a :*: b)         = a * derivative b + b * derivative a -- product ru
 derivative (a :^: (Const x)) = ((Const x) * (a :^: (Const (x - one)))) * (derivative a)
  -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (a :/: b)         = ((derivative a * b) - (a * derivative b)) / (b :^: (Const (one + one)))
-derivative expr              = error "I'm not a part of your system!" -- unsupported operation
-
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 ddx = fullSimplify . derivative
