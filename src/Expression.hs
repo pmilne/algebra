@@ -30,7 +30,7 @@ instance (Field a) => Field (Expression a) where
 
 instance (Exponentiable a) => Exponentiable (Expression a) where
   (^) = Pow
-  log  = Log
+  log = Log
 
 instance (Show a) => Show (Expression a) where
  show (Var a) = show a
