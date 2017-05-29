@@ -9,13 +9,13 @@ import Field
 import Exponentiable
 
 data Expression a = Var Char
-            | Const a
-            | Sum (Expression a) (Expression a)
-            | Neg (Expression a)
-            | Prd (Expression a) (Expression a)
-            | Pow (Expression a) (Expression a)
-            | Div (Expression a) (Expression a)
-            deriving (Eq)
+                  | Const a
+                  | Sum (Expression a) (Expression a)
+                  | Neg (Expression a)
+                  | Prd (Expression a) (Expression a)
+                  | Pow (Expression a) (Expression a)
+                  | Div (Expression a) (Expression a)
+                  deriving (Eq)
 
 instance (Ring a) => Ring (Expression a) where
   (+) = Sum
