@@ -1,10 +1,14 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module Numeral where
 
 import Ring
 
--- The Church Numeral type
-newtype Numeral t
-  = Numeral ((t -> t) -> (t -> t))
+-- A Church Numeral type
+newtype Numeral t = Numeral ((t -> t) -> (t -> t))
+
+type Numeral2 a = (a -> a) -> (a -> a)
 
 instance (Show s, Num s) => Show (Numeral s) where
    show (Numeral n1) = show (n1 (Prelude.+1) 0)
@@ -16,20 +20,23 @@ instance  (Ring a) => Ring (Numeral a) where
     zero                        = Numeral (church 0)
     one                        = Numeral (church 1)
 
-type Numeral2 a = (a -> a) -> (a -> a)
+instance  Ring (Numeral2 a) where
+    n1 + n2 = \ f x -> (n1 f (n2 f x))
+    n1 * n2 = \ f -> n1 (n2 f)
+    negate _          = undefined
+    zero              = church 0
+    one               = church 1
+
 
 church :: Integer -> Numeral2 a
 church 0 = \ _ x -> x
 church n = \ f x -> f (church (n Prelude.- 1) f x)
 
-cinc :: Integer -> Integer
-cinc x = x Prelude.+ 1
-
 ident :: a -> a
 ident x = x
 
 unchurch :: Numeral2 Integer -> Integer
-unchurch n = n cinc 0 :: Integer
+unchurch n = n (Prelude.+1) 0 :: Integer
 
 s :: Numeral2 a -> Numeral2 a
 s n f x = f (n f x)
