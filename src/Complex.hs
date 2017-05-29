@@ -9,10 +9,10 @@ infix  6  :+
 data Complex a = !a :+ !a deriving (Eq, Show, Read)
 
 conjugate        :: Ring a => Complex a -> Complex a
-conjugate (x:+y) =  x :+ negate y
+conjugate (x :+ y) =  x :+ negate y
 
 modulus2        :: Ring a => Complex a -> a
-modulus2 (x:+y) =  x * x + y * y
+modulus2 (x :+ y) =  x * x + y * y
 
 instance (Ring a) => Ring (Complex a) where
     (r1 :+ i1) + (r2 :+ i2)   =  (r1 + r2) :+ (i1 + i2)
