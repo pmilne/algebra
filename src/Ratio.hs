@@ -13,9 +13,9 @@ frac n d = let g = gcd n d in quo n g :/ quo d  g
 
 instance  (Ring a, Euclidean a) => Ring (Ratio a) where
     (n1 :/ d1) + (n2 :/ d2)   =  frac (n1 * d2 + n2 * d1) (d1 * d2)
-    (n1 :/ d1) * (n2 :/ d2)   =  frac (n1 * n2 ) (d1 * d2)
+    (n1 :/ d1) * (n2 :/ d2)   =  frac (n1 * n2) (d1 * d2)
     negate (n :/ d)           =  negate n :/ d
-    zero     = zero :/ one
-    one     = one :/ one
+    zero                      = zero :/ one
+    one                       = one :/ one
 --    promote a = a :/ 0
 
