@@ -82,9 +82,6 @@ mapExpr f exp =
                          (Pow a b) -> f (Pow (walk a) (walk b))
   in walk exp
 
-fullSimplify :: (Eq t, Field t, Powerable t) => Expression t -> Expression t
-fullSimplify = mapExpr simplify
-
 substitute :: Char -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
@@ -105,11 +102,3 @@ derivative (Log a)           = derivative a / a
 
 ddx :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
 ddx = derivative
-
-{-
-ddxs :: (Ring a, Powerable a, Field a, Eq a) => Expr a -> [Expr a]
-ddxs = iterate ddx
-
-nthDerivative :: (Ring a, Powerable a, Field a, Eq a) => Int -> Expr a -> Expr a
-nthDerivative n = foldr1 (.) (replicate n ddx)
--}
