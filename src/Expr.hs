@@ -66,16 +66,16 @@ simplify (Neg (Const a))  = Const (negate a)
 simplify x          = x
 
 mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
-mapExpr f e  =
-  let rec = mapExpr f in
-  case e of
+mapExpr f exp =
+  let simp e = case e of
         (Const a) -> f (Const a)
         (Var a)   -> f (Var a)
-        (Neg a)   -> f (Neg (rec a))
-        (Sum a b) -> f (Sum (rec a) (rec b))
-        (Prd a b) -> f (Prd (rec a) (rec b))
-        (Div a b) -> f (Div (rec a) (rec b))
-        (Pow a b) -> f (Pow (rec a) (rec b))
+        (Neg a)   -> f (Neg (simp a))
+        (Sum a b) -> f (Sum (simp a) (simp b))
+        (Prd a b) -> f (Prd (simp a) (simp b))
+        (Div a b) -> f (Div (simp a) (simp b))
+        (Pow a b) -> f (Pow (simp a) (simp b))
+   in simp exp
 
 fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
 fullSimplify = mapExpr simplify
