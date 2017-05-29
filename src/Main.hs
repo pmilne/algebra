@@ -26,8 +26,8 @@ x :: Expr Double
 x = Var 'x'
 
 expr :: Expr Double
---expr = Const 3 * (x :^: Const 2) -- 3x^2
-expr = x :^: x -- x ^ x
+expr = Const 3 * (x :^: Const 2) -- 3x^2
+--expr = x :^: x -- x ^ x
 
 dexpr :: Expr Double
 dexpr = Const 6 * x -- 6x

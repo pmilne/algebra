@@ -37,11 +37,11 @@ instance (Exponentiable a) => Exponentiable (Expr a) where
 instance (Show a) => Show (Expr a) where
  show (Var a) = show a
  show (Const a) = show a
- show (a :+: b) = "(" ++ (show a) ++ " + " ++ (show b) ++ ")"
+ show (a :+: b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Negate a) = "(" ++ "-" ++ show a ++ ")"
- show (a :*: b) = "(" ++ (show a) ++ " * " ++ (show b) ++ ")"
- show (a :^: b) = "(" ++ (show a) ++ " ^ " ++ (show b) ++ ")"
- show (a :/: b) = "(" ++ (show a) ++ " / " ++ (show b) ++ ")"
+ show (a :*: b) = "(" ++ show a ++ " * " ++ show b ++ ")"
+ show (a :^: b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
+ show (a :/: b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
 simplify :: (Eq a, Field a, Exponentiable a) => Expr a -> Expr a
 --additive identities
@@ -60,7 +60,7 @@ simplify (e@(a :*: Const b)) | b == zero = zero | b == one = a | otherwise = e
 --power identities
 simplify (Const a :^: Const b) = Const (a ^ b)
 simplify (e@(a :^: Const b)) | b == zero = one | b == one = a | otherwise = e
-simplify (e@(Const a :^: b)) | a == one = one | otherwise = e
+simplify (e@(Const a :^: _)) | a == one = one | otherwise = e
 
 simplify (Const a :/: Const b) = Const (a / b)
 simplify (e@(a :/: Const b)) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
@@ -69,21 +69,21 @@ simplify (Negate (Const a))  = Const (negate a)
 
 simplify x          = x
 
-mapExpr :: ((Expr t) -> (Expr t)) -> (Expr t) -> (Expr t)
+mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
 mapExpr f (Var a)  = f (Var a)
 mapExpr f (Const a)  = f (Const a)
 mapExpr f (Negate a)  = f (Negate (mapExpr f a))
-mapExpr f (a :+: b)  = f ((mapExpr f a) :+: (mapExpr f b))
-mapExpr f (a :*: b)  = f ((mapExpr f a) :*: (mapExpr f b))
-mapExpr f (a :/: b)  = f ((mapExpr f a) :/: (mapExpr f b))
-mapExpr f (a :^: b)  = f ((mapExpr f a) :^: (mapExpr f b))
+mapExpr f (a :+: b)  = f (mapExpr f a :+: mapExpr f b)
+mapExpr f (a :*: b)  = f (mapExpr f a :*: mapExpr f b)
+mapExpr f (a :/: b)  = f (mapExpr f a :/: mapExpr f b)
+mapExpr f (a :^: b)  = f (mapExpr f a :^: mapExpr f b)
 
 fullSimplify :: (Eq t, Field t, Exponentiable t) => Expr t -> Expr t
 fullSimplify = mapExpr simplify
 
 substitute :: Char -> a -> Expr a -> Expr a
 substitute c val (Var x) = if x == c then Const val else Var x
-substitute c val exp = exp
+substitute _ _ exp = exp
 
 evalExpr :: (Eq a, Field a, Exponentiable a) => Char -> a -> Expr a -> Expr a
 evalExpr c val exp = fullSimplify (mapExpr (substitute c val) exp)
