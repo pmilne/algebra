@@ -8,20 +8,18 @@ import Ring
 import Field
 import Exponentiable
 
-infixl 5 :*:
-
 data Expr a = Var Char
             | Const a
             | Sum (Expr a) (Expr a)
             | Negate (Expr a)
-            | (Expr a) :*: (Expr a)
+            | Prd (Expr a) (Expr a)
             | Pow (Expr a) (Expr a)
             | Div (Expr a) (Expr a)
             deriving (Eq)
 
 instance (Ring a) => Ring (Expr a) where
   (+) = Sum
-  (*) = (:*:)
+  (*) = Prd
   negate = Negate
   zero = Const zero
   one = Const one
@@ -37,7 +35,7 @@ instance (Show a) => Show (Expr a) where
  show (Const a) = show a
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Negate a) = "(" ++ "-" ++ show a ++ ")"
- show (a :*: b) = "(" ++ show a ++ " * " ++ show b ++ ")"
+ show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
@@ -47,14 +45,14 @@ simplify (Sum (Const a) (Const b)) = Const (a + b)
 simplify (e@(Sum (Const a) b)) = if a == zero then b else e
 simplify (e@(Sum a (Const b))) = if b == zero then a else e
 --multiplicative identities
-simplify (Const a :*: Const b) = Const (a * b)
+simplify (Prd (Const a) (Const b)) = Const (a * b)
 --associativity identities
-simplify (Const a :*: (Const b :*: expr)) = Const (a * b) :*: expr
-simplify (Const a :*: expr :*: Const b)   = Const (a * b) :*: expr
-simplify (expr :*: Const a :*: Const b)   = Const (a * b) :*: expr
+simplify (Prd (Const a) (Prd (Const b) expr)) = Prd (Const (a * b)) expr
+simplify (Prd (Const a) (Prd expr (Const b))) = Prd (Const (a * b)) expr
+simplify (Prd expr (Prd (Const a) (Const b))) = Prd (Const (a * b)) expr
 -- and back
-simplify (e@(Const a :*: b)) | a == zero = zero | a == one = b | otherwise = e
-simplify (e@(a :*: Const b)) | b == zero = zero | b == one = a | otherwise = e
+simplify (e@(Prd (Const a) b)) | a == zero = zero | a == one = b | otherwise = e
+simplify (e@(Prd a (Const b))) | b == zero = zero | b == one = a | otherwise = e
 --power identities
 simplify (Pow (Const a) (Const b)) = Const (a ^ b)
 simplify (e@(Pow a (Const b))) | b == zero = one | b == one = a | otherwise = e
@@ -70,9 +68,9 @@ simplify x          = x
 mapExpr :: (Expr t -> Expr t) -> (Expr t -> Expr t)
 mapExpr f (Var a)  = f (Var a)
 mapExpr f (Const a)  = f (Const a)
-mapExpr f (Negate a)  = f (Negate (mapExpr f a))
+mapExpr f (Negate a) = f (Negate (mapExpr f a))
 mapExpr f (Sum a b)  = f (Sum (mapExpr f a) (mapExpr f b))
-mapExpr f (a :*: b)  = f (mapExpr f a :*: mapExpr f b)
+mapExpr f (Prd a b)  = f (Prd (mapExpr f a) (mapExpr f b))
 mapExpr f (Div a b)  = f (Div (mapExpr f a) (mapExpr f b))
 mapExpr f (Pow a b)  = f (Pow (mapExpr f a) (mapExpr f b))
 
@@ -91,7 +89,7 @@ derivative (Const _)       = zero
 derivative (Var _)         = one
 derivative (Negate f)      = Negate (derivative f)
 derivative (Sum a b)       = derivative a + derivative b
-derivative (a :*: b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
+derivative (Prd a b)       = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)       = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --power rule (xa^(x-1) * a')
 derivative (Pow _ _) = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
