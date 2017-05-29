@@ -46,7 +46,7 @@ simplify (e@(Sum (Const a) b)) = if a == zero then b else e
 simplify (e@(Sum a (Const b))) = if b == zero then a else e
 --multiplicative identities
 simplify (Prd (Const a) (Const b)) = Const (a * b)
---put constants first
+--put constants first in a product
 simplify (Prd a b@(Const _)) | b == zero = zero | b == one = a | otherwise = Prd b a
 --associativity
 simplify (Prd (Const a) (Prd (Const b) expr)) = Prd (Const (a * b)) expr
