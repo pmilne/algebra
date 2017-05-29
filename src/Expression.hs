@@ -93,8 +93,8 @@ derivative (Neg f)           = Neg (derivative f)
 derivative (Sum a b)         = derivative a + derivative b
 derivative (Prd a b)         = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)         = (derivative a * b - a * derivative b) / Pow b (Const (one + one)) -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --power rule (xa^(x-1) * a')
-derivative (Pow _ _)         = undefined --requires general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Pow a (Const x)) = Const x * derivative a * Pow a (Const (x - one)) --specialised power rule (xa^(x-1) * a')
+derivative (Pow _ _)         = undefined --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
 ddx :: (Eq a, Field a, Exponentiable a) => Expression a -> Expression a
 ddx = fullSimplify . derivative
