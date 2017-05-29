@@ -40,10 +40,10 @@ test :: (Show a, Eq a) => String -> a -> a -> IO ()
 test name expected actual = assert (expected == actual) putStrLn (name ++ " = " ++ show actual)
 
 n0, n1, n2, n3 :: Numeral Int
-n0 = Numeral (church 0)
-n1 = Numeral (church 1)
-n2 = Numeral (church 2)
-n3 = Numeral (church 3)
+n0 = numeral 0
+n1 = numeral 1
+n2 = numeral 2
+n3 = numeral 3
 
 main :: IO ()
 main = do
