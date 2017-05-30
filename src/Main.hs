@@ -2,6 +2,8 @@ module Main where
 
 {-
 stack build && .stack-work/install/x86_64-osx/lts-8.15/8.0.2/bin/algebra
+cabal repl
+:info Ratio
 -}
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
