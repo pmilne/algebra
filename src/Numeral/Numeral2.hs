@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
 
-module Numeral2 where
+module Numeral.Numeral2 where
 
 import Ring
 import Powerable
@@ -44,3 +44,4 @@ times1 a b f = a (b f)
 --expt1 :: t -> (t -> t) -> t
 expt1 :: Numeral2 t -> Numeral2 (t -> t) -> Numeral2 t
 expt1 a b = b a
+

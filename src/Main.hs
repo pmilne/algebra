@@ -10,7 +10,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ratio
 import Factorial
 import Complex
-import Numeral
+import Numeral.Numeral1
 import Expression
 import Ring
 import Field
@@ -47,7 +47,7 @@ test name expected actual = do
                                 putStrLn (name ++ " = " ++ show actual)
                                 assert (expected == actual) putStr "" -- oh dear
 
-n0, n1, n2, n3 :: Numeral Integer
+n0, n1, n2, n3 :: Numeral1 Integer
 n0 = numeral 0
 n1 = numeral 1
 n2 = numeral 2
