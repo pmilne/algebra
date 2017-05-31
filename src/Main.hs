@@ -10,6 +10,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ratio
 import Factorial
 import Complex
+--import Modular
 import Numeral.Numeral1
 import Expression
 import Ring
@@ -66,6 +67,7 @@ main = do
           test "c - c" ((0 :/ 1) :+ (0 :/ 1)) (c - c)
           test "c * c" (((-51) :/ 196) :+ (5 :/ 7)) (c * c)
           test "c / c" ((1 :/ 1) :+ (0 :/ 1)) (c / c)
+--          test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
           putStrLn ("expr = " ++ show expr)
