@@ -4,7 +4,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Ring
 
 data Polynomial a = Const !a
-                  | Term !a Integer (Polynomial a)
+                  | Term !a !Integer !(Polynomial a)
                   deriving (Eq, Read)
 
 mult :: (Ring a) => a -> Integer -> Polynomial a -> Polynomial a
