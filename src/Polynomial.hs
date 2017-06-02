@@ -28,10 +28,10 @@ instance (Ring a) => Ring (Polynomial a) where
     p1@(Term a1 n1 r1) * p2@(Const a2)      = Term (a1 * a2) n1 (r1 * p2)
     p1@(Term a1 n1 r1) * p2@(Term a2 n2 r2) = mult a1 n1 p2 + r1 * p2;
 
-    negate (Term a n r)         = Term (negate a) n (negate r)
+    negate (Term a n r)      = Term (negate a) n (negate r)
 
     negate (Const a)         = Const (negate a)
 
-    zero                    = Const zero
-    one                     = Const zero
+    zero                     = Const zero
+    one                      = Const zero
 
