@@ -10,6 +10,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ratio
 import Factorial
 import Complex
+import Polynomial
 --import Modular
 import Numeral.Numeral1
 import Expression
@@ -37,7 +38,7 @@ expr = Pow var var -- x ^ x
 
 dexpr :: Expression Double
 --dexpr = Const 6 * var -- 6x
-dexpr = Pow var var * (Const 1.0 + Log var)
+dexpr = Pow var var * (Expression.Const 1.0 + Log var)
 
 assert :: Bool -> a -> a
 assert False _ = error "*** assertion failed! ***"
@@ -53,6 +54,9 @@ n0 = numeral 0
 n1 = numeral 1
 n2 = numeral 2
 n3 = numeral 3
+
+p :: Polynomial Integer
+p = Term 1 1 (Polynomial.Const 1)
 
 main :: IO ()
 main = do
@@ -73,5 +77,7 @@ main = do
           putStrLn ("expr = " ++ show expr)
           test "derivative expr" dexpr (derivative expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
+          putStrLn ("p = " ++ show (p * p * p))
+
 
 
