@@ -6,7 +6,7 @@ module Expression where
 import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
 import Ring
 import Field
-import Powerable
+import Exponentiative
 
 data Expression a = Const a
                   | Var Char
@@ -18,17 +18,17 @@ data Expression a = Const a
                   | Log (Expression a)
                   deriving (Eq)
 
-instance (Eq a, Field a, Powerable a) => Ring (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
   a + b    = simplify (Sum a b)
   a * b    = simplify (Prd a b)
   negate a = simplify (Neg a)
   zero     = Const zero
   one      = Const one
 
-instance (Eq a, Field a, Powerable a) => Field (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)
 
-instance (Eq a, Field a, Powerable a) => Powerable (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   a ^ b = simplify (Pow a b)
   log a = simplify (Log a)
 
@@ -42,7 +42,7 @@ instance (Show a) => Show (Expression a) where
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
-simplify :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
+simplify :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 --additive identities
 simplify (Sum (Const a) (Const b)) = Const (a + b)
 simplify (e@(Sum (Const a) b)) = if a == zero then b else e
@@ -86,10 +86,10 @@ substitute :: Char -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
-evalExpr :: (Eq a, Field a, Powerable a) => Char -> a -> Expression a -> Expression a
+evalExpr :: (Eq a, Field a, Exponentiative a) => Char -> a -> Expression a -> Expression a
 evalExpr c val = mapExpr (simplify . substitute c val)
 
-derivative :: (Eq a, Field a, Powerable a) => Expression a -> Expression a
+derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)         = zero
 derivative (Var _)           = one
 derivative (Neg f)           = Neg (derivative f)

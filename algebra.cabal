@@ -14,7 +14,7 @@ cabal-version:       >=1.10
 extra-source-files:  README.md
 
 executable algebra
-  other-modules:       Factorial, Modular, Complex, Numeral.Numeral1, Expression, Ring, Ratio, Field, Euclidean, Powerable
+  other-modules:       Factorial, Modular, Complex, Numeral.Numeral1, Expression, Ring, Ratio, Field, Euclidean, Exponentiative, Polynomial
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
