@@ -4,6 +4,7 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 module Expression where
 
 import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
+import Additive
 import Ring
 import Field
 import Exponentiative
@@ -18,11 +19,13 @@ data Expression a = Const a
                   | Log (Expression a)
                   deriving (Eq)
 
-instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Additive (Expression a) where
   a + b    = simplify (Sum a b)
+  zero     = Const zero
+
+instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
   a * b    = simplify (Prd a b)
   negate a = simplify (Neg a)
-  zero     = Const zero
   one      = Const one
 
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where

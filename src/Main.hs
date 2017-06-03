@@ -14,6 +14,7 @@ import Polynomial
 --import Modular
 import Numeral.Numeral1
 import Expression
+import Additive
 import Ring
 import Field
 
