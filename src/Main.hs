@@ -19,10 +19,10 @@ import Ring
 import Field
 
 fr :: Ratio Int
-fr = 1 :/ 2
+fr = Ratio 1 2
 
 c :: Complex (Ratio Int)
-c = (1 :/ 2) :+ (5 :/ 7)
+c = Ratio 1 2 :+ Ratio 5 7
 --c :: Complex Double
 --c = 0.5 :+ 0.25
 
@@ -68,10 +68,10 @@ main = do
 --          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
           putStrLn ("(1 / 2) = " ++ show fr)
           putStrLn ("c = " ++ show c)
-          test "c + c" ((1 :/ 1) :+ (10 :/ 7)) (c + c)
-          test "c - c" ((0 :/ 1) :+ (0 :/ 1)) (c - c)
-          test "c * c" (((-51) :/ 196) :+ (5 :/ 7)) (c * c)
-          test "c / c" ((1 :/ 1) :+ (0 :/ 1)) (c / c)
+          test "c + c" (Ratio 1 1 :+ Ratio 10 7) (c + c)
+          test "c - c" (Ratio 0 1 :+ Ratio 0 1) (c - c)
+          test "c * c" (Ratio (-51) 196 :+ Ratio 5 7) (c * c)
+          test "c / c" (Ratio 1 1 :+ Ratio 0 1) (c / c)
 --          test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))

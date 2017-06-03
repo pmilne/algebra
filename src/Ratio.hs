@@ -6,23 +6,21 @@ import Ring
 import Euclidean
 import Field
 
-infix  6  :/
-
-data Ratio a = !a :/ !a deriving (Eq, Show, Read)
+data Ratio a = Ratio !a !a deriving (Eq, Show, Read)
 
 frac :: (Euclidean a) => a -> a -> Ratio a
-frac n d = let g = gcd n d in quo n g :/ quo d  g
+frac n d = let g = gcd n d in Ratio (quo n g) (quo d  g)
 
 instance (Ring a, Euclidean a) => Additive (Ratio a) where
-    (n1 :/ d1) + (n2 :/ d2)   = frac (n1 * d2 + n2 * d1) (d1 * d2)
-    zero                      = zero :/ one
+    (Ratio n1 d1) + (Ratio n2 d2)   = frac (n1 * d2 + n2 * d1) (d1 * d2)
+    zero                      = Ratio zero one
 --    promote a = a :/ 0
 
 instance (Ring a, Euclidean a) => Ring (Ratio a) where
-    (n1 :/ d1) * (n2 :/ d2)   = frac (n1 * n2) (d1 * d2)
-    negate (n :/ d)           = negate n :/ d
-    one                       = one :/ one
+    (Ratio n1 d1) * (Ratio n2 d2) = frac (n1 * n2) (d1 * d2)
+    negate (Ratio n d)            = Ratio (negate n) d
+    one                           = Ratio one one
 --    promote a = a :/ 0
 
 instance (Ring a, Euclidean a) => Field (Ratio a) where
-    inv (n :/ d) = d :/ n
+    inv (Ratio n d) = Ratio d n -- fixme sign!!!!
