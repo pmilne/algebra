@@ -9,6 +9,14 @@ data Polynomial a = Const !a
                   | Term !a !Integer !(Polynomial a)
                   deriving (Eq, Read)
 
+lc :: Polynomial a -> a
+lc (Const a) = a
+lc (Term a _ _) = a
+
+degree :: Polynomial a -> Integer
+degree (Const _) = 0
+degree (Term _ n _) = n
+
 scaleAndShift :: (Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift a1 n1 (Const a2)      = Term (a1 * a2) n1 zero
 scaleAndShift a1 n1 (Term a2 n2 r2) = Term (a1 * a2) (n1 + n2) (scaleAndShift a1 n1 r2)
@@ -43,6 +51,9 @@ instance (Ring a) => Ring (Polynomial a) where
 
     one                      = Const zero
 
-instance (Ring a) => Euclidean (Polynomial a) where
+instance (Euclidean a, Ring a) => Euclidean (Polynomial a) where
+    -- Divide by an element of the coefficient domain.
+    divideOrFail (Const c)    (Const v) = Const (divideOrFail c v)
+    divideOrFail (Term a n r) (Const v) = Term (divideOrFail a v) n (divideOrFail r (Const v))
 --    canonical n d = let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
 

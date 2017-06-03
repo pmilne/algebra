@@ -25,18 +25,6 @@ pseudoRem u v lcv delta =
         let su = Const ff * u in
         rem su v
 
-lc :: Polynomial a -> a
-lc (Term lc deg red) = lc
-
-degree :: Polynomial a -> Integer
-degree (Const lc) = 0
-degree (Term lc deg red) = deg
-
--- Divide by an element of the coefficient domain.
-divideOrFail2 :: Euclidean a => Polynomial a -> a -> Polynomial a
-divideOrFail2 (Const c)    v = Const (divideOrFail c v)
-divideOrFail2 (Term a n r) v = Term (divideOrFail a v) n (divideOrFail2 r v)
-
 subresultant :: (Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a  -> a  -> (Polynomial a -> a -> r) -> r
 -- u.deg >= v.deg
 subresultant u (Const lcv) g h =
@@ -56,7 +44,7 @@ subresultant u v@(Term lcv degv redV) g h =
         let delta = degree u - degv in
         let pRem = pseudoRem u v lcv delta in
         let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
-        subresultant v (divideOrFail2 pRem (g * (h ^ delta))) lcv nh
+        subresultant v (divideOrFail pRem (Const (g * (h ^ delta)))) lcv nh
 
 gcdAndResultant :: (Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> (Polynomial a -> a  -> r) -> r
 gcdAndResultant u v =
