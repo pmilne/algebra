@@ -1,12 +1,9 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Composite where
 
-import Complex
-
-class Composite t where
-    promote      :: a -> t a
-
-instance Composite Complex where
-    promote n = n :+ n
+class Composite t s where
+    promote      :: s -> t
 
 
 

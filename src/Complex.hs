@@ -1,6 +1,10 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Complex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
+import Composite
 import Additive
 import Ring
 import Field
@@ -12,8 +16,11 @@ data Complex a = !a :+ !a deriving (Eq, Show, Read)
 conjugate :: Ring a => Complex a -> Complex a
 conjugate (x :+ y) =  x :+ negate y
 
-promote :: (Additive a) => a -> Complex a
-promote a = a :+ zero
+promote1 :: (Additive a) => a -> Complex a
+promote1 a = a :+ zero
+
+instance (Additive a) => Composite (Complex a) a where
+    promote n = promote n
 
 instance (Additive a) => Additive (Complex a) where
     (r1 :+ i1) + (r2 :+ i2) = (r1 + r2) :+ (i1 + i2)
