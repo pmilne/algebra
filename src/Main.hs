@@ -17,6 +17,7 @@ import Expression
 import Additive
 import Ring
 import Field
+import Collins
 
 fr :: Ratio Int
 fr = Ratio 1 2
@@ -56,8 +57,14 @@ n1 = numeral 1
 n2 = numeral 2
 n3 = numeral 3
 
+x :: Polynomial Integer
+x = Term 1 1 (Polynomial.Const 0)
+
 p :: Polynomial Integer
 p = Term 1 1 (Polynomial.Const 1)
+
+promoteInt :: Integer -> Polynomial Integer
+promoteInt = promote
 
 main :: IO ()
 main = do
@@ -75,10 +82,13 @@ main = do
 --          test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
+          putStrLn ("3*x + 1 " ++ show (Collins.gcd (promoteInt 3 * x + promoteInt 1) (promoteInt 7)) ++ " = " ++ show (promoteInt 7))
           putStrLn ("expr = " ++ show expr)
           test "derivative expr" dexpr (derivative expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
           putStrLn ("p = " ++ show (p * p * p))
+
+
 
 
 

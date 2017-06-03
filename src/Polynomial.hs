@@ -3,7 +3,7 @@ module Polynomial where
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Additive
 import Ring
---import Euclidean
+import Euclidean
 
 data Polynomial a = Const !a
                   | Term !a !Integer !(Polynomial a)
@@ -12,6 +12,12 @@ data Polynomial a = Const !a
 scaleAndShift :: (Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift a1 n1 (Const a2)      = Term (a1 * a2) n1 zero
 scaleAndShift a1 n1 (Term a2 n2 r2) = Term (a1 * a2) (n1 + n2) (scaleAndShift a1 n1 r2)
+
+promote :: a -> Polynomial a
+promote = Const
+
+promote1 :: Additive a => a -> Integer -> Polynomial a
+promote1 a n = Term a n (Const zero)
 
 instance (Show a) => Show (Polynomial a) where
     show (Const a)      = show a
@@ -37,6 +43,6 @@ instance (Ring a) => Ring (Polynomial a) where
 
     one                      = Const zero
 
---instance (Ring a) => Euclidean (Polynomial a) where
+instance (Ring a) => Euclidean (Polynomial a) where
 --    canonical n d = let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
 
