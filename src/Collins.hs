@@ -41,8 +41,7 @@ subresultant u v g h =
             if degree v == 0 then
                 \f -> f one nh
             else
-                let pRem = pseudoRem u v lcv delta in
-                subresultant v (divideOrFail pRem (Const (g * (h ^ delta)))) lcv nh
+                subresultant v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> (Polynomial a -> a  -> r) -> r
 gcdAndResultant u v =
