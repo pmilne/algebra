@@ -22,10 +22,12 @@ instance (Additive a) => Additive (Complex a) where
     (r1 :+ i1) + (r2 :+ i2) = (r1 + r2) :+ (i1 + i2)
     zero                    = zero :+ zero
 
+instance (Additive a, Multiplicative a) => Multiplicative (Complex a) where
+    one                     = one  :+ zero
+
 instance (Ring a) => Ring (Complex a) where
     (r1 :+ i1) * (r2 :+ i2) = (r1 * r2 - i1 * i2) :+ (r1 * i2 + i1 * r2)
     negate (r :+ i)         = negate r :+ negate i
-    one                     = one  :+ zero
 --    promote a = a :+ 0
 
 instance (Field a) => Field (Complex a) where

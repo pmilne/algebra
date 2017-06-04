@@ -22,10 +22,12 @@ instance (Eq a, Field a, Exponentiative a) => Additive (Expression a) where
   a + b    = simplify (Sum a b)
   zero     = Const zero
 
+instance (Multiplicative a) => Multiplicative (Expression a) where
+  one      = Const one
+
 instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
   a * b    = simplify (Prd a b)
   negate a = simplify (Neg a)
-  one      = Const one
 
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)

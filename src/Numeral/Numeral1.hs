@@ -19,8 +19,10 @@ instance  (Additive a) => Additive (Numeral1 a) where
     (Numeral1 n1) + (Numeral1 n2) = Numeral1 (\f x -> (n1 f (n2 f x)))
     zero                          = Numeral1 (\_ x -> x)
 
+instance  (Multiplicative a) => Multiplicative (Numeral1 a) where
+    one                           = Numeral1 id
+
 instance  (Ring a) => Ring (Numeral1 a) where
     (Numeral1 n1) * (Numeral1 n2) = Numeral1 (n1 . n2)
     negate (Numeral1 _)           = undefined
-    one                           = Numeral1 id
 
