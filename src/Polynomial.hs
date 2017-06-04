@@ -3,7 +3,7 @@ module Polynomial where
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Ring
 import Euclidean
-import Debug.Trace
+--import Debug.Trace
 
 data Polynomial a = Const !a
                   | Term !a !Integer !(Polynomial a)
@@ -53,7 +53,7 @@ instance (Show a, Eq a, Ring a) => Multiplicative (Polynomial a) where
     Const a1      * Term a2 n2 r2 = polynomial (a1 * a2) n2 (Const a1 * r2)
     Term a1 n1 r1 * Const a2      = polynomial (a1 * a2) n1 (r1 * Const a2)
     Term a1 n1 r1 * p2            = scaleAndShift a1 n1 p2 + r1 * p2;
-    one                      = Const one
+    one                           = Const one
 
 instance (Show a, Eq a, Ring a) => Subtractive (Polynomial a) where
     neg (Term a n r)      = Term (neg a) n (neg r)
