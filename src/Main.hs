@@ -55,6 +55,10 @@ n1 = numeral 1
 n2 = numeral 2
 n3 = numeral 3
 
+m0, m1 :: Modular Int
+m0 = Modular 3
+m1 = Modular 2
+
 x, x2, x3, x4, x5, x6, x7 :: Polynomial Integer
 x = Term 1 1 (Polynomial.Const 0)
 x2 = x * x;
@@ -84,6 +88,7 @@ main = do
           test "c - c" (Ratio 0 1 :+ Ratio 0 1) (c - c)
           test "c * c" (Ratio (-51) 196 :+ Ratio 5 7) (c * c)
           test "c / c" (Ratio 1 1 :+ Ratio 0 1) (c / c)
+          putStrLn ("2 * 3 mod 4 = " ++ show (m0 * m1))
           test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
