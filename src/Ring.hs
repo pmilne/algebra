@@ -1,4 +1,4 @@
-module Ring where
+module Ring(module Additive, module Ring) where
 
 import Additive
 

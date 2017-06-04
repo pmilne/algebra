@@ -5,7 +5,6 @@ module Complex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Composite
-import Additive
 import Ring
 import Field
 

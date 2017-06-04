@@ -1,7 +1,6 @@
 module Polynomial where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
-import Additive
 import Ring
 import Euclidean
 import Debug.Trace

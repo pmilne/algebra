@@ -1,7 +1,6 @@
 module Ratio where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
-import Additive
 import Ring
 import Euclidean
 import Field

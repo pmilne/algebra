@@ -1,7 +1,6 @@
 module Collins where
 
 import Prelude hiding ((-), rem, negate, (*), (^), (/))
-import Additive
 import Ring
 import Euclidean
 import Polynomial

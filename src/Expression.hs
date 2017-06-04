@@ -4,7 +4,6 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 module Expression where
 
 import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
-import Additive
 import Ring
 import Field
 import Exponentiative

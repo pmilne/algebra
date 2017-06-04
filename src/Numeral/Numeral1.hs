@@ -1,6 +1,5 @@
 module Numeral.Numeral1 where
 
-import Additive
 import Ring
 
 -- A Church Numeral type
