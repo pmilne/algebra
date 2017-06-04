@@ -8,7 +8,6 @@ infixl 6 -
 class (Additive a) => Subtractive a where
     (-)      :: a -> a -> a
     neg      :: a -> a
---    promote  :: b -> a
     x - y               = x Additive.+ Subtractive.neg y
     neg x               = Additive.zero Subtractive.- x
 
