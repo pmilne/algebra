@@ -25,6 +25,10 @@ polynomial :: (Show a, Eq a, Additive a) => a -> Integer -> Polynomial a -> Poly
 --polynomial a n r | trace ("polynomial " ++ show a ++ " " ++ show n) False = undefined
 polynomial a n r = if a == zero then r else Term a n r
 
+map2 :: (a -> Integer -> b -> b) -> (a -> b) -> Polynomial a -> b
+map2 f g (Term a n r) = f a n (map2 f g r)
+map2 f g (Const c)    = g c
+
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift a1 n1 (Const a2)      = if n1 == 0 then Const (a1 * a2) else polynomial (a1 * a2) n1 zero
 scaleAndShift a1 n1 (Term a2 n2 r2) = polynomial (a1 * a2) (n1 + n2) (scaleAndShift a1 n1 r2)
@@ -81,8 +85,7 @@ instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     quo                = divide quo1
     rem                = divide rem1
     gcd                = undefined -- Collins.gcd
-    -- Divide by an element of the coefficient domain.
-    divideOrFail (Const c)    (Const v) = Const (divideOrFail c v)
-    divideOrFail (Term a n r) (Const v) = Term  (divideOrFail a v) n (divideOrFail r (Const v))
+    divideOrFail p (Const v) = map2 (\a n r -> Term (divideOrFail a v) n r) (\c -> Const (divideOrFail c v)) p
+
     canonical n d = undefined -- let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
 
