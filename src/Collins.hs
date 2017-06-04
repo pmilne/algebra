@@ -30,10 +30,10 @@ subresultant u v g h | trace ("subresultant "
                                             ) False = undefined
 subresultant u v g h =
        if v == zero then
-            trace "v is zero returning [3]." $
+--            trace "v is zero returning [3]." $
             \f -> f u zero
         else
-            trace "u, v both non-constant [5]." $
+--            trace "u, v both non-constant [5]." $
             let delta = deg u - deg v in
             let lcv = lc v in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
