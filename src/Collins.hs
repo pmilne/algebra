@@ -29,22 +29,20 @@ subresultant u v g h | trace ("subresultant "
                                             ++ "\t\tg: " ++ show g
                                             ++ "\t\th: " ++ show h
                                             ) False = undefined
-subresultant u (Const lcv) g h =
-       if lcv == zero then
+subresultant u v g h =
+       if v == zero then
             trace "v is zero returning [3]." $
             \f -> f u zero
         else
-            trace "v is non-zero constant, returning [4]." $
-            let delta = degree u in
-            let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
-            trace ("nh = " ++ show nh) $
-            \f -> f (Const one) nh
-subresultant u v@(Term lcv degv redV) g h =
             trace "u, v both non-constant [5]." $
-            let delta = degree u - degv in
-            let pRem = pseudoRem u v lcv delta in
+            let delta = degree u - degree v in
+            let lcv = lc v in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
-            subresultant v (divideOrFail pRem (Const (g * (h ^ delta)))) lcv nh
+            if degree v == 0 then
+                \f -> f one nh
+            else
+                let pRem = pseudoRem u v lcv delta in
+                subresultant v (divideOrFail pRem (Const (g * (h ^ delta)))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> (Polynomial a -> a  -> r) -> r
 gcdAndResultant u v =
