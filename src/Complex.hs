@@ -5,7 +5,6 @@ module Complex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Composite
-import Ring
 import Field
 
 infix  6  :+

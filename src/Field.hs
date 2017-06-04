@@ -1,4 +1,4 @@
-module Field where
+module Field(module Ring, module Field) where
 
 import Prelude hiding ((*))
 import Ring

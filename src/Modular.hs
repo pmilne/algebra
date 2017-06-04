@@ -2,7 +2,6 @@ module Modular where
 
 import Prelude hiding ((+), (-), negate, rem, (*), (^), (/))
 import Euclidean
-import Ring
 import Field
 
 m :: Modular Int

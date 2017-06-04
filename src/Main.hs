@@ -14,7 +14,6 @@ import Polynomial
 --import Modular
 import Numeral.Numeral1
 import Expression
-import Ring
 import Field
 import Collins
 
