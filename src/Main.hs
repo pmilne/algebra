@@ -11,7 +11,7 @@ import Ratio
 import Factorial
 import Complex
 import Polynomial
---import Modular
+import Modular
 import Numeral.Numeral1
 import Expression
 import Field
@@ -84,7 +84,7 @@ main = do
           test "c - c" (Ratio 0 1 :+ Ratio 0 1) (c - c)
           test "c * c" (Ratio (-51) 196 :+ Ratio 5 7) (c * c)
           test "c / c" (Ratio 1 1 :+ Ratio 0 1) (c / c)
---          test "m + m" (Modular 2) (m + m)
+          test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
 --          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
 --          print (Collins.gcd (pc 0) (pc 1))
