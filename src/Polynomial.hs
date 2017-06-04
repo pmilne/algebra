@@ -35,11 +35,9 @@ promote = Const
 promote1 :: Additive a => a -> Integer -> Polynomial a
 promote1 a n = Term a n (Const zero)
 
-instance (Show a) => Show (Polynomial a) where
---instance (Show a, Eq a, Multiplicative a) => Show (Polynomial a) where
+instance (Show a, Eq a, Multiplicative a) => Show (Polynomial a) where
     show (Const a)      = show a
-    show (Term a n r)   = show a ++ " * x^" ++ show n ++ " + " ++ show r
---    show (Term a n r)   = if a /= one then (show a ++ " * ") else "" ++ "x^" ++ show n ++ " + " ++ show r
+    show (Term a n r)   = (if a /= one then show a ++ " * " else "") ++ "x^" ++ show n ++ " + " ++ show r
 
 instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
     Const a1      + Const a2                = Const (a1 + a2)
