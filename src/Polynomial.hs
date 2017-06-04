@@ -80,7 +80,7 @@ divide f u v =
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     quo                = divide quo1
     rem                = divide rem1
-    gcd               = undefined -- Collins.gcd
+    gcd                = undefined -- Collins.gcd
     -- Divide by an element of the coefficient domain.
     divideOrFail (Const c)    (Const v) = Const (divideOrFail c v)
     divideOrFail (Term a n r) (Const v) = Term  (divideOrFail a v) n (divideOrFail r (Const v))
