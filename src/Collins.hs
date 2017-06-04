@@ -35,17 +35,17 @@ subresultant u v g h =
             \f -> f u zero
         else
             trace "u, v both non-constant [5]." $
-            let delta = degree u - degree v in
+            let delta = deg u - deg v in
             let lcv = lc v in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
-            if degree v == 0 then
+            if deg v == 0 then
                 \f -> f one nh
             else
                 subresultant v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> (Polynomial a -> a  -> r) -> r
 gcdAndResultant u v =
-        if degree u > degree v then subresultant u v one one else subresultant v u one one
+        if deg u > deg v then subresultant u v one one else subresultant v u one one
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant u v = gcdAndResultant u v (\g r -> r)

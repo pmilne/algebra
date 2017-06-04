@@ -14,9 +14,9 @@ lc :: Polynomial a -> a
 lc (Const a) = a
 lc (Term a _ _) = a
 
-degree :: Polynomial a -> Integer
-degree (Const _) = 0
-degree (Term _ n _) = n
+deg :: Polynomial a -> Integer
+deg (Const _) = 0
+deg (Term _ n _) = n
 
 red :: (Show a, Eq a, Additive a) => Polynomial a -> Polynomial a
 red (Const _) = zero
@@ -72,7 +72,7 @@ divide :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> Polynomial a -
 --divide f u v | trace ("divide " ++ show u ++ " " ++ show v) False = undefined
 divide f u v =
         if v == zero then error "Divide by zero " else
-        let delta = degree u - degree v in
+        let delta = deg u - deg v in
         if u == zero || delta < 0 then f zero u else
         let r = divideOrFail (lc u) (lc v) in
         let quoAndRem1 = divide quoAndRem (red u - scaleAndShift r delta (red v)) v in
