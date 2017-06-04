@@ -30,8 +30,8 @@ map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
-scaleAndShift a1 n1 (Const a2)      = if n1 == 0 then Const (a1 * a2) else polynomial (a1 * a2) n1 zero
-scaleAndShift a1 n1 (Term a2 n2 r2) = polynomial (a1 * a2) (n1 + n2) (scaleAndShift a1 n1 r2)
+scaleAndShift a1 n1 = map2 (\a2 n2 r -> polynomial (a1 * a2) (n1 + n2) r)
+                           (\a2 -> if n1 == 0 then Const (a1 * a2) else polynomial (a1 * a2) n1 zero)
 
 promote :: a -> Polynomial a
 promote = Const
