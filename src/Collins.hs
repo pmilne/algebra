@@ -50,5 +50,5 @@ resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
 resultant u v = gcdAndResultant u v (\g r -> r)
 
 gcd :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
-gcd u v = gcdAndResultant u v (\g r -> g)
+gcd u v = gcdAndResultant u v (\g r -> g) -- this needs to separate pp and content etc
 
