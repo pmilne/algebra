@@ -14,7 +14,7 @@ powerAssociative op a0 a n =
 --    trace ("powerAssociative: " ++ show n) $
     powerAssociative op (if even n then a0 else op a0 a) (op a a) (div n 2)
 
-(^) :: Ring a => a -> Integer -> a
+(^) :: Multiplicative a => a -> Integer -> a
 a ^ n = if n < 0 then error "Collins: Negative exponent" else powerAssociative (*) one a n
 
 pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> Integer -> Polynomial a
