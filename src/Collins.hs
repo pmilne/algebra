@@ -29,14 +29,6 @@ subresultant u v g h | trace ("subresultant "
                                             ++ "\t\tg: " ++ show g
                                             ++ "\t\th: " ++ show h
                                             ) False = undefined
-subresultant u@(Const lcu) (Const lcv) g h =
-       if lcv == zero then
---            // u is gcd.
-            trace "v is zero returning [1]." $
-            \f -> f u h
-        else
-            trace "v is non-zero constant, returning [2]." $
-            \f -> f (Const h) zero
 subresultant u (Const lcv) g h =
        if lcv == zero then
             trace "v is zero returning [3]." $
@@ -46,7 +38,7 @@ subresultant u (Const lcv) g h =
             let delta = degree u in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
             trace ("nh = " ++ show nh) $
-            \f -> f (Const nh) zero
+            \f -> f (Const one) nh
 subresultant u v@(Term lcv degv redV) g h =
             trace "u, v both non-constant [5]." $
             let delta = degree u - degv in
