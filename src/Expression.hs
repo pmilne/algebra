@@ -26,8 +26,10 @@ instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) wher
   a * b    = simplify (Prd a b)
   one      = Const one
 
+instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
+  neg a = simplify (Neg a)
+
 instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
-  negate a = simplify (Neg a)
 
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)
@@ -68,7 +70,7 @@ simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
 simplify e@(Div (Var a) (Var b)) = if a == b then one else e
 
-simplify (Neg (Const a))  = Const (negate a)
+simplify (Neg (Const a))  = Const (neg a)
 
 simplify (Log (Const a))  = Const (log a)
 

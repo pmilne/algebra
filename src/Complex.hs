@@ -13,7 +13,7 @@ infix  6  :+
 data Complex a = !a :+ !a deriving (Eq, Show, Read)
 
 conjugate :: Ring a => Complex a -> Complex a
-conjugate (x :+ y) =  x :+ negate y
+conjugate (x :+ y) =  x :+ neg y
 
 instance (Additive a) => Composite (Complex a) a where
     promote a = a :+ zero
@@ -26,10 +26,12 @@ instance (Additive a, Multiplicative a, Ring a) => Multiplicative (Complex a) wh
     (r1 :+ i1) * (r2 :+ i2) = (r1 * r2 - i1 * i2) :+ (r1 * i2 + i1 * r2)
     one                     = one  :+ zero
 
-instance (Ring a) => Ring (Complex a) where
-    negate (r :+ i)         = negate r :+ negate i
+instance (Subtractive a) => Subtractive (Complex a) where
+    neg (r :+ i)         = neg r :+ neg i
 --    promote a = a :+ 0
 
+instance (Ring a) => Ring (Complex a) where
+
 instance (Field a) => Field (Complex a) where
-    inv (a :+ b)            =  let d = a * a + b * b in a / d :+ negate b / d
+    inv (a :+ b)            =  let d = a * a + b * b in a / d :+ neg b / d
 

@@ -57,10 +57,11 @@ instance (Show a, Eq a, Ring a) => Multiplicative (Polynomial a) where
     Term a1 n1 r1 * p2            = scaleAndShift a1 n1 p2 + r1 * p2;
     one                      = Const one
 
-instance (Show a, Eq a, Ring a) => Ring (Polynomial a) where
+instance (Show a, Eq a, Ring a) => Subtractive (Polynomial a) where
+    neg (Term a n r)      = Term (neg a) n (neg r)
+    neg (Const a)         = Const (neg a)
 
-    negate (Term a n r)      = Term (negate a) n (negate r)
-    negate (Const a)         = Const (negate a)
+instance (Show a, Eq a, Ring a) => Ring (Polynomial a) where
 
 quoAndRem :: a -> b -> (a -> b -> c) -> c
 quoAndRem q r f = f q r

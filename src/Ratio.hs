@@ -17,9 +17,11 @@ instance (Ring a, Euclidean a) => Multiplicative (Ratio a) where
     one                           = Ratio one one
 --    promote a = a :/ 0
 
-instance (Ring a, Euclidean a) => Ring (Ratio a) where
-    negate (Ratio n d)            = Ratio (negate n) d
+instance (Ring a, Euclidean a) => Subtractive (Ratio a) where
+    neg (Ratio n d)            = Ratio (neg n) d
 --    promote a = a :/ 0
+
+instance (Ring a, Euclidean a) => Ring (Ratio a) where
 
 instance (Ring a, Euclidean a) => Field (Ratio a) where
     inv (Ratio n d) = canonical d n Ratio -- this could be optimised; there is no need for a gcd in this case
