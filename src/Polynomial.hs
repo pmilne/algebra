@@ -29,9 +29,12 @@ map2 :: (a -> Integer -> b -> b) -> (a -> b) -> Polynomial a -> b
 map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
+scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
+scale a1 =  map2 (\a2 n2 r -> (Term (a1 * a2) n2 r)) (\ a2 -> Const (a1 * a2))
+
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
-scaleAndShift a1 n1 = map2 (\a2 n2 r -> polynomial (a1 * a2) (n1 + n2) r)
-                           (\a2 -> if n1 == 0 then Const (a1 * a2) else polynomial (a1 * a2) n1 zero)
+scaleAndShift a1 n1 = if n1 == 0 then scale a1 else
+            map2 (\a2 n2 r -> polynomial (a1 * a2) (n1 + n2) r) (\a2 -> polynomial (a1 * a2) n1 zero)
 
 promote :: a -> Polynomial a
 promote = Const
