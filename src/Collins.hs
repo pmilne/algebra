@@ -63,4 +63,5 @@ instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     rem                = divide rem1
     gcd u v            = let d = gcd (content u) (content v) in scale d (pp (Collins.gcd1 (pp u) (pp v)))
     divideOrFail p (Const v) = map1 (\a -> (divideOrFail a v)) p
-    canonical n d = undefined -- let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
+    sign p                   = Const (sign (lc p))
+    canonical n d = let g = sign d * gcd n d in \f -> f (divideOrFail n g) (divideOrFail d g)
