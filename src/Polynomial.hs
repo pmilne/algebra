@@ -29,7 +29,7 @@ map2 :: (a -> Integer -> b -> b) -> (a -> b) -> Polynomial a -> b
 map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
-map1 :: (Show a, Eq a, Ring a) => (a -> a) -> Polynomial a -> Polynomial a
+map1 :: (Show a, Eq a, Ring a) => (a -> b) -> Polynomial a -> Polynomial b
 map1 f = map2 (\a -> Term (f a)) (\a -> Const (f a)) -- constructor currying!
 
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
