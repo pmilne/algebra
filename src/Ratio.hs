@@ -23,4 +23,4 @@ instance (Ring a, Euclidean a) => Subtractive (Ratio a) where
 instance (Ring a, Euclidean a) => Ring (Ratio a) where
 
 instance (Ring a, Euclidean a) => Field (Ratio a) where
-    inv (Ratio n d) = ratio d n -- this could be optimised; there is no need for a gcd in this case
+    inv (Ratio n d) = ratio d n -- this could be optimised; there is no need for a gcd in this case -- just signum
