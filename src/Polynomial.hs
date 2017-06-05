@@ -3,7 +3,7 @@ module Polynomial where
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ring
 import Euclidean
---import Debug.Trace
+import Debug.Trace
 
 data Polynomial a = Const !a
                   | Term !a !Integer !(Polynomial a)
@@ -23,7 +23,7 @@ red (Term _ _ r) = r
 
 polynomial :: (Show a, Eq a, Additive a) => a -> Integer -> Polynomial a -> Polynomial a
 --polynomial a n r | trace ("polynomial " ++ show a ++ " " ++ show n) False = undefined
-polynomial a n r = if a == zero then r else Term a n r
+polynomial a n r = if a == zero then r else if n == 0 then Const a else Term a n r
 
 map2 :: (a -> Integer -> b -> b) -> (a -> b) -> Polynomial a -> b
 map2 f g (Term a n r) = f a n (map2 f g r)
@@ -47,7 +47,8 @@ promote1 a n = Term a n (Const zero)
 
 instance (Show a, Eq a, Multiplicative a) => Show (Polynomial a) where
     show (Const a)      = show a
-    show (Term a n r)   = (if a /= one then show a ++ " * " else "") ++ "x^" ++ show n ++ " + " ++ show r
+    show (Term a n r)   = (if a /= one then show a ++ " * "  else "") ++ "x" ++
+                          (if n /= one then "^"    ++ show n else "") ++ " + " ++ show r
 
 instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
     Const a1      + Const a2                = Const (a1 + a2)
@@ -79,10 +80,12 @@ rem1 q r = r
 divide :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> Polynomial a -> b) -> Polynomial a -> Polynomial a -> b
 --divide f u v | trace ("divide " ++ show u ++ " " ++ show v) False = undefined
 divide f u v =
-        if v == zero then error "Divide by zero " else
+        if v == zero then error "Polynomial:: divide by zero. " else
         let delta = deg u - deg v in
         if u == zero || delta < 0 then f zero u else
         let r = divideOrFail (lc u) (lc v) in
         let quoAndRem1 = divide quoAndRem (red u - scaleAndShift r delta (red v)) v in
-        f (Term r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
+--        trace ("quo = " ++ show (quoAndRem1 quo1))
+--        trace ("rem = " ++ show (quoAndRem1 rem1))
+        f (polynomial r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
 

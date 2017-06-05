@@ -6,6 +6,9 @@ import Field
 
 data Ratio a = Ratio !a !a deriving (Eq, Show, Read)
 
+ratio :: (Ring a, Euclidean a) => a -> a -> Ratio a
+ratio n d = canonical n d Ratio
+
 instance (Ring a, Euclidean a) => Additive (Ratio a) where
     (Ratio n1 d1) + (Ratio n2 d2) = canonical (n1 * d2 + n2 * d1) (d1 * d2) Ratio
     zero                          = Ratio zero one
