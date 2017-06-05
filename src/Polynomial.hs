@@ -1,6 +1,6 @@
 module Polynomial where
 
-import Prelude hiding ((+), (-), negate, (*), (^), (/))
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Ring
 import Euclidean
 --import Debug.Trace
@@ -85,12 +85,4 @@ divide f u v =
         let r = divideOrFail (lc u) (lc v) in
         let quoAndRem1 = divide quoAndRem (red u - scaleAndShift r delta (red v)) v in
         f (Term r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
-
-instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
-    quo                = divide quo1
-    rem                = divide rem1
-    gcd                = undefined -- Collins.gcd
-    divideOrFail p (Const v) = map1 (\a -> (divideOrFail a v)) p
-
-    canonical n d = undefined -- let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
 

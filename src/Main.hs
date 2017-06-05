@@ -15,6 +15,7 @@ import Modular
 import Numeral.Numeral1
 import Expression
 import Field
+import Euclidean
 import Collins
 
 fr :: Ratio Int
@@ -96,10 +97,11 @@ main = do
 --          print (Collins.gcd (pc 1) (pc 0))
 --          print (Collins.gcd (pc 3) (pc 7))
 --          print (Collins.gcd (pc 3 * x + pc 1) (pc 7))
-          test "gcd" (x - pc 1) (Collins.gcd (x2 - pc 1) (x - pc 1))
+          test "gcd" (x - pc 1) (gcd (x2 - pc 1) (x - pc 1))
+          test "gcd" (pc 2 * (x - pc 1)) (gcd (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1)))
 --          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
 --          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
-          print (Collins.gcd (pc 3 * x2 + pc 1) (pc 5 * x4 + x2 + pc 4))
+          print (gcd (pc 3 * x2 + pc 1) (pc 5 * x4 + x2 + pc 4))
           test "subresultant" 260708 (Collins.resultant (x8 + x6 - pc 3 * x4 - pc 3 * x3 + pc 8 * x2 + pc 2 * x - pc 5) (pc 3 * x6 + pc 5 * x4 - pc 4 * x2 - pc 9 * x + pc 21))
           putStrLn ("expr = " ++ show expr)
           test "derivative expr" dexpr (derivative expr)

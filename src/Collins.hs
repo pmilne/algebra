@@ -1,6 +1,6 @@
 module Collins where
 
-import Prelude hiding ((-), rem, negate, (*), (^), (/))
+import Prelude hiding ((-), rem, negate, (*), (^), (/), gcd)
 import Ring
 import Euclidean
 import Polynomial
@@ -49,6 +49,18 @@ gcdAndResultant u v =
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant u v = gcdAndResultant u v (\g r -> r)
 
-gcd :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
-gcd u v = gcdAndResultant u v (\g r -> g) -- this needs to separate pp and content etc
+gcd1 :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
+gcd1 u v = gcdAndResultant u v (\g r -> g) -- this needs to separate pp and content etc
 
+content :: (Euclidean a) => Polynomial a -> a
+content = map2 (\ a _ r -> gcd a r) id
+
+pp :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
+pp p = divideOrFail p (Const (content p))
+
+instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
+    quo                = divide quo1
+    rem                = divide rem1
+    gcd u v            = let d = gcd (content u) (content v) in scale d (pp (Collins.gcd1 (pp u) (pp v)))
+    divideOrFail p (Const v) = map1 (\a -> (divideOrFail a v)) p
+    canonical n d = undefined -- let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
