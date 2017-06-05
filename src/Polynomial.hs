@@ -30,7 +30,7 @@ map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
-scale k =  map2 (\ a -> Term (k * a)) (\ a -> Const (k * a)) -- constructor currying!
+scale k =  map2 (\a -> Term (k * a)) (\a -> Const (k * a)) -- constructor currying!
 
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift k delta = if delta == 0 then scale k else
@@ -88,7 +88,7 @@ instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     quo                = divide quo1
     rem                = divide rem1
     gcd                = undefined -- Collins.gcd
-    divideOrFail p (Const v) = map2 (\a n r -> Term (divideOrFail a v) n r) (\c -> Const (divideOrFail c v)) p
+    divideOrFail p (Const v) = map2 (\a -> Term (divideOrFail a v)) (\c -> Const (divideOrFail c v)) p
 
     canonical n d = undefined -- let g = Prelude.signum d * Prelude.gcd n d in \f -> f (Prelude.quot n g) (Prelude.quot d g)
 
