@@ -29,7 +29,7 @@ map2 :: (a -> Integer -> b -> b) -> (a -> b) -> Polynomial a -> b
 map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
-map1 :: (Show a, Eq a, Ring a) => (a -> b) -> Polynomial a -> Polynomial b
+map1 :: (a -> b) -> Polynomial a -> Polynomial b
 map1 f = map2 (\a -> Term (f a)) (\a -> Const (f a)) -- note currying of constructors
 
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
@@ -58,9 +58,8 @@ instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
                                             | otherwise = polynomial (a1 + a2) n1 (r1 + r2)
     zero                     = Const zero
 
-instance (Show a, Eq a, Ring a) => Subtractive (Polynomial a) where
-    neg (Term a n r)      = Term (neg a) n (neg r)
-    neg (Const a)         = Const (neg a)
+instance (Show a, Eq a, Subtractive a) => Subtractive (Polynomial a) where
+    neg       = map1 neg
 
 instance (Show a, Eq a, Ring a) => Multiplicative (Polynomial a) where
     Const a1      * Const a2      = Const (a1 * a2)
