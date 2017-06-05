@@ -52,9 +52,9 @@ gcd1 :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> P
 gcd1 = gcdAndResultant (\g _ -> g)
 
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
-    quo                = divide quo1
-    rem                = divide rem1
-    gcd u v            = let d = gcd (content u) (content v) in scale d (pp (gcd1 (pp u) (pp v)))
-    divideOrFail = divide (\q r -> if r /= zero then error "Collins:: divideOrFail" else q)
-    sign p                   = Const (sign (lc p))
+    quo             = divide quo1
+    rem             = divide rem1
+    gcd u v         = let d = gcd (content u) (content v) in scale d (pp (gcd1 (pp u) (pp v)))
+    divideOrFail    = divide (\q r -> if r /= zero then error "Collins:: divideOrFail" else q)
+    sign p          = Const (sign (lc p))
     canonical f n d = let g = sign d * gcd n d in f (divideOrFail n g) (divideOrFail d g)
