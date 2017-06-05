@@ -7,7 +7,7 @@ import Field
 data Ratio a = Ratio !a !a deriving (Eq, Show, Read)
 
 ratio :: (Ring a, Euclidean a) => a -> a -> Ratio a
-ratio = canonical Ratio
+ratio = canonical Ratio -- Curried constructor
 
 instance (Ring a, Euclidean a) => Additive (Ratio a) where
     (Ratio n1 d1) + (Ratio n2 d2) = ratio (n1 * d2 + n2 * d1) (d1 * d2)
