@@ -21,36 +21,35 @@ pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
 pseudoRem u v lcv delta = rem (Const (lcv ^ (delta Prelude.+ 1)) * u) v
 
 -- degree u >= degree v
-subresultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> a  -> (Polynomial a -> a -> r) -> r
-subresultant u v g h | trace ("subresultant "
+subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> a -> a -> r
+subresultant f u v g h | trace ("subresultant "
                                             ++ "\t\tu: " ++ show u
                                             ++ "\t\tv: " ++ show v
                                             ++ "\t\tg: " ++ show g
                                             ++ "\t\th: " ++ show h
                                             ) False = undefined
-subresultant u v g h =
+subresultant f u v g h =
        if v == zero then
 --            trace "v is zero returning [3]." $
-            \f -> f u zero
+            f u zero
         else
 --            trace "u, v both non-constant [5]." $
             let delta = deg u - deg v in
             let lcv = lc v in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
             if deg v == 0 then
-                \f -> f one nh
+                f one nh
             else
-                subresultant v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
+                subresultant f v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
-gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> (Polynomial a -> a  -> r) -> r
-gcdAndResultant u v =
-        if deg u > deg v then subresultant u v one one else subresultant v u one one
+gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a  -> r) -> Polynomial a -> Polynomial a -> r
+gcdAndResultant f u v = (if deg u > deg v then subresultant f u v else subresultant f v u) one one
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
-resultant u v = gcdAndResultant u v (\_ r -> r)
+resultant = gcdAndResultant (\_ r -> r)
 
 gcd1 :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
-gcd1 u v = gcdAndResultant u v (\g _ -> g)
+gcd1 = gcdAndResultant (\g _ -> g)
 
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     quo                = divide quo1
