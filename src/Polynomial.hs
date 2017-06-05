@@ -58,16 +58,16 @@ instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
                                             | otherwise = polynomial (a1 + a2) n1 (r1 + r2)
     zero                     = Const zero
 
+instance (Show a, Eq a, Ring a) => Subtractive (Polynomial a) where
+    neg (Term a n r)      = Term (neg a) n (neg r)
+    neg (Const a)         = Const (neg a)
+
 instance (Show a, Eq a, Ring a) => Multiplicative (Polynomial a) where
     Const a1      * Const a2      = Const (a1 * a2)
     Const a1      * Term a2 n2 r2 = polynomial (a1 * a2) n2 (Const a1 * r2)
     Term a1 n1 r1 * Const a2      = polynomial (a1 * a2) n1 (r1 * Const a2)
     Term a1 n1 r1 * p2            = scaleAndShift a1 n1 p2 + r1 * p2;
     one                           = Const one
-
-instance (Show a, Eq a, Ring a) => Subtractive (Polynomial a) where
-    neg (Term a n r)      = Term (neg a) n (neg r)
-    neg (Const a)         = Const (neg a)
 
 instance (Show a, Eq a, Ring a) => Ring (Polynomial a) where
 
