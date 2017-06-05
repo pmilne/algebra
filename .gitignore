@@ -17,9 +17,10 @@ cabal.sandbox.config
 *.aux
 *.hp
 *.eventlog
+cabal.project.local
+.HTF/
 .idea/compiler.xml
 .idea/misc.xml
 .stack-work/
-cabal.project.local
-.HTF/
-
+.idea/workspace.xml
+.ideaHaskellLib/
