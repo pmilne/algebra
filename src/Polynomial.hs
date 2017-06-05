@@ -30,14 +30,14 @@ map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
 map1 :: (Show a, Eq a, Ring a) => (a -> b) -> Polynomial a -> Polynomial b
-map1 f = map2 (\a -> Term (f a)) (\a -> Const (f a)) -- constructor currying!
+map1 f = map2 (\a -> Term (f a)) (\a -> Const (f a)) -- note currying of constructors
 
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
 scale k = map1 (k *)
 
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift k delta = if delta == 0 then scale k else
-            map2 (\a n -> polynomial (k * a) (n + delta)) (\a -> polynomial (k * a) delta zero) -- constructor currying!
+            map2 (\a n -> polynomial (k * a) (n + delta)) (\a -> polynomial (k * a) delta zero) -- note currying
 
 promote :: a -> Polynomial a
 promote = Const
