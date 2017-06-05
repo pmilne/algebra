@@ -30,11 +30,11 @@ map2 f g (Term a n r) = f a n (map2 f g r)
 map2 f g (Const c)    = g c
 
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
-scale a1 =  map2 (\a2 n2 r -> (Term (a1 * a2) n2 r)) (\ a2 -> Const (a1 * a2))
+scale k =  map2 (\ a -> Term (k * a)) (\ a -> Const (k * a)) -- constructor currying!
 
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
-scaleAndShift a1 n1 = if n1 == 0 then scale a1 else
-            map2 (\a2 n2 r -> polynomial (a1 * a2) (n1 + n2) r) (\a2 -> polynomial (a1 * a2) n1 zero)
+scaleAndShift k delta = if delta == 0 then scale k else
+            map2 (\a n -> polynomial (k * a) (n + delta)) (\a -> polynomial (k * a) delta zero) -- constructor currying!
 
 promote :: a -> Polynomial a
 promote = Const
