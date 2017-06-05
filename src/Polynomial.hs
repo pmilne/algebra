@@ -35,6 +35,8 @@ map1 f = map2 (\a -> Term (f a)) (\a -> Const (f a)) -- note currying of constru
 scale :: (Show a, Eq a, Ring a) => a -> Polynomial a -> Polynomial a
 scale k = map1 (k *)
 
+divideOrFail2 p v = map1 (\a -> (divideOrFail a v)) p
+
 scaleAndShift :: (Show a, Eq a, Ring a) => a -> Integer -> Polynomial a -> Polynomial a
 scaleAndShift k delta = if delta == 0 then scale k else
             map2 (\a n -> polynomial (k * a) (n + delta)) (\a -> polynomial (k * a) delta zero) -- note currying
@@ -88,4 +90,10 @@ divide f u v =
 --        trace ("quo = " ++ show (quoAndRem1 quo1))
 --        trace ("rem = " ++ show (quoAndRem1 rem1))
         f (polynomial r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
+
+content :: (Euclidean a) => Polynomial a -> a
+content = map2 (\ a _ r -> gcd a r) id
+
+pp :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
+pp p = divideOrFail2 p (content p)
 

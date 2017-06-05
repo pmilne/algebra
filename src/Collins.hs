@@ -20,8 +20,6 @@ a ^ n = if n < 0 then error "Collins: Negative exponent" else powerAssociative (
 pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> Integer -> Polynomial a
 pseudoRem u v lcv delta = rem (Const (lcv ^ (delta Prelude.+ 1)) * u) v
 
-divideOrFail2 p v = map1 (\a -> (divideOrFail a v)) p
-
 -- degree u >= degree v
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> a  -> (Polynomial a -> a -> r) -> r
 subresultant u v g h | trace ("subresultant "
@@ -53,12 +51,6 @@ resultant u v = gcdAndResultant u v (\_ r -> r)
 
 gcd1 :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
 gcd1 u v = gcdAndResultant u v (\g _ -> g)
-
-content :: (Euclidean a) => Polynomial a -> a
-content = map2 (\ a _ r -> gcd a r) id
-
-pp :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
-pp p = divideOrFail2 p (content p)
 
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     quo                = divide quo1
