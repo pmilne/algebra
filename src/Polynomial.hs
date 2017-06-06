@@ -85,9 +85,9 @@ divide1 f u v =
         if u == zero || delta < 0 then f zero u else
         let r = divideOrFail (lc u) (lc v) in
         let quoAndRem1 = divide1 quoAndRem (red u - scaleAndShift r delta (red v)) v in
---        trace ("quo = " ++ show (quoAndRem1 quo1))
---        trace ("rem = " ++ show (quoAndRem1 rem1))
-        f (polynomial r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
+--        trace ("quo = " ++ show (quoAndRem1 _quo))
+--        trace ("rem = " ++ show (quoAndRem1 _rem))
+        f (polynomial r delta (quoAndRem1 _quo)) (quoAndRem1 _rem)
 
 content :: (Euclidean a) => Polynomial a -> a
 content = map2 (\ a _ r -> gcd a r) id
