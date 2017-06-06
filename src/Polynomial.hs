@@ -77,17 +77,14 @@ instance (Show a, Eq a, Ring a) => Ring (Polynomial a) where
 quoAndRem :: a -> b -> (a -> b -> c) -> c
 quoAndRem q r f = f q r
 
-quo1 q r = q
-rem1 q r = r
-
-divide :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> Polynomial a -> b) -> Polynomial a -> Polynomial a -> b
+divide1 :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> Polynomial a -> b) -> Polynomial a -> Polynomial a -> b
 --divide f u v | trace ("divide " ++ show u ++ " " ++ show v) False = undefined
-divide f u v =
+divide1 f u v =
         if v == zero then error "Polynomial:: divide by zero. " else
         let delta = deg u - deg v in
         if u == zero || delta < 0 then f zero u else
         let r = divideOrFail (lc u) (lc v) in
-        let quoAndRem1 = divide quoAndRem (red u - scaleAndShift r delta (red v)) v in
+        let quoAndRem1 = divide1 quoAndRem (red u - scaleAndShift r delta (red v)) v in
 --        trace ("quo = " ++ show (quoAndRem1 quo1))
 --        trace ("rem = " ++ show (quoAndRem1 rem1))
         f (polynomial r delta (quoAndRem1 quo1)) (quoAndRem1 rem1)
