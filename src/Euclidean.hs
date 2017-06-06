@@ -22,5 +22,5 @@ instance Euclidean Integer where
     gcd               = Prelude.gcd
     divideOrFail n d  = if Prelude.rem n d /= 0 then error ("Fail: " ++ show n ++ " // by " ++ show d) else quot n d
     sign              = Prelude.signum
-    canonical f n d   = let g = sign d * Euclidean.gcd n d in f (Prelude.quot n g) (Prelude.quot d g)
+    canonical f n d   = let g = sign d * Euclidean.gcd n d in f (divideOrFail n g) (divideOrFail d g)
 
