@@ -2,14 +2,12 @@ module Euclidean where
 
 import Multiplicative
 
-class Multiplicative a => Euclidean a where
+class Euclidean a where
     quo          :: a -> a -> a
     rem          :: a -> a -> a
     gcd          :: a -> a -> a
     divideOrFail :: a -> a -> a
     sign         :: a -> a
-    canonical    :: (a -> a -> b) -> a -> a -> b
-    canonical f n d = let g = sign d Multiplicative.* Euclidean.gcd n d in f (divideOrFail n g) (divideOrFail d g)
 
 instance Euclidean Int where
     quo               = Prelude.quot

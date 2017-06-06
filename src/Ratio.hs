@@ -6,6 +6,9 @@ import Field
 
 data Ratio a = Ratio !a !a deriving (Eq, Show, Read)
 
+canonical :: (Ring a, Euclidean a) => (a -> a -> b) -> a -> a -> b
+canonical f n d = let g = sign d * gcd n d in f (divideOrFail n g) (divideOrFail d g)
+
 ratio :: (Ring a, Euclidean a) => a -> a -> Ratio a
 ratio = canonical Ratio -- Curried constructor
 
