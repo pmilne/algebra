@@ -1,6 +1,6 @@
 module Euclidean where
 
-import Prelude hiding (return)
+--import Prelude hiding (return)
 import Additive
 
 _quo q r = q
@@ -16,7 +16,7 @@ class (Show a, Eq a, Additive a) => Euclidean a where
 
     quo                = divide _quo
     rem                = divide _rem
-    divide return n d  = return (quo n d) (Euclidean.rem n d)
+    divide rtn n d  = rtn (quo n d) (Euclidean.rem n d)
     divideOrFail n d   = divide (\q r -> if r /= zero then error ("Fail: " ++ show n ++ " // by " ++ show d) else q) n d
 
 instance Euclidean Int where
