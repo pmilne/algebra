@@ -49,6 +49,7 @@ promote1 :: Additive a => a -> Integer -> Polynomial a
 promote1 a n = Term a n (Const zero)
 
 instance (Show a, Eq a, Additive a, Multiplicative a) => Show (Polynomial a) where
+--    show (Const a)      = "Const " ++ show a
     show (Const a)      = show a
     show (Term a n r)   = (if a /= one then show a ++ " * "  else "") ++ "x" ++
                           (if n /= one then "^"    ++ show n else "") ++ " + " ++

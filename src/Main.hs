@@ -76,6 +76,20 @@ p = Term 1 1 (Polynomial.Const 1)
 pc :: Integer -> Polynomial Integer
 pc = promote
 
+{-
+pp0 :: Polynomial (Polynomial (Polynomial (Polynomial Integer)))
+pp0 = zero
+
+foo :: (Multiplicative a) => a -> a
+foo x = one
+
+bar :: (Multiplicative a) => Polynomial a -> a
+bar x = one
+
+baz :: (Multiplicative a) => Polynomial (Polynomial a) -> a
+baz x = one
+-}
+
 main :: IO ()
 main = do
           putStrLn ("factorial1 " ++ show ff ++ " = " ++ show (factorial1 ff))
@@ -109,6 +123,14 @@ main = do
           test "derivative expr" dexpr (derivative expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
           putStrLn ("p = " ++ show (p * p * p))
+{-
+          putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial (Polynomial (Polynomial Integer))))))
+          putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial Integer))))
+          putStrLn ("zero = " ++ show (bar (undefined :: Polynomial (Polynomial Integer))))
+          putStrLn ("zero = " ++ show (foo pp0))
+          putStrLn ("zero = " ++ show (bar pp0))
+          putStrLn ("zero = " ++ show (baz pp0))
+-}
 
 
 
