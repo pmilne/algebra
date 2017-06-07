@@ -1,6 +1,7 @@
 module Collins where
 
-import Prelude hiding ((-), rem, negate, (*), (^), (/), gcd)
+--import Prelude(Show, Eq, Integer)
+import Prelude hiding ((+), (-), negate, (*), (^), (/), rem, gcd)
 import Ring
 import Euclidean
 import Polynomial
@@ -18,7 +19,7 @@ powerAssociative op a0 a n =
 a ^ n = if n < 0 then error "Collins: Negative exponent" else powerAssociative (*) one a n
 
 pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> Integer -> Polynomial a
-pseudoRem u v lcv delta = rem (Const (lcv ^ (delta Prelude.+ 1)) * u) v
+pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
 -- degree u >= degree v
