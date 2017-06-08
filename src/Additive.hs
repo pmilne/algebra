@@ -1,11 +1,19 @@
+-- {-# LANGUAGE TypeSynonymInstances #-}
+-- {-# LANGUAGE FlexibleInstances #-}
+
 module Additive where
 
 infixl 6 +
 
--- https://en.wikipedia.org/wiki/Ring_(mathematics)
 class Additive a where
     (+)      :: a -> a -> a
     zero     :: a
+
+{-
+instance Additive String where
+    (+)       = (Prelude.++)
+    zero      = ""
+-}
 
 instance Additive Int where
     (+)       = (Prelude.+)
