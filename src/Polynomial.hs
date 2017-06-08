@@ -65,8 +65,10 @@ instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
                                             | otherwise = polynomial (a1 + a2) n1 (r1 + r2)
     zero                                    = Const zero
 
-instance (Show a, Eq a, Subtractive a) => Subtractive (Polynomial a) where
+instance (Negatable a) => Negatable (Polynomial a) where
     neg       = map1 neg
+
+instance (Show a, Eq a, Subtractive a) => Subtractive (Polynomial a) where
 
 instance (Show a, Eq a, Ring a) => Multiplicative (Polynomial a) where
     Const a1      * Const a2      = Const (a1 * a2)

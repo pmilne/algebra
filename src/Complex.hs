@@ -21,8 +21,10 @@ instance (Additive a) => Additive (Complex a) where
     (r1 :+ i1) + (r2 :+ i2) = (r1 + r2) :+ (i1 + i2)
     zero                    = zero :+ zero
 
-instance (Subtractive a) => Subtractive (Complex a) where
+instance (Negatable a) => Negatable (Complex a) where
     neg (r :+ i)         = neg r :+ neg i
+
+instance (Subtractive a) => Subtractive (Complex a) where
 
 instance (Ring a) => Multiplicative (Complex a) where
     (r1 :+ i1) * (r2 :+ i2) = (r1 * r2 - i1 * i2) :+ (r1 * i2 + i1 * r2)

@@ -20,8 +20,10 @@ instance (Ring a, Euclidean a) => Multiplicative (Ratio a) where
     (Ratio n1 d1) * (Ratio n2 d2) = ratio (n1 * n2) (d1 * d2)
     one                           = Ratio one one
 
-instance (Ring a, Euclidean a) => Subtractive (Ratio a) where
+instance (Ring a, Euclidean a) => Negatable (Ratio a) where
     neg (Ratio n d)            = Ratio (neg n) d
+
+instance (Ring a, Euclidean a) => Subtractive (Ratio a) where
 
 instance (Ring a, Euclidean a) => Ring (Ratio a) where
 

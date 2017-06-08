@@ -1,22 +1,17 @@
-module Subtractive where
+module Subtractive(module Additive, module Negatable, module Subtractive) where
 
+import Prelude hiding ((+), (-), negate, (*), (^), (/))
 import Additive
+import Negatable
 
 infixl 6 -
 
--- https://en.wikipedia.org/wiki/Ring_(mathematics)
-class (Additive a) => Subtractive a where
+class (Additive a, Negatable a) => Subtractive a where
     (-)      :: a -> a -> a
-    neg      :: a -> a
-    x - y               = x Additive.+ Subtractive.neg y
-    neg x               = Additive.zero Subtractive.- x
+    x - y     = x + neg y
 
 instance Subtractive Int where
-    neg    = Prelude.negate
 
 instance Subtractive Integer where
-    neg    = Prelude.negate
 
 instance Subtractive Double where
-    neg    = Prelude.negate
-

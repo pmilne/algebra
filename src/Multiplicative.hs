@@ -2,7 +2,6 @@ module Multiplicative where
 
 infixl 7 *
 
--- https://en.wikipedia.org/wiki/Ring_(mathematics)
 class Multiplicative a where
     (*)      :: a -> a -> a
     one      :: a

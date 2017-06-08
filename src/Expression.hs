@@ -25,8 +25,10 @@ instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) wher
   a * b    = simplify (Prd a b)
   one      = Const one
 
-instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Negatable (Expression a) where
   neg a = simplify (Neg a)
+
+instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
 
 instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
 

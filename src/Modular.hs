@@ -27,8 +27,10 @@ instance (ModularN a, Euclidean a, Ring a) => Multiplicative (Modular a) where
     Modular m1 * Modular m2 = reduce (m1 * m2) modulus
     one                     = Modular one
 
-instance (ModularN a, Euclidean a, Ring a) => Subtractive (Modular a) where
+instance (ModularN a, Euclidean a, Ring a) => Negatable (Modular a) where
     neg (Modular m)      = Modular (neg m)
+
+instance (ModularN a, Euclidean a, Ring a) => Subtractive (Modular a) where
 
 instance (ModularN a, Euclidean a, Ring a) => Ring (Modular a) where
 

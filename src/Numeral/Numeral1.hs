@@ -23,8 +23,10 @@ instance  (Multiplicative a) => Multiplicative (Numeral1 a) where
     (Numeral1 n1) * (Numeral1 n2) = Numeral1 (n1 . n2)
     one                           = Numeral1 id
 
-instance  (Ring a) => Subtractive (Numeral1 a) where
+instance  (Negatable a) => Negatable (Numeral1 a) where
     neg (Numeral1 _)           = undefined
+
+instance  (Ring a) => Subtractive (Numeral1 a) where
 
 instance  (Ring a) => Ring (Numeral1 a) where
 
