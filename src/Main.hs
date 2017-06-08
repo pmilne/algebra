@@ -6,8 +6,8 @@ cabal repl
 :info Ratio
 -}
 
-import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
-import Ratio
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
+import Rational
 import Factorial
 import Complex
 import Polynomial
@@ -18,11 +18,11 @@ import Field
 import Euclidean
 import Collins
 
-fr :: Ratio Int
-fr = Ratio 1 2
+fr :: Rational Int
+fr = Rational 1 2
 
-c :: Complex (Ratio Int)
-c = Ratio 1 2 :+ Ratio 5 7
+c :: Complex (Rational Int)
+c = Rational 1 2 :+ Rational 5 7
 --c :: Complex Double
 --c = 0.5 :+ 0.25
 
@@ -99,10 +99,10 @@ main = do
 --          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
           putStrLn ("(1 / 2) = " ++ show fr)
           putStrLn ("c = " ++ show c)
-          test "c + c" (Ratio 1 1 :+ Ratio 10 7) (c + c)
-          test "c - c" (Ratio 0 1 :+ Ratio 0 1) (c - c)
-          test "c * c" (Ratio (-51) 196 :+ Ratio 5 7) (c * c)
-          test "c / c" (Ratio 1 1 :+ Ratio 0 1) (c / c)
+          test "c + c" (Rational 1 1 :+ Rational 10 7) (c + c)
+          test "c - c" (Rational 0 1 :+ Rational 0 1) (c - c)
+          test "c * c" (Rational (-51) 196 :+ Rational 5 7) (c * c)
+          test "c / c" (Rational 1 1 :+ Rational 0 1) (c / c)
           putStrLn ("2 * 3 mod 4 = " ++ show (m0 * m1))
           test "m + m" (Modular 2) (m + m)
 --          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
