@@ -81,15 +81,15 @@ quoAndRem q r f = f q r
 
 divide1 :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> Polynomial a -> b) -> Polynomial a -> Polynomial a -> b
 --divide f u v | trace ("divide " ++ show u ++ " " ++ show v) False = undefined
-divide1 f u v =
+divide1 rtn u v =
         if v == zero then error "Polynomial:: divide by zero. " else
         let delta = deg u - deg v in
-        if u == zero || delta < 0 then f zero u else
+        if u == zero || delta < 0 then rtn zero u else
         let r = divideOrFail (lc u) (lc v) in
         let quoAndRem1 = divide1 quoAndRem (red u - scaleAndShift r delta (red v)) v in
 --        trace ("quo = " ++ show (quoAndRem1 _quo))
 --        trace ("rem = " ++ show (quoAndRem1 _rem))
-        f (polynomial r delta (quoAndRem1 _quo)) (quoAndRem1 _rem)
+        rtn (polynomial r delta (quoAndRem1 _quo)) (quoAndRem1 _rem)
 
 content :: (Euclidean a) => Polynomial a -> a
 content = map2 (\ a _ r -> gcd a r) id

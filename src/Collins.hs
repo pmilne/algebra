@@ -24,24 +24,24 @@ pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
 -- degree u >= degree v
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> a -> a -> r
-subresultant f u v g h | trace ("subresultant "
+subresultant rtn u v g h | trace ("subresultant "
                                             ++ "\t\tu: " ++ show u
                                             ++ "\t\tv: " ++ show v
                                             ++ "\t\tg: " ++ show g
                                             ++ "\t\th: " ++ show h
                                             ) False = undefined
-subresultant f u v g h =
+subresultant rtn u v g h =
        if v == zero then
-            f u zero
+            rtn u zero
         else
             let delta = deg u - deg v in
             let lcv = lc v in
             let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
             if deg v == 0 then
-                f one nh
+                rtn one nh
             else
 --                subresultant f v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
-                subresultant f v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
+                subresultant rtn v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 gcdAndResultant f u v = (if deg u > deg v then subresultant f u v else subresultant f v u) one one
