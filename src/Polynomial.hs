@@ -5,6 +5,7 @@ import Ring
 import Euclidean
 import Debug.Trace
 
+-- A data structure for Polynomials of the form a * x ^ n + r(x)
 data Polynomial a = Const !a
                   | Term !a !Integer !(Polynomial a)
                   deriving (Eq, Read)
@@ -62,7 +63,7 @@ instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
     p1@(Term a1 n1 r1) + p2@(Term a2 n2 r2) | n1 > n2   = Term a1 n1 (r1 + p2)
                                             | n1 < n2   = Term a2 n2 (p1 + r2)
                                             | otherwise = polynomial (a1 + a2) n1 (r1 + r2)
-    zero                     = Const zero
+    zero                                    = Const zero
 
 instance (Show a, Eq a, Subtractive a) => Subtractive (Polynomial a) where
     neg       = map1 neg

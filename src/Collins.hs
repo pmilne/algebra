@@ -44,7 +44,7 @@ subresultant rtn u v g h =
                 subresultant rtn v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
-gcdAndResultant f u v = (if deg u > deg v then subresultant f u v else subresultant f v u) one one
+gcdAndResultant rtn u v = (if deg u > deg v then subresultant rtn u v else subresultant rtn v u) one one
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = gcdAndResultant (\_ r -> r)
