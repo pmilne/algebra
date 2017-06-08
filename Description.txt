@@ -1,0 +1,4 @@
+A simple (currently experimental) type-safe algebra 'system', written in Haskell.
+This initial submission defines 'Ring' and 'Field' as type classes and uses
+instances of these classes to implement standard arithmetic operations on
+'Complex', 'Rational' and 'Polynomial' data types.

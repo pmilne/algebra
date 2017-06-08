@@ -14,10 +14,10 @@ class (Show a, Eq a, Additive a) => Euclidean a where
     divideOrFail      :: a -> a -> a
     sign              :: a -> a
 
-    quo                = divide _quo
-    rem                = divide _rem
-    divide rtn n d  = rtn (quo n d) (Euclidean.rem n d)
-    divideOrFail n d   = divide (\q r -> if r /= zero then error ("Fail: " ++ show n ++ " // by " ++ show d) else q) n d
+    quo               = divide _quo
+    rem               = divide _rem
+    divide rtn n d    = rtn (quo n d) (Euclidean.rem n d)
+    divideOrFail n d  = divide (\q r -> if r /= zero then error ("Fail: " ++ show n ++ " // by " ++ show d) else q) n d
 
 instance Euclidean Int where
     quo               = Prelude.quot
