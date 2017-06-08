@@ -34,6 +34,6 @@ instance (ModularN a, Euclidean a, Ring a) => Subtractive (Modular a) where
 
 instance (ModularN a, Euclidean a, Ring a) => Ring (Modular a) where
 
-instance (ModularN a, Euclidean a, Ring a) => Field (Modular a) where
+instance (ModularN a, Euclidean a, Ring a) => Invertable (Modular a) where
     inv (Modular m1)        = undefined -- Modular (inverse11 m1)
 

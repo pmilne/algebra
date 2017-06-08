@@ -32,6 +32,9 @@ instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
 
 instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
 
+instance (Eq a, Field a, Exponentiative a) => Invertable (Expression a) where
+  inv a = simplify (Div one a)
+
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)
 
