@@ -9,7 +9,6 @@ infixl 7 /
 class (Ring a, Invertable a) => Field a where
     (/)      :: a -> a -> a
     x / y     = x * inv y
---    inv x     = one Field./ x
 
 instance Field Double where
     (/)       = (Prelude./)
