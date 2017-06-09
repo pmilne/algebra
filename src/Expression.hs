@@ -76,8 +76,8 @@ instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
                     | a == one = one
                     | otherwise = Pow (Const a) b
   a       ^ b       = Pow a b
-  log (Const a) = Const (log a)
-  log a = Log a
+  log (Const a)     = Const (log a)
+  log a             = Log a
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
