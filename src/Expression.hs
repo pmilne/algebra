@@ -9,13 +9,24 @@ import Exponentiative
 
 data Expression a = Const a
                   | Var String
+                  | App (a -> a) a
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
                   | Div (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
                   | Log (Expression a)
-                  deriving (Eq)
+
+instance (Eq a) => Eq (Expression a) where
+    Const a == Const b     = a == b
+    Var a == Var b         = a == b
+    Neg a == Neg b         = a == b
+    Log a == Log b         = a == b
+    Sum a1 a2 == Sum b1 b2 = a1 == b1 && a2 == b2
+    Prd a1 a2 == Prd b1 b2 = a1 == b1 && a2 == b2
+    Div a1 a2 == Div b1 b2 = a1 == b1 && a2 == b2
+    Pow a1 a2 == Pow b1 b2 = a1 == b1 && a2 == b2
+    a == b                 = False
 
 instance (Show a) => Show (Expression a) where
  show (Var a)   = a
