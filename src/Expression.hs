@@ -26,12 +26,12 @@ instance (Eq a, Additive a) => Additive (Expression a) where
 
 instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) where
   Const a * Const b = Const (a * b)
-  Const a * b       | a == zero = zero
-                    | a == one = b
-                    | otherwise = simplify (Prd (Const a) b)
   a       * Const b | b == zero = zero
                     | b == one = a
                     | otherwise = simplify (Prd a (Const b))
+  Const a * b       | a == zero = zero
+                    | a == one = b
+                    | otherwise = simplify (Prd (Const a) b)
   a       * b       = Prd a b
   one               = Const one
 
@@ -50,7 +50,14 @@ instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)
 
 instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
-  a ^ b = simplify (Pow a b)
+  Const a ^ Const b = Const (a ^ b)
+  a       ^ Const b | b == zero = one
+                    | b == one = a
+                    | otherwise = Pow a (Const b)
+  Const a ^ b       | a == zero = zero
+                    | a == one = one
+                    | otherwise = simplify (Pow (Const a) b)
+  a       ^ b       = Pow a b
   log a = simplify (Log a)
 
 instance (Show a) => Show (Expression a) where
@@ -66,7 +73,6 @@ instance (Show a) => Show (Expression a) where
 simplify :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 --additive identities
 --multiplicative identities
-simplify (Prd (Const a) (Const b)) = Const (a * b)
 --put constants first in a product
 simplify (Prd a b@(Const _)) | b == zero = zero | b == one = a | otherwise = Prd b a
 --associativity
@@ -74,9 +80,6 @@ simplify (Prd (Const a) (Prd (Const b) expr)) = Prd (Const (a * b)) expr
 -- and back
 simplify (e@(Prd (Const a) b)) | a == zero = zero | a == one = b | otherwise = e
 --power identities
-simplify (Pow (Const a) (Const b)) = Const (a ^ b)
-simplify (e@(Pow a (Const b))) | b == zero = one | b == one = a | otherwise = e
-simplify (e@(Pow (Const a) _)) | a == one = one | otherwise = e
 
 simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
