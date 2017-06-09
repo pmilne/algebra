@@ -3,21 +3,21 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
 module Expression where
 
-import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
+import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan)
 import Field
 import Exponentiative
+import Trigonometric
 
 data Fn a = Fn {
   name :: String,
-  fn :: a -> a,
   deriv:: Expression a -> Expression a
 }
 
 instance Eq (Fn a) where
-  Fn name1 _ _ == Fn name2 _ _ = name1 == name2
+  Fn name1 _ == Fn name2 _ = name1 == name2
 
 instance Show (Fn a) where
-  show (Fn name _ _) = name
+  show (Fn name1 _) = name1
 
 data Expression a = Const a
                   | Var String
@@ -107,6 +107,11 @@ instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
   a       ^ b       = Pow a b
   log (Const a)     = Const (log a)
   log a             = Log a
+
+instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
+  sin = App (Fn "sin" cos)
+  cos = App (Fn "cos" (neg . sin))
+  tan = App (Fn "tan" (\x -> one / (one + x ^ (one + one))))
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
