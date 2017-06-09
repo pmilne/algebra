@@ -18,7 +18,9 @@ executable algebra
                        Rational, Complex, Modular, Expression, Polynomial, Numeral.Numeral1,
                        Composite,
                        Factorial,
-                       Collins
+                       Collins,
+                       TestUtil,
+                       TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1
   hs-source-dirs:      src, test
   main-is:             Main.hs
   default-language:    Haskell2010

@@ -2,9 +2,11 @@ module TestComplex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Ring
+import Field
+
 import Complex
 import Rational
-import Field
+
 import TestUtil
 
 c :: Complex (Rational Int)
