@@ -15,11 +15,11 @@ extra-source-files:  README.md
 
 executable algebra
   other-modules:       Additive, Negatable, Subtractive, Multiplicative, Invertable, Ring, Field, Euclidean, Exponentiative,
-                       Modular, Complex, Numeral.Numeral1, Expression, Rational, Polynomial,
+                       Rational, Complex, Modular, Expression, Polynomial, Numeral.Numeral1,
                        Composite,
                        Factorial,
                        Collins
-  hs-source-dirs:      src
+  hs-source-dirs:      src, test
   main-is:             Main.hs
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
