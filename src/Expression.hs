@@ -49,7 +49,7 @@ instance (Eq a, Field a, Exponentiative a) => Invertable (Expression a) where
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   a / b = simplify (Div a b)
 
-instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
+instance (Eq a, Ring a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
   a       ^ Const b | b == zero = one
                     | b == one = a
@@ -58,7 +58,8 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
                     | a == one = one
                     | otherwise = simplify (Pow (Const a) b)
   a       ^ b       = Pow a b
-  log a = simplify (Log a)
+  log (Const a) = Const (log a)
+  log a = Log a
 
 instance (Show a) => Show (Expression a) where
  show (Var a)   = show a
@@ -84,8 +85,6 @@ simplify (e@(Prd (Const a) b)) | a == zero = zero | a == one = b | otherwise = e
 simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
 simplify e@(Div (Var a) (Var b)) = if a == b then one else e
-
-simplify (Log (Const a))  = Const (log a)
 
 simplify x          = x
 
