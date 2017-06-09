@@ -36,12 +36,22 @@ d1 = pc 6 * x -- 6x
 d2 = Pow x x * (pc 1 + Log x)
 d3 = pc 1 / (x * Log x)
 
+xx :: Expression Double
+xx = Var "xx"
+
+sine, cosine:: Fn Double
+sine   = Fn "Sine"   sin (App cosine)
+cosine = Fn "Cosine" cos (\x -> neg (App sine x))
+
 run :: IO ()
 run = do
           test ("derivative " ++ show e0) d0 (derivative e0)
           test ("derivative " ++ show e1) d1 (derivative e1)
           test ("derivative " ++ show e2) d2 (derivative e2)
           test ("derivative " ++ show e3) d3 (derivative e3)
+          putStrLn ("expr = " ++ show (derivative (App sine xx)))
+          putStrLn ("expr = " ++ show (derivative (xx + App sine xx)))
+          putStrLn ("expr = " ++ show (derivative (derivative (xx + App sine xx))))
 
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr "x" (rational1 5) (derivative e2)))
           putStrLn ("expr = " ++ show e2)
