@@ -20,6 +20,7 @@ executable algebra
                        Factorial,
                        Collins,
                        TestUtil,
+                       TestFactorial, TestTypes
                        TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1
   hs-source-dirs:      src, test
   main-is:             Main.hs
