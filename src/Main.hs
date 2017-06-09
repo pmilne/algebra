@@ -17,6 +17,8 @@ import Expression
 import Field
 import Euclidean
 import Collins
+import TestPolynomial
+import TestUtil
 
 fr :: Rational Int
 fr = Rational 1 2
@@ -41,15 +43,6 @@ dexpr :: Expression Double
 --dexpr = Const 6 * var -- 6x
 dexpr = Pow var var * (Expression.Const 1.0 + Log var)
 
-assert :: Bool -> a -> a
-assert False _ = error "*** assertion failed! ***"
-assert _     x = x
-
-test :: (Show a, Eq a) => String -> a -> a -> IO ()
-test name expected actual = do
-                                putStrLn (name ++ " = " ++ show actual)
-                                assert (expected == actual) putStr "" -- oh dear
-
 n0, n1, n2, n3 :: Numeral1 Integer
 n0 = numeral 0
 n1 = numeral 1
@@ -59,22 +52,6 @@ n3 = numeral 3
 m0, m1 :: Modular Int
 m0 = Modular 3
 m1 = Modular 2
-
-x, x2, x3, x4, x5, x6, x7 :: Polynomial Integer
-x = Term 1 1 (Polynomial.Const 0)
-x2 = x * x;
-x3 = x2 * x
-x4 = x3 * x
-x5 = x4 * x
-x6 = x5 * x
-x7 = x6 * x
-x8 = x7 * x
-
-p :: Polynomial Integer
-p = Term 1 1 (Polynomial.Const 1)
-
-pc :: Integer -> Polynomial Integer
-pc = promote
 
 {-
 pp0 :: Polynomial (Polynomial (Polynomial (Polynomial Integer)))
@@ -105,24 +82,10 @@ main = do
           test "c / c" (Rational 1 1 :+ Rational 0 1) (c / c)
           putStrLn ("2 * 3 mod 4 = " ++ show (m0 * m1))
           test "m + m" (Modular 2) (m + m)
---          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
---          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
---          print (Collins.gcd (pc 0) (pc 1))
---          print (Collins.gcd (pc 1) (pc 0))
---          print (Collins.gcd (pc 3) (pc 7))
---          print (Collins.gcd (pc 3 * x + pc 1) (pc 7))
-          test "gcd" (x - pc 1) (gcd (x2 - pc 1) (x - pc 1))
-          putStrLn ("gcd " ++ show (gcd (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1))))
-          test "ratio " (ratio (pc 3 * x + pc 3) (pc 2)) (ratio (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1)))
-          putStrLn ("expr = " ++ show expr)
---          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
---          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
-          print (gcd (pc 3 * x2 + pc 1) (pc 5 * x4 + x2 + pc 4))
-          test "subresultant" 260708 (Collins.resultant (x8 + x6 - pc 3 * x4 - pc 3 * x3 + pc 8 * x2 + pc 2 * x - pc 5) (pc 3 * x6 + pc 5 * x4 - pc 4 * x2 - pc 9 * x + pc 21))
           putStrLn ("expr = " ++ show expr)
           test "derivative expr" dexpr (derivative expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
-          putStrLn ("p = " ++ show (p * p * p))
+          putStrLn ("expr = " ++ show expr)
 {-
           putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial (Polynomial (Polynomial Integer))))))
           putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial Integer))))
@@ -131,6 +94,7 @@ main = do
           putStrLn ("zero = " ++ show (bar pp0))
           putStrLn ("zero = " ++ show (baz pp0))
 -}
+          TestPolynomial.testPoly
 
 
 
