@@ -56,7 +56,7 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
 instance (Eq a, Ring a) => Ring (Expression a) where
 
 instance (Eq a, Field a) => Invertable (Expression a) where
-  inv a = Div one a
+  inv = Div one
 
 instance (Eq a, Field a) => Field (Expression a) where
   Const a / Const b = Const (a / b)
