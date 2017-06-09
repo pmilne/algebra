@@ -28,10 +28,12 @@ instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) wher
   Const a * Const b = Const (a * b)
   a       * Const b | b == zero = zero
                     | b == one = a
-                    | otherwise = simplify (Prd a (Const b))
+                    | otherwise = Prd (Const b) a -- if commutative we can move the constant to the front
+  Const a * (Prd (Const b) c)  -- if associative, gather constants
+                    = Prd (Const (a * b)) c
   Const a * b       | a == zero = zero
                     | a == one = b
-                    | otherwise = simplify (Prd (Const a) b)
+                    | otherwise = Prd (Const a) b
   a       * b       = Prd a b
   one               = Const one
 
@@ -44,7 +46,7 @@ instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
 instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
 
 instance (Eq a, Field a, Exponentiative a) => Invertable (Expression a) where
-  inv a = simplify (Div one a)
+  inv a = Div one a
 
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
   Const a / Const b = Const (a / b)
@@ -62,7 +64,7 @@ instance (Eq a, Ring a, Field a, Exponentiative a) => Exponentiative (Expression
                     | otherwise = Pow a (Const b)
   Const a ^ b       | a == zero = zero
                     | a == one = one
-                    | otherwise = simplify (Pow (Const a) b)
+                    | otherwise = Pow (Const a) b
   a       ^ b       = Pow a b
   log (Const a) = Const (log a)
   log a = Log a
@@ -76,20 +78,6 @@ instance (Show a) => Show (Expression a) where
  show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
  show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
-
-simplify :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
---additive identities
---multiplicative identities
---put constants first in a product
-simplify (Prd a b@(Const _)) | b == zero = zero | b == one = a | otherwise = Prd b a
---associativity
-simplify (Prd (Const a) (Prd (Const b) expr)) = Prd (Const (a * b)) expr
--- and back
-simplify (e@(Prd (Const a) b)) | a == zero = zero | a == one = b | otherwise = e
---power identities
-
-
-simplify x          = x
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
@@ -108,7 +96,7 @@ substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
 evalExpr :: (Eq a, Field a, Exponentiative a) => Char -> a -> Expression a -> Expression a
-evalExpr c val = mapExpr (simplify . substitute c val)
+evalExpr c val = mapExpr (substitute c val)
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)         = zero
