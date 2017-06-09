@@ -3,23 +3,50 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
 module Expression where
 
-import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log)
+import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan)
 import Field
 import Exponentiative
+import Trigonometric
+
+data Fn a = Fn {
+  name :: String,
+  deriv:: Expression a -> Expression a
+}
+
+instance Eq (Fn a) where
+  Fn name1 _ == Fn name2 _ = name1 == name2
+
+instance Show (Fn a) where
+  show (Fn name1 _) = name1
 
 data Expression a = Const a
                   | Var String
+                  | App (Fn a) (Expression a)
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
                   | Div (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
                   | Log (Expression a)
-                  deriving (Eq)
+                  deriving Eq
+
+{-
+instance (Eq a) => Eq (Expression a) where
+    Const a == Const b     = a == b
+    Var a == Var b         = a == b
+    Neg a == Neg b         = a == b
+    Log a == Log b         = a == b
+    Sum a1 a2 == Sum b1 b2 = a1 == b1 && a2 == b2
+    Prd a1 a2 == Prd b1 b2 = a1 == b1 && a2 == b2
+    Div a1 a2 == Div b1 b2 = a1 == b1 && a2 == b2
+    Pow a1 a2 == Pow b1 b2 = a1 == b1 && a2 == b2
+    _ == _                 = False
+-}
 
 instance (Show a) => Show (Expression a) where
- show (Var a)   = a
  show (Const a) = show a
+ show (Var a)   = a
+ show (App f a) = "(" ++ show f ++ " " ++ show a ++ ")"
  show (Log a)   = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
@@ -81,16 +108,22 @@ instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
   log (Const a)     = Const (log a)
   log a             = Log a
 
+instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
+  sin = App (Fn "sin" cos)
+  cos = App (Fn "cos" (neg . sin))
+  tan = App (Fn "tan" (\x -> one / (one + x ^ (one + one))))
+
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
-  let walk e = case e of (Const a) -> f (Const a)
-                         (Var a)   -> f (Var a)
-                         (Neg a)   -> f (Neg (walk a))
-                         (Log a)   -> f (Log (walk a))
-                         (Sum a b) -> f (Sum (walk a) (walk b))
-                         (Prd a b) -> f (Prd (walk a) (walk b))
-                         (Div a b) -> f (Div (walk a) (walk b))
-                         (Pow a b) -> f (Pow (walk a) (walk b))
+  let walk e = case e of (Const a)      -> f (Const a)
+                         (Var a)        -> f (Var a)
+                         (App fun a)    -> f (App fun (walk a)) -- ?? should we transform the function here?
+                         (Neg a)        -> f (Neg (walk a))
+                         (Log a)        -> f (Log (walk a))
+                         (Sum a b)      -> f (Sum (walk a) (walk b))
+                         (Prd a b)      -> f (Prd (walk a) (walk b))
+                         (Div a b)      -> f (Div (walk a) (walk b))
+                         (Pow a b)      -> f (Pow (walk a) (walk b))
   in walk exp
 
 substitute :: String -> a -> Expression a -> Expression a
@@ -101,13 +134,14 @@ evalExpr :: (Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> 
 evalExpr c val = mapExpr (substitute c val)
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-derivative (Const _)         = zero
-derivative (Var _)           = one
-derivative (Neg f)           = neg (derivative f)
-derivative (Sum a b)         = derivative a + derivative b
-derivative (Prd a b)         = a * derivative b + b * derivative a --product rule (ab' + a'b)
-derivative (Div a b)         = (derivative a * b - a * derivative b) / b ^ Const (one + one) -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (Pow a (Const x)) = Const x * derivative a * a ^ Const (x - one) --specialised power rule (xa^(x-1) * a')
-derivative (Pow f g)         = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
-derivative (Log a)           = derivative a / a
+derivative (Const _)            = zero
+derivative (Var _)              = one
+derivative (App f a)            = deriv f a -- chain rule?
+derivative (Neg a)              = neg (derivative a)
+derivative (Sum a b)            = derivative a + derivative b
+derivative (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
+derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ Const (one + one) -- quotient rule ( (a'b - b'a) / b^2 )
+derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
+derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Log a)              = derivative a / a
 
