@@ -57,7 +57,7 @@ instance (Eq a, Field a) => Field (Expression a) where
                     | otherwise = Div (Const a) b
   a       / b       = if a == b then one else Div a b
 
-instance (Eq a, Ring a, Field a, Exponentiative a) => Exponentiative (Expression a) where
+instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
   a       ^ Const b | b == zero = one
                     | b == one = a
