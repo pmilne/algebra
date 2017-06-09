@@ -24,8 +24,8 @@ p = Term 1 1 (Polynomial.Const 1)
 pc :: Integer -> Polynomial Integer
 pc = promote
 
-testPoly :: IO ()
-testPoly = do
+run :: IO ()
+run = do
 --          print (Collins.gcd (pc 0) (pc 1))
 --          print (Collins.gcd (pc 1) (pc 0))
 --          print (Collins.gcd (pc 3) (pc 7))

@@ -88,8 +88,8 @@ main = do
           putStrLn ("zero = " ++ show (bar pp0))
           putStrLn ("zero = " ++ show (baz pp0))
 -}
-          TestComplex.testPoly
-          TestPolynomial.testPoly
+          TestComplex.run
+          TestPolynomial.run
 
 
 
