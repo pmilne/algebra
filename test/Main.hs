@@ -17,16 +17,13 @@ import Expression
 import Field
 import Euclidean
 import Collins
-import TestPolynomial
 import TestUtil
+
+import TestComplex
+import TestPolynomial
 
 fr :: Rational Int
 fr = Rational 1 2
-
-c :: Complex (Rational Int)
-c = Rational 1 2 :+ Rational 5 7
---c :: Complex Double
---c = 0.5 :+ 0.25
 
 ff :: Int
 --ff = 2 ^ 27
@@ -75,17 +72,14 @@ main = do
           putStrLn ("2 * 3 = " ++ show (n2 * n3))
 --          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
           putStrLn ("(1 / 2) = " ++ show fr)
-          putStrLn ("c = " ++ show c)
-          test "c + c" (Rational 1 1 :+ Rational 10 7) (c + c)
-          test "c - c" (Rational 0 1 :+ Rational 0 1) (c - c)
-          test "c * c" (Rational (-51) 196 :+ Rational 5 7) (c * c)
-          test "c / c" (Rational 1 1 :+ Rational 0 1) (c / c)
           putStrLn ("2 * 3 mod 4 = " ++ show (m0 * m1))
           test "m + m" (Modular 2) (m + m)
           putStrLn ("expr = " ++ show expr)
           test "derivative expr" dexpr (derivative expr)
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' 5 (derivative expr)))
           putStrLn ("expr = " ++ show expr)
+--          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
+--          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
 {-
           putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial (Polynomial (Polynomial Integer))))))
           putStrLn ("zero = " ++ show (foo (undefined :: Polynomial (Polynomial Integer))))
@@ -94,6 +88,7 @@ main = do
           putStrLn ("zero = " ++ show (bar pp0))
           putStrLn ("zero = " ++ show (baz pp0))
 -}
+          TestComplex.testPoly
           TestPolynomial.testPoly
 
 
