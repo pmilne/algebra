@@ -25,8 +25,15 @@ instance (Eq a, Field a, Exponentiative a) => Additive (Expression a) where
   zero              = Const zero
 
 instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) where
-  a * b    = simplify (Prd a b)
-  one      = Const one
+  Const a * Const b = Const (a * b)
+  Const a * b       | a == zero = zero
+                    | a == one = b
+                    | otherwise = simplify (Prd (Const a) b)
+  a       * Const b | b == zero = zero
+                    | b == one = a
+                    | otherwise = simplify (Prd a (Const b))
+  a       * b       = Prd a b
+  one               = Const one
 
 instance (Eq a, Field a, Exponentiative a) => Negatable (Expression a) where
   neg a = simplify (Neg a)
