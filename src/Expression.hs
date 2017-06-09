@@ -65,6 +65,8 @@ instance (Eq a, Field a) => Field (Expression a) where
                     | otherwise = Div a (Const b)
   Const a / b       | a == zero = zero
                     | otherwise = Div (Const a) b
+  Div a b / c       = Div a (b * c)
+  a       / Div b c = Div (a * c) b
   a       / b       = if a == b then one else Div a b
 
 instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where

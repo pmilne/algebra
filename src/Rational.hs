@@ -1,4 +1,4 @@
-module Rational where
+module Rational(Euclidean, module Rational) where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Euclidean
