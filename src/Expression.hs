@@ -17,7 +17,7 @@ data Expression a = Const a
                   | Log (Expression a)
                   deriving (Eq)
 
-instance (Eq a, Field a, Exponentiative a) => Additive (Expression a) where
+instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
   Const a + b       = if a == zero then b else Sum (Const a) b
   a       + Const b = if b == zero then a else Sum a (Const b)
@@ -35,8 +35,9 @@ instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) wher
   a       * b       = Prd a b
   one               = Const one
 
-instance (Eq a, Field a, Exponentiative a) => Negatable (Expression a) where
-  neg a = simplify (Neg a)
+instance (Negatable a) => Negatable (Expression a) where
+  neg (Const a) = Const (neg a)
+  neg a = Neg a
 
 instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
 
@@ -80,8 +81,6 @@ simplify (e@(Pow (Const a) _)) | a == one = one | otherwise = e
 simplify (Div (Const a) (Const b)) = Const (a / b)
 simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
 simplify e@(Div (Var a) (Var b)) = if a == b then one else e
-
-simplify (Neg (Const a))  = Const (neg a)
 
 simplify (Log (Const a))  = Const (log a)
 
