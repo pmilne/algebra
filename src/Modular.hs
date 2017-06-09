@@ -5,6 +5,7 @@ import Euclidean
 import Ring
 import Field
 
+-- humph looks like we need to use explicit reification. yuk. hard code the modulus for now...
 instance ModularN Int where
   modulus = 4
 
