@@ -8,6 +8,9 @@ import Modular
 
 import TestUtil
 
+m :: Modular Int
+m = Modular 3
+
 m0, m1 :: Modular Int
 m0 = Modular 3
 m1 = Modular 2
