@@ -24,7 +24,13 @@ instance (Eq a, Additive a) => Additive (Expression a) where
   a + b             = Sum a b
   zero              = Const zero
 
-instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) where
+instance (Negatable a) => Negatable (Expression a) where
+  neg (Const a) = Const (neg a)
+  neg a = Neg a
+
+instance (Eq a, Subtractive a) => Subtractive (Expression a) where
+
+instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) where
   Const a * Const b = Const (a * b)
   a       * Const b | b == zero = zero
                     | b == one = a
@@ -37,18 +43,12 @@ instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) wher
   a       * b       = Prd a b
   one               = Const one
 
-instance (Negatable a) => Negatable (Expression a) where
-  neg (Const a) = Const (neg a)
-  neg a = Neg a
+instance (Eq a, Ring a) => Ring (Expression a) where
 
-instance (Eq a, Field a, Exponentiative a) => Subtractive (Expression a) where
-
-instance (Eq a, Field a, Exponentiative a) => Ring (Expression a) where
-
-instance (Eq a, Field a, Exponentiative a) => Invertable (Expression a) where
+instance (Eq a, Field a) => Invertable (Expression a) where
   inv a = Div one a
 
-instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
+instance (Eq a, Field a) => Field (Expression a) where
   Const a / Const b = Const (a / b)
   a       / Const b | b == zero = error "Divide by zero!"
                     | b == one = a
