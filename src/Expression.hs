@@ -47,7 +47,13 @@ instance (Eq a, Field a, Exponentiative a) => Invertable (Expression a) where
   inv a = simplify (Div one a)
 
 instance (Eq a, Field a, Exponentiative a) => Field (Expression a) where
-  a / b = simplify (Div a b)
+  Const a / Const b = Const (a / b)
+  a       / Const b | b == zero = error "Divide by zero!"
+                    | b == one = a
+                    | otherwise = Div a (Const b)
+  Const a / b       | a == zero = zero
+                    | otherwise = Div (Const a) b
+  a       / b       = if a == b then one else Div a b
 
 instance (Eq a, Ring a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
@@ -82,9 +88,6 @@ simplify (Prd (Const a) (Prd (Const b) expr)) = Prd (Const (a * b)) expr
 simplify (e@(Prd (Const a) b)) | a == zero = zero | a == one = b | otherwise = e
 --power identities
 
-simplify (Div (Const a) (Const b)) = Const (a / b)
-simplify (e@(Div a (Const b))) | b == zero = error "Divide by zero!" | b == one = a | otherwise = e
-simplify e@(Div (Var a) (Var b)) = if a == b then one else e
 
 simplify x          = x
 
