@@ -32,7 +32,7 @@ run = do
 --          print (Collins.gcd (pc 3 * x + pc 1) (pc 7))
           test "gcd" (x - pc 1) (gcd (x2 - pc 1) (x - pc 1))
           putStrLn ("gcd " ++ show (gcd (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1))))
-          test "ratio " (ratio (pc 3 * x + pc 3) (pc 2)) (ratio (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1)))
+          test "ratio " (rational (pc 3 * x + pc 3) (pc 2)) (rational (pc 6 * (x2 - pc 1)) (pc 4 * (x - pc 1)))
 --          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
 --          print (Collins.gcd (x2 - pc 1) (x2 - pc 2 * x + pc 1))
           print (gcd (pc 3 * x2 + pc 1) (pc 5 * x4 + x2 + pc 4))
