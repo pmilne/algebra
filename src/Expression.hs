@@ -18,8 +18,11 @@ data Expression a = Const a
                   deriving (Eq)
 
 instance (Eq a, Field a, Exponentiative a) => Additive (Expression a) where
-  a + b    = simplify (Sum a b)
-  zero     = Const zero
+  Const a + Const b = Const (a + b)
+  Const a + b       = if a == zero then b else Sum (Const a) b
+  a       + Const b = if b == zero then a else Sum a (Const b)
+  a + b             = Sum a b
+  zero              = Const zero
 
 instance (Eq a, Field a, Exponentiative a) => Multiplicative (Expression a) where
   a * b    = simplify (Prd a b)
@@ -54,9 +57,6 @@ instance (Show a) => Show (Expression a) where
 
 simplify :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 --additive identities
-simplify (Sum (Const a) (Const b)) = Const (a + b)
-simplify (e@(Sum (Const a) b)) = if a == zero then b else e
-simplify (e@(Sum a (Const b))) = if b == zero then a else e
 --multiplicative identities
 simplify (Prd (Const a) (Const b)) = Const (a * b)
 --put constants first in a product
