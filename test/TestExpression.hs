@@ -2,11 +2,9 @@ module TestExpression where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Ring
-import Field
+import Euclidean
 import Rational
 import Exponentiative
-
-import Rational
 
 import Expression
 
@@ -19,8 +17,10 @@ instance Exponentiative (Rational a) where
 var :: Expression (Rational Integer)
 var = Var 'x'
 
+pc :: (Euclidean a, Ring a) => a -> Expression (Rational a)
 pc x = Const (rational1 x)
 
+xp1 :: Expression (Rational Integer)
 xp1 = var + pc 1
 
 e0, e1, e2 :: Expression (Rational Integer)
