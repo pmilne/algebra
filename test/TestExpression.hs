@@ -15,7 +15,7 @@ instance Exponentiative (Rational a) where
   log a = undefined
 
 var :: Expression (Rational Integer)
-var = Var 'x'
+var = Var "x"
 
 pc :: (Euclidean a, Ring a) => a -> Expression (Rational a)
 pc x = Const (rational1 x)
@@ -40,5 +40,5 @@ run = do
           test ("derivative " ++ show e1) d1 (derivative e1)
           test ("derivative " ++ show e2) d2 (derivative e2)
 
-          putStrLn ("eval (ddx expr) = " ++ show (evalExpr 'x' (rational1 5) (derivative e2)))
+          putStrLn ("eval (ddx expr) = " ++ show (evalExpr "x" (rational1 5) (derivative e2)))
           putStrLn ("expr = " ++ show e2)

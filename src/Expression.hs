@@ -8,7 +8,7 @@ import Field
 import Exponentiative
 
 data Expression a = Const a
-                  | Var Char
+                  | Var String
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
@@ -18,7 +18,7 @@ data Expression a = Const a
                   deriving (Eq)
 
 instance (Show a) => Show (Expression a) where
- show (Var a)   = show a
+ show (Var a)   = a
  show (Const a) = show a
  show (Log a)   = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
@@ -91,11 +91,11 @@ mapExpr f exp =
                          (Pow a b) -> f (Pow (walk a) (walk b))
   in walk exp
 
-substitute :: Char -> a -> Expression a -> Expression a
+substitute :: String -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
 substitute _ _ exp = exp
 
-evalExpr :: (Eq a, Field a, Exponentiative a) => Char -> a -> Expression a -> Expression a
+evalExpr :: (Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
 evalExpr c val = mapExpr (substitute c val)
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
