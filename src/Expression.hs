@@ -17,6 +17,16 @@ data Expression a = Const a
                   | Log (Expression a)
                   deriving (Eq)
 
+instance (Show a) => Show (Expression a) where
+ show (Var a)   = show a
+ show (Const a) = show a
+ show (Log a)   = "(log " ++ show a ++ ")"
+ show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
+ show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
+ show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
+ show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
+ show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
+
 instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
   Const a + b       = if a == zero then b else Sum (Const a) b
@@ -68,16 +78,6 @@ instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
   a       ^ b       = Pow a b
   log (Const a) = Const (log a)
   log a = Log a
-
-instance (Show a) => Show (Expression a) where
- show (Var a)   = show a
- show (Const a) = show a
- show (Log a)   = "(log " ++ show a ++ ")"
- show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
- show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
- show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
- show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
- show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
