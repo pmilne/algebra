@@ -117,8 +117,9 @@ ev fun (Const x) = Const (value_ fun x)
 ev fun e = App fun e
 
 mapExpr :: (Show t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
-mapExpr f exp =
-  let walk e = case e of (Const a)      -> f (Const a)
+mapExpr f =
+  walk where walk e = case e of
+                         (Const a)      -> f (Const a)
                          (Var a)        -> f (Var a)
                          (App fun a)    -> f (ev fun (walk a))
                          (Neg a)        -> f (Neg (walk a))
@@ -126,7 +127,6 @@ mapExpr f exp =
                          (Prd a b)      -> f (Prd (walk a) (walk b))
                          (Div a b)      -> f (Div (walk a) (walk b))
                          (Pow a b)      -> f (Pow (walk a) (walk b))
-  in walk exp
 
 substitute :: String -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
