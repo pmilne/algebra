@@ -4,6 +4,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Euclidean
 import Field
 
+-- A fraction or ratio between two elements of a Euclidean Ring. E.g. Integer or Polynomial
 data Rational a = Rational !a !a deriving (Eq, Read)
 
 canonical :: (Ring a, Euclidean a) => (a -> a -> b) -> a -> a -> b
