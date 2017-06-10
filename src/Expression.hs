@@ -100,9 +100,10 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
 
 -- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin  = App (Fn "sin"  cos)
-  cos  = App (Fn "cos"  (neg . sin))
-  tan  = App (Fn "tan"  (\x -> one / cos x^two))
+  sin = App (Fn "sin" cos)
+  cos = App (Fn "cos" (neg . sin))
+  tan = App (Fn "tan" (\x -> one / cos x^two))
+
   asin = App (Fn "asin" (\x -> one / sqrt (one - x^two)))
   acos = App (Fn "acos" (\x -> neg one / sqrt (one - x^two)))
   atan = App (Fn "atan" (\x -> one / (one + x^two)))
