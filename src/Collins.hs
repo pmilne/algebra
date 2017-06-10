@@ -25,7 +25,8 @@ pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 -- degree u >= degree v
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 subresultant rtn u0 v0 =
-       let rec u v g h =
+        rec u0 v0 one one where -- avoid passing the rtn function in the recursion
+        rec u v g h =
              trace ("subresultant " ++ "\t\tu: " ++ show u ++ "\t\tv: " ++ show v ++ "\t\tv: " ++ show g ++ "\t\tv: " ++ show h) $
              if v == zero then
                 rtn u zero
@@ -37,8 +38,7 @@ subresultant rtn u0 v0 =
                    rtn one nh
                else
 --                subresultant f v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
-                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh in
-        rec u0 v0 one one
+                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 gcdAndResultant rtn u v = if deg u > deg v then subresultant rtn u v else subresultant rtn v u
