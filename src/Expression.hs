@@ -10,10 +10,10 @@ import Trigonometric
 import Debug.Trace
 
 data Fn a = Fn {
-  name :: String,
-  value :: a -> a,
-  inverse :: a -> a,
-  deriv:: Expression a -> Expression a
+  name_ :: String,
+  value_ :: a -> a,
+  inverse_ :: a -> a,
+  derivative_:: Expression a -> Expression a
 }
 
 instance Eq (Fn a) where
@@ -111,7 +111,7 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   atan = App (Fn "atan" atan tan (\x -> one / (one + x^two)))
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
-ev fun (Const x) = Const (value fun x)
+ev fun (Const x) = Const (value_ fun x)
 ev fun e = App fun e
 
 mapExpr :: (Show t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
@@ -138,7 +138,7 @@ evalExpr nm val = mapExpr (substitute nm val)
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
 derivative (Var _)              = one
-derivative (App f a)            = derivative a * deriv f a -- chain rule
+derivative (App f a)            = derivative a * derivative_ f a -- chain rule
 derivative (Neg a)              = neg (derivative a)
 derivative (Sum a b)            = derivative a + derivative b
 derivative (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
