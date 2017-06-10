@@ -12,7 +12,7 @@ import Debug.Trace
 data Fn a = Fn {
   name_ :: String,
   value_ :: a -> a,
-  inverse_ :: a -> a,
+  inverse_ :: Expression a -> Expression a,
   derivative_:: Expression a -> Expression a
 }
 
@@ -146,4 +146,16 @@ derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ tw
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Log a)              = derivative a / a
+
+inverse :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+inverse (Const _)            = undefined
+inverse (Var x)              = Var x
+inverse (App f a)            = inverse_ f (inverse a)
+inverse (Neg a)              = neg a
+inverse (Sum a b)            = derivative a + derivative b
+inverse (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
+inverse (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
+inverse (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
+inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+inverse (Log a)              = derivative a / a
 
