@@ -40,7 +40,8 @@ subresultant rtn u v =
              else
                let delta = deg u - deg v in
                let lcv = lc v in
-               let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
+               -- in the first iteration, delta may be zero, which needs an explicit check.
+               let nh = if delta == 0 && h == one then lcv else divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
                if deg v == 0 then
                    rtn one nh
                else
