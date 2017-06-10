@@ -41,11 +41,11 @@ subresultant rtn u v =
                let delta = deg u - deg v in
                let lcv = lc v in
                -- in the first iteration, delta may be zero, which needs an explicit check.
-               let nh = if delta == 0 && h == one then lcv else divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
+               let nh = if delta == 0 && h == one then lcv else (lcv ^ delta) /! (h ^ (delta - 1)) in
                if deg v == 0 then
                    rtn one nh
                else
-                   rec v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
+                   rec v (pseudoRem u v lcv delta /! Const (g * (h ^ delta))) lcv nh -- also works
 --                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a

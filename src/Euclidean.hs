@@ -6,6 +6,11 @@ import Additive
 _quo q r = q
 _rem q r = r
 
+infixl 7 /! -- divide or fail
+
+(/!) :: Euclidean a => a -> a -> a
+(/!) = divideOrFail
+
 class (Show a, Eq a, Additive a) => Euclidean a where
     quo               :: a -> a -> a
     rem               :: a -> a -> a
