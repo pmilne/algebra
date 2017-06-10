@@ -21,7 +21,14 @@ a ^ n = if n < 0 then error "Collins: Negative exponent" else powerAssociative (
 pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> Integer -> Polynomial a
 pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 
+_gcd :: a -> b -> a
+_gcd g _ = g
+
+_resultant :: a -> b -> b
+_resultant _ r = r
+
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
+-- returns (rtn gcd resultant) where gcd = gcd(u, v) and resultant = resultant(u, v).
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 subresultant rtn u v =
         (if deg u > deg v then rec u v else rec v u) one one where -- avoid passing the rtn function in the recursion
@@ -33,7 +40,7 @@ subresultant rtn u v =
              else
                let delta = deg u - deg v in
                let lcv = lc v in
-               let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in -- todo not valid if delta == 0
+               let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
                if deg v == 0 then
                    rtn one nh
                else
@@ -41,9 +48,9 @@ subresultant rtn u v =
 --                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
-resultant = subresultant (\_ r -> r)
+resultant = subresultant _resultant
 
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     divide          = divide1
-    gcd u v         = let d = gcd (content u) (content v) in scale d (pp ((subresultant (\g _ -> g)) (pp u) (pp v)))
+    gcd u v         = let d = gcd (content u) (content v) in scale d (pp (subresultant _gcd (pp u) (pp v)))
     sign p          = Const (sign (lc p))
