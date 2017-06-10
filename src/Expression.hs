@@ -10,7 +10,7 @@ import Trigonometric
 
 data Fn a = Fn {
   name :: String,
-  deriv:: Expression a -> Expression a
+  deriv:: a -> a
 }
 
 instance Eq (Fn a) where
@@ -21,7 +21,7 @@ instance Show (Fn a) where
 
 data Expression a = Const a
                   | Var String
-                  | App (Fn a) (Expression a)
+                  | App (Fn (Expression a)) (Expression a)
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
