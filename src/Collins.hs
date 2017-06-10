@@ -45,7 +45,7 @@ subresultant rtn u v =
                if deg v == 0 then
                    rtn one nh
                else
-                   rec v (pseudoRem u v /! Const (g * (h ^ delta))) lcv nh -- also works
+                   rec v (pseudoRem u v /! Const (g * (h ^ delta))) lcv nh
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = subresultant _resultant
