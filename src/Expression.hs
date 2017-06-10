@@ -7,21 +7,23 @@ import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan
 import Field
 import Exponentiative
 import Trigonometric
+import Debug.Trace
 
 data Fn a = Fn {
   name :: String,
-  deriv:: a -> a
+  value :: a -> a,
+  deriv:: Expression a -> Expression a
 }
 
 instance Eq (Fn a) where
-  Fn name1 _ == Fn name2 _ = name1 == name2
+  Fn name1 _ _ == Fn name2 _ _ = name1 == name2
 
 instance Show (Fn a) where
-  show (Fn name1 _) = name1
+  show (Fn name1 _ _) = name1
 
 data Expression a = Const a
                   | Var String
-                  | App (Fn (Expression a)) (Expression a)
+                  | App (Fn a) (Expression a)
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
@@ -94,24 +96,28 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
   a       ^ b       = Pow a b
   log (Const a)     = Const (log a)
   log a             = Log a
-  sqrt              = App (Fn "sqrt" (\x -> one / (two * sqrt x)))
+  sqrt              = App (Fn "sqrt" sqrt (\x -> one / (two * sqrt x)))
   two               = Const two
 
 
 -- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin = App (Fn "sin" cos)
-  cos = App (Fn "cos" (neg . sin))
-  tan = App (Fn "tan" (\x -> one / cos x^two))
-  asin = App (Fn "asin" (\x -> one / sqrt (one - x^two)))
-  acos = App (Fn "acos" (\x -> neg one / sqrt (one - x^two)))
-  atan = App (Fn "atan" (\x -> one / (one + x^two)))
+  sin = App (Fn "sin" sin cos)
+  cos = App (Fn "cos" cos (neg . sin))
+  tan = App (Fn "tan" tan (\x -> one / cos x^two))
+  asin = App (Fn "asin" asin (\x -> one / sqrt (one - x^two)))
+  acos = App (Fn "acos" acos (\x -> neg one / sqrt (one - x^two)))
+  atan = App (Fn "atan" atan (\x -> one / (one + x^two)))
 
-mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
+ev :: (Show a) => Fn a -> Expression a -> Expression a
+ev fun (Const x) = Const (value fun x)
+ev fun e = App fun e
+
+mapExpr :: (Show t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =
   let walk e = case e of (Const a)      -> f (Const a)
                          (Var a)        -> f (Var a)
-                         (App fun a)    -> f (App fun (walk a)) -- ?? should we transform the function here?
+                         (App fun a)    -> f (ev fun (walk a))
                          (Neg a)        -> f (Neg (walk a))
                          (Log a)        -> f (Log (walk a))
                          (Sum a b)      -> f (Sum (walk a) (walk b))
@@ -122,10 +128,11 @@ mapExpr f exp =
 
 substitute :: String -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
+--substitute c val (Var x) = (trace ("c = " ++ c ++ " x = " ++ x)) Const val
 substitute _ _ exp = exp
 
-evalExpr :: (Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
-evalExpr c val = mapExpr (substitute c val)
+evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
+evalExpr nm val = mapExpr (substitute nm val)
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
