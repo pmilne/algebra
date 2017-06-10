@@ -147,6 +147,7 @@ derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ tw
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
+{-
 inverse :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
@@ -157,4 +158,5 @@ inverse (Prd a b)            = a * derivative b + b * derivative a --product rul
 inverse (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
 inverse (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+-}
 
