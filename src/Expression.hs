@@ -12,14 +12,15 @@ import Debug.Trace
 data Fn a = Fn {
   name :: String,
   value :: a -> a,
+  inverse :: a -> a,
   deriv:: Expression a -> Expression a
 }
 
 instance Eq (Fn a) where
-  Fn name1 _ _ == Fn name2 _ _ = name1 == name2
+  Fn name1 _ _ _ == Fn name2 _ _ _ = name1 == name2
 
 instance Show (Fn a) where
-  show (Fn name1 _ _) = name1
+  show (Fn name1 _ _ _) = name1
 
 data Expression a = Const a
                   | Var String
@@ -96,18 +97,18 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
   a       ^ b       = Pow a b
   log (Const a)     = Const (log a)
   log a             = Log a
-  sqrt              = App (Fn "sqrt" sqrt (\x -> one / (two * sqrt x)))
+  sqrt              = App (Fn "sqrt" sqrt (^ two) (\x -> one / (two * sqrt x)))
   two               = Const two
 
 
 -- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin = App (Fn "sin" sin cos)
-  cos = App (Fn "cos" cos (neg . sin))
-  tan = App (Fn "tan" tan (\x -> one / cos x^two))
-  asin = App (Fn "asin" asin (\x -> one / sqrt (one - x^two)))
-  acos = App (Fn "acos" acos (\x -> neg one / sqrt (one - x^two)))
-  atan = App (Fn "atan" atan (\x -> one / (one + x^two)))
+  sin = App (Fn "sin" sin asin cos)
+  cos = App (Fn "cos" cos acos (neg . sin))
+  tan = App (Fn "tan" tan atan (\x -> one / cos x^two))
+  asin = App (Fn "asin" asin sin (\x -> one / sqrt (one - x^two)))
+  acos = App (Fn "acos" acos cos (\x -> neg one / sqrt (one - x^two)))
+  atan = App (Fn "atan" atan tan (\x -> one / (one + x^two)))
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value fun x)
