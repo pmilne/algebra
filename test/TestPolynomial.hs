@@ -8,7 +8,7 @@ import Collins
 import Rational
 import TestUtil
 
-x, x2, x3, x4, x5, x6, x7 :: Polynomial Integer
+x, x2, x3, x4, x5, x6, x7, x8 :: Polynomial Integer
 x = Term 1 1 (Polynomial.Const 0)
 x2 = x * x;
 x3 = x2 * x
