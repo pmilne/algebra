@@ -18,8 +18,8 @@ powerAssociative op a0 a n =
 (^) :: Multiplicative a => a -> Integer -> a
 a ^ n = if n < 0 then error "Collins: Negative exponent" else powerAssociative (*) one a n
 
-pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a -> Integer -> Polynomial a
-pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
+pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
+pseudoRem u v = rem (Const (lc v ^ (deg u - deg v + 1)) * u) v
 
 _gcd :: a -> b -> a
 _gcd g _ = g
@@ -45,8 +45,7 @@ subresultant rtn u v =
                if deg v == 0 then
                    rtn one nh
                else
-                   rec v (pseudoRem u v lcv delta /! Const (g * (h ^ delta))) lcv nh -- also works
---                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
+                   rec v (pseudoRem u v /! Const (g * (h ^ delta))) lcv nh -- also works
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = subresultant _resultant
