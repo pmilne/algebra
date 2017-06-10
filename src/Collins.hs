@@ -23,28 +23,25 @@ pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
 -- degree u >= degree v
-subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> a -> a -> r
-subresultant rtn u v g h | trace ("subresultant "
-                                            ++ "\t\tu: " ++ show u
-                                            ++ "\t\tv: " ++ show v
-                                            ++ "\t\tg: " ++ show g
-                                            ++ "\t\th: " ++ show h
-                                            ) False = undefined
-subresultant rtn u v g h =
-       if v == zero then
-            rtn u zero
-        else
-            let delta = deg u - deg v in
-            let lcv = lc v in
-            let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in
-            if deg v == 0 then
-                rtn one nh
-            else
+subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
+subresultant rtn u0 v0 =
+       let rec u v g h =
+             trace ("subresultant " ++ "\t\tu: " ++ show u ++ "\t\tv: " ++ show v ++ "\t\tv: " ++ show g ++ "\t\tv: " ++ show h) $
+             if v == zero then
+                rtn u zero
+             else
+               let delta = deg u - deg v in
+               let lcv = lc v in
+               let nh = divideOrFail (lcv ^ delta) (h ^ (delta - 1)) in -- todo not valid if delta == 0
+               if deg v == 0 then
+                   rtn one nh
+               else
 --                subresultant f v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
-                subresultant rtn v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
+                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh in
+        rec u0 v0 one one
 
 gcdAndResultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
-gcdAndResultant rtn u v = (if deg u > deg v then subresultant rtn u v else subresultant rtn v u) one one
+gcdAndResultant rtn u v = if deg u > deg v then subresultant rtn u v else subresultant rtn v u
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = gcdAndResultant (\_ r -> r)
