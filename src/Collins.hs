@@ -22,10 +22,10 @@ pseudoRem :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a
 pseudoRem u v lcv delta = rem (Const (lcv ^ (delta + 1)) * u) v
 
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
--- degree u >= degree v
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 subresultant rtn u v =
         (if deg u > deg v then rec u v else rec v u) one one where -- avoid passing the rtn function in the recursion
+        -- degree u >= degree v
         rec u v g h =
              trace ("subresultant " ++ "\t\tu: " ++ show u ++ "\t\tv: " ++ show v ++ "\t\tv: " ++ show g ++ "\t\tv: " ++ show h) $
              if v == zero then
