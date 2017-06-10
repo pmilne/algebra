@@ -28,7 +28,7 @@ _resultant :: a -> b -> b
 _resultant _ r = r
 
 -- Translated from Knuth Volume II: "The Subresultant Algorithm", Section 4.6.1
--- returns (rtn gcd resultant) where gcd = gcd(u, v) and resultant = resultant(u, v).
+-- subresultant returns (rtn gcd resultant) where gcd = gcd(u, v) and resultant = resultant(u, v).
 subresultant :: (Show a, Eq a, Ring a, Euclidean a) => (Polynomial a -> a -> r) -> Polynomial a -> Polynomial a -> r
 subresultant rtn u v =
         (if deg u > deg v then rec u v else rec v u) one one where -- avoid passing the rtn function in the recursion
