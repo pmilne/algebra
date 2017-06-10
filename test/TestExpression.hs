@@ -44,5 +44,5 @@ run = do
           testDerivative (sin (sin x1))  (cos x1 * cos (sin x1))
           testDerivative (tan (tan x1))  ((one/(cos x1 ^ two))*(one/(cos (tan x1) ^ two)))
           testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
-          putStrLn ("expr = " ++ show (derivative (derivative (x1 + sin x1))))
+          testDerivative (derivative (x1 + sin x1)) (neg (sin x1))
 
