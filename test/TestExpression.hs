@@ -32,6 +32,9 @@ x1 = Var "x"
 testDerivative :: (Exponentiative a, Field a, Eq a, Show a) => Expression a -> Expression a -> IO ()
 testDerivative e d = test ("derivative " ++ show e) d (derivative e)
 
+--inv2 :: (a -> a) -> (a -> a)
+--inv2 f = case
+
 run :: IO ()
 run = do
           testDerivative (x + pc 1) (pc 1)
@@ -45,4 +48,6 @@ run = do
           testDerivative (tan (tan x1))  ((one/(cos x1 ^ two))*(one/(cos (tan x1) ^ two)))
           testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
           testDerivative (derivative (x1 + sin x1)) (neg (sin x1))
+
+--          putStrLn ("inv sin = " ++ show (inv (sin x1)))
 

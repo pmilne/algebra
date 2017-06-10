@@ -5,7 +5,8 @@ import Euclidean
 import Ring
 import Field
 
--- humph looks like we need to use explicit reification. yuk. hard code the modulus for now...
+-- Humph, it looks like we need to use explicit reification to associate the modulus with the class.
+-- Oh dear. Hardcode the modulus for now...
 instance ModularN Int where
   modulus = 4
 
