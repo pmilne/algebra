@@ -37,8 +37,8 @@ subresultant rtn u v =
                if deg v == 0 then
                    rtn one nh
                else
---                subresultant f v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
-                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
+                   rec v (divideOrFail (pseudoRem u v lcv delta) (Const (g * (h ^ delta)))) lcv nh -- also works
+--                  rec v (divideOrFail2 (pseudoRem u v lcv delta) (g * (h ^ delta))) lcv nh
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = subresultant (\_ r -> r)
