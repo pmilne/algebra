@@ -1,6 +1,6 @@
 module TestExpression where
 
-import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sin, cos, tan, asin, acos, atan)
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sqrt, sin, cos, tan, asin, acos, atan)
 
 import Field
 import Exponentiative
@@ -12,8 +12,8 @@ import Expression
 import TestUtil
 
 instance Exponentiative (Rational a) where
-  a ^ b = undefined
-  log a = undefined
+  _ ^ _ = undefined
+  log _ = undefined
   sqrt = undefined
   two = undefined
 
@@ -21,39 +21,28 @@ x :: Expression (Rational Integer)
 x = Var "x"
 
 pc :: (Euclidean a, Ring a) => a -> Expression (Rational a)
-pc x = Const (rational1 x)
+pc xx = Const (rational1 xx)
 
 xp1 :: Expression (Rational Integer)
 xp1 = x + pc 1
 
-e0, e1, e2, e3 :: Expression (Rational Integer)
---e0 = xp1 * xp1 -- (x + 1)^2
-e0 = xp1 -- (x + 1)
-e1 = pc 3 * Pow x (pc 2) -- 3x^2
-e2 = Pow x x -- x ^ x
-e3 = Log (Log x)
-
-d0, d1, d2, d3 :: Expression (Rational Integer)
-d0 = pc 1
-d1 = pc 6 * x -- 6x
-d2 = Pow x x * (pc 1 + Log x)
-d3 = pc 1 / (x * Log x)
-
 x1 :: Expression Double
 x1 = Var "x"
 
+testDerivative :: (Exponentiative a, Field a, Eq a, Show a) => Expression a -> Expression a -> IO ()
+testDerivative e d = test ("derivative " ++ show e) d (derivative e)
+
 run :: IO ()
 run = do
-          test ("derivative " ++ show e0) d0 (derivative e0)
-          test ("derivative " ++ show e1) d1 (derivative e1)
-          test ("derivative " ++ show e2) d2 (derivative e2)
-          test ("derivative " ++ show e3) d3 (derivative e3)
-          putStrLn ("expr = " ++ show (derivative (sin x1)))
-          putStrLn ("expr = " ++ show (derivative (x1 + sin x1)))
-          putStrLn ("expr = " ++ show (derivative (sin (sin x1))))
-          putStrLn ("expr = " ++ show (derivative (tan (tan x1))))
-          putStrLn ("expr = " ++ show (derivative (derivative (x1 + sin x1))))
-          putStrLn ("expr = " ++ show (derivative (asin x1)))
+          testDerivative (x + pc 1) (pc 1)
+          testDerivative (pc 3 * Pow x (pc 2)) (pc 6 * x)
+          testDerivative (Pow x x) (Pow x x * (pc 1 + Log x))
+          testDerivative (Log (Log x)) (pc 1 / (x * Log x))
 
-          putStrLn ("eval (ddx expr) = " ++ show (evalExpr "x" (rational1 5) (derivative e2)))
-          putStrLn ("expr = " ++ show e2)
+          testDerivative (sin x1) (cos x1)
+          testDerivative (x1 + sin x1) (Const 1 + cos x1)
+          testDerivative (sin (sin x1))  (cos x1 * cos (sin x1))
+          testDerivative (tan (tan x1))  ((one/(cos x1 ^ two))*(one/(cos (tan x1) ^ two)))
+          testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
+          putStrLn ("expr = " ++ show (derivative (derivative (x1 + sin x1))))
+
