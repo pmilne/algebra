@@ -30,14 +30,12 @@ data Expression a = Const a
                   | Prd (Expression a) (Expression a)
                   | Div (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
-                  | Log (Expression a)
                   deriving (Eq)
 
 instance (Show a) => Show (Expression a) where
  show (Const a) = show a
  show (Var a)   = a
  show (App f a) = "(" ++ show f ++ " " ++ show a ++ ")"
- show (Log a)   = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
  show (Prd a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
@@ -64,6 +62,8 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
                     | otherwise = Prd (Const b) a -- if commutative we can move the constant to the front
   Const a * (Prd (Const b) c)  -- if associative, gather constants
                     = Prd (Const (a * b)) c
+  (Div n1 d1) * (Div n2 d2)
+                    = Div (n1 * n2) (d1 * d2)
   Const a * b       | a == zero = zero
                     | a == one = b
                     | otherwise = Prd (Const a) b
@@ -95,8 +95,10 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
                     | a == one = one
                     | otherwise = Pow (Const a) b
   a       ^ b       = Pow a b
-  log (Const a)     = Const (log a)
-  log a             = Log a
+  ln (Const a)      = Const (ln a)
+  ln a              = App (Fn "ln" ln exp (\x -> one / x)) a
+  exp (Const a)     = Const (exp a)
+  exp a             = App (Fn "exp" exp ln exp) a
   sqrt              = App (Fn "sqrt" sqrt (^ two) (\x -> one / (two * sqrt x)))
   two               = Const two
 
@@ -120,7 +122,6 @@ mapExpr f exp =
                          (Var a)        -> f (Var a)
                          (App fun a)    -> f (ev fun (walk a))
                          (Neg a)        -> f (Neg (walk a))
-                         (Log a)        -> f (Log (walk a))
                          (Sum a b)      -> f (Sum (walk a) (walk b))
                          (Prd a b)      -> f (Prd (walk a) (walk b))
                          (Div a b)      -> f (Div (walk a) (walk b))
@@ -144,8 +145,7 @@ derivative (Sum a b)            = derivative a + derivative b
 derivative (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
 derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
-derivative (Log a)              = derivative a / a
+derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
 inverse :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 inverse (Const _)            = undefined
@@ -156,6 +156,5 @@ inverse (Sum a b)            = derivative a + derivative b
 inverse (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
 inverse (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
 inverse (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * log f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
-inverse (Log a)              = derivative a / a
+inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 

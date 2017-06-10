@@ -13,9 +13,10 @@ import TestUtil
 
 instance Exponentiative (Rational a) where
   _ ^ _ = undefined
-  log _ = undefined
-  sqrt = undefined
-  two = undefined
+  ln _  = undefined
+  exp _ = undefined
+  sqrt  = undefined
+  two   = undefined
 
 x :: Expression (Rational Integer)
 x = Var "x"
@@ -39,8 +40,8 @@ run :: IO ()
 run = do
           testDerivative (x + pc 1) (pc 1)
           testDerivative (pc 3 * Pow x (pc 2)) (pc 6 * x)
-          testDerivative (Pow x x) (Pow x x * (pc 1 + Log x))
-          testDerivative (Log (Log x)) (pc 1 / (x * Log x))
+          testDerivative (Pow x x) (Pow x x * (pc 1 + ln x))
+          testDerivative (ln (ln x)) (pc 1 / (x * ln x))
 
           testDerivative (sin x1) (cos x1)
           testDerivative (x1 + sin x1) (Const 1 + cos x1)
