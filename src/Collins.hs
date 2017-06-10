@@ -43,10 +43,7 @@ subresultant rtn u v =
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = subresultant (\_ r -> r)
 
-gcd1 :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> Polynomial a
-gcd1 = subresultant (\g _ -> g)
-
 instance (Show a, Eq a, Ring a, Euclidean a) => Euclidean (Polynomial a) where
     divide          = divide1
-    gcd u v         = let d = gcd (content u) (content v) in scale d (pp (gcd1 (pp u) (pp v)))
+    gcd u v         = let d = gcd (content u) (content v) in scale d (pp ((subresultant (\g _ -> g)) (pp u) (pp v)))
     sign p          = Const (sign (lc p))
