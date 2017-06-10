@@ -3,7 +3,7 @@ From: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
 module Expression where
 
-import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan)
+import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan, sqrt, asin, acos, atan)
 import Field
 import Exponentiative
 import Trigonometric
@@ -37,9 +37,9 @@ instance (Show a) => Show (Expression a) where
  show (Log a)   = "(log " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
- show (Prd a b) = "(" ++ show a ++ " * " ++ show b ++ ")"
- show (Pow a b) = "(" ++ show a ++ " ^ " ++ show b ++ ")"
- show (Div a b) = "(" ++ show a ++ " / " ++ show b ++ ")"
+ show (Prd a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
+ show (Pow a b) = "(" ++ show a ++ "^" ++ show b ++ ")"
+ show (Div a b) = "(" ++ show a ++ "/" ++ show b ++ ")"
 
 instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
@@ -83,7 +83,7 @@ instance (Eq a, Field a) => Field (Expression a) where
   a       / Div b c = Div (a * c) b
   a       / b       = if a == b then one else Div a b
 
-instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
+instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
   a       ^ Const b | b == zero = one
                     | b == one = a
@@ -94,11 +94,18 @@ instance (Eq a, Ring a, Exponentiative a) => Exponentiative (Expression a) where
   a       ^ b       = Pow a b
   log (Const a)     = Const (log a)
   log a             = Log a
+  sqrt              = App (Fn "sqrt" (\x -> one / (two * sqrt x)))
+  two               = Const two
 
+
+-- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin = App (Fn "sin" cos)
-  cos = App (Fn "cos" (neg . sin))
-  tan = App (Fn "tan" (\x -> one / (one + x ^ (one + one))))
+  sin  = App (Fn "sin"  cos)
+  cos  = App (Fn "cos"  (neg . sin))
+  tan  = App (Fn "tan"  (\x -> one / cos x^two))
+  asin = App (Fn "asin" (\x -> one / sqrt (one - x^two)))
+  acos = App (Fn "acos" (\x -> neg one / sqrt (one - x^two)))
+  atan = App (Fn "atan" (\x -> one / (one + x^two)))
 
 mapExpr :: (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f exp =

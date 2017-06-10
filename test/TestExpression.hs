@@ -1,6 +1,6 @@
 module TestExpression where
 
-import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sin, cos, tan)
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sin, cos, tan, asin, acos, atan)
 
 import Field
 import Exponentiative
@@ -14,6 +14,8 @@ import TestUtil
 instance Exponentiative (Rational a) where
   a ^ b = undefined
   log a = undefined
+  sqrt = undefined
+  two = undefined
 
 x :: Expression (Rational Integer)
 x = Var "x"
@@ -51,6 +53,7 @@ run = do
           putStrLn ("expr = " ++ show (derivative (sin (sin x1))))
           putStrLn ("expr = " ++ show (derivative (tan (tan x1))))
           putStrLn ("expr = " ++ show (derivative (derivative (x1 + sin x1))))
+          putStrLn ("expr = " ++ show (derivative (asin x1)))
 
           putStrLn ("eval (ddx expr) = " ++ show (evalExpr "x" (rational1 5) (derivative e2)))
           putStrLn ("expr = " ++ show e2)

@@ -5,12 +5,18 @@ infixr 8 ^
 class Exponentiative a where
     (^)      :: a -> a -> a
     log      :: a -> a
+    sqrt     :: a -> a
+    two      :: a -- oh dear, this was all going so well
 
 instance Exponentiative Int where
     (^)       = (Prelude.^)
     log       = undefined
+    sqrt      = undefined
+    two       = 2
 
 instance Exponentiative Double where
     (^)       = (Prelude.**)
     log       = Prelude.log
+    sqrt      = Prelude.sqrt
+    two       = 2
 
