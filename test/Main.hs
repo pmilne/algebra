@@ -22,9 +22,9 @@ main = do
           TestComplex.run
           TestModular.run
           TestRational.run
-          TestExpression.run
           TestPolynomial.run
           TestTypes.run
+          TestExpression.run
 
 
 

@@ -116,21 +116,20 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App fun e
 
-mapExpr :: (Show t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
+mapExpr :: (Show t, Eq t, Field t, Exponentiative t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
 mapExpr f =
   walk where walk e = case e of
                          (Const a)      -> f (Const a)
                          (Var a)        -> f (Var a)
                          (App fun a)    -> f (ev fun (walk a))
-                         (Neg a)        -> f (Neg (walk a))
-                         (Sum a b)      -> f (Sum (walk a) (walk b))
-                         (Prd a b)      -> f (Prd (walk a) (walk b))
-                         (Div a b)      -> f (Div (walk a) (walk b))
-                         (Pow a b)      -> f (Pow (walk a) (walk b))
+                         (Neg a)        -> f (neg (walk a))
+                         (Sum a b)      -> f (walk a + walk b)
+                         (Prd a b)      -> f (walk a * walk b)
+                         (Div a b)      -> f (walk a / walk b)
+                         (Pow a b)      -> f (walk a ^ walk b)
 
 substitute :: String -> a -> Expression a -> Expression a
 substitute c val (Var x) = if x == c then Const val else Var x
---substitute c val (Var x) = (trace ("c = " ++ c ++ " x = " ++ x)) Const val
 substitute _ _ exp = exp
 
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
@@ -142,21 +141,19 @@ derivative (Var _)              = one
 derivative (App f a)            = derivative a * derivative_ f a -- chain rule
 derivative (Neg a)              = neg (derivative a)
 derivative (Sum a b)            = derivative a + derivative b
-derivative (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
+derivative (Prd a b)            = a * derivative b + derivative a * b --product rule (ab' + a'b)
 derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
-{-
-inverse :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+inverse :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
-inverse (App f a)            = inverse_ f (inverse a)
+--inverse (App f a)            = evalExpr "x1" (inverse_ f) (Var "x1")  {-( (Var "ff"))-}
 inverse (Neg a)              = neg a
-inverse (Sum a b)            = derivative a + derivative b
-inverse (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
-inverse (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
-inverse (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
--}
+--inverse (Sum a b)            = derivative a + derivative b
+--inverse (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
+--inverse (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
+--inverse (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
+--inverse (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
