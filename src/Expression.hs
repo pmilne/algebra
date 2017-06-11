@@ -116,24 +116,17 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App fun e
 
-mapExpr :: (Show t, Eq t, Field t, Exponentiative t) => (Expression t -> Expression t) -> (Expression t -> Expression t)
-mapExpr f =
-  walk where walk e = case e of
-                         (Const a)      -> f (Const a)
-                         (Var a)        -> f (Var a)
-                         (App fun a)    -> f (ev fun (walk a))
-                         (Neg a)        -> f (neg (walk a))
-                         (Sum a b)      -> f (walk a + walk b)
-                         (Prd a b)      -> f (walk a * walk b)
-                         (Div a b)      -> f (walk a / walk b)
-                         (Pow a b)      -> f (walk a ^ walk b)
-
-substitute :: String -> a -> Expression a -> Expression a
-substitute c val (Var x) = if x == c then Const val else Var x
-substitute _ _ exp = exp
-
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
-evalExpr nm val = mapExpr (substitute nm val)
+evalExpr nm val = -- mapExpr (substitute nm val)
+  walk where walk e = case e of
+                         Const a      -> Const a
+                         Var a        -> if a == nm then Const val else Var a
+                         App fun a    -> ev fun (walk a)
+                         Neg a        -> neg (walk a)
+                         Sum a b      -> walk a + walk b
+                         Prd a b      -> walk a * walk b
+                         Div a b      -> walk a / walk b
+                         Pow a b      -> walk a ^ walk b
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
