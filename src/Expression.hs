@@ -117,16 +117,17 @@ ev fun (Const x) = Const (value_ fun x)
 ev fun e = App fun e
 
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
-evalExpr nm val = -- mapExpr (substitute nm val)
-  walk where walk e = case e of
+evalExpr nm val =
+  rec where
+  rec e = case e of
                          Const a      -> Const a
                          Var a        -> if a == nm then Const val else Var a
-                         App fun a    -> ev fun (walk a)
-                         Neg a        -> neg (walk a)
-                         Sum a b      -> walk a + walk b
-                         Prd a b      -> walk a * walk b
-                         Div a b      -> walk a / walk b
-                         Pow a b      -> walk a ^ walk b
+                         App fun a    -> ev fun (rec a)
+                         Neg a        -> neg (rec a)
+                         Sum a b      -> rec a + rec b
+                         Prd a b      -> rec a * rec b
+                         Div a b      -> rec a / rec b
+                         Pow a b      -> rec a ^ rec b
 
 derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
