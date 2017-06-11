@@ -50,9 +50,9 @@ run = do
           testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
           testDerivative (derivative (x1 + sin x1)) (neg (sin x1))
 
-          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
+--          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
 
-          putStrLn ("sin (1) = " ++ show (evalExpr "x1" (Const 1.0) Const (sin x1)))
+          putStrLn ("sin (1) = " ++ show (evalExpr "x1" 1.0 (sin x1)))
 
           putStrLn ("inv sin = " ++ show (inverse (sin x1)))
           putStrLn ("inv sin = " ++ show (inverse (sin (cos x1))))

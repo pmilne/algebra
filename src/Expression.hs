@@ -13,7 +13,6 @@ data Fn a = Fn {
   name_ :: String,
   value_ :: a -> a,
   inverse_ :: Expression a -> Expression a,
---  derivative0_:: a -> a,
   derivative_:: Expression a -> Expression a
 }
 
@@ -119,20 +118,18 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
-evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> (b -> a) -> Expression b -> a
-evalExpr nm val f =
+evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> a
+evalExpr nm val =
   rec where
   rec e = case e of
-                         Const a      -> f a
-                         Var a        -> if a == nm then val else undefined
---                         App fun a    -> ((value_ fun) (rec a))
---                         Fun fun      -> f fun
---                         App (Fun f) a -> rec a
-                         Neg a        -> neg (rec a)
-                         Sum a b      -> rec a + rec b
-                         Prd a b      -> rec a * rec b
-                         Div a b      -> rec a / rec b
-                         Pow a b      -> rec a ^ rec b
+                         Const a        -> a
+                         Var a          -> if a == nm then val else undefined
+                         App (Fun fn) a -> value_ fn (rec a)
+                         Neg a          -> neg (rec a)
+                         Sum a b        -> rec a + rec b
+                         Prd a b        -> rec a * rec b
+                         Div a b        -> rec a / rec b
+                         Pow a b        -> rec a ^ rec b
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
@@ -148,7 +145,7 @@ derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g *
 inverse :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
---inverse (App f a)            = evalExpr "x1" (inverse_ f) (Var "x1")  {-( (Var "ff"))-}
+inverse (App (Fun f) a)      = inverse_ f (inverse a)
 inverse (Neg a)              = neg a
 --inverse (Sum a b)            = derivative a + derivative b
 --inverse (Prd a b)            = a * derivative b + b * derivative a --product rule (ab' + a'b)
