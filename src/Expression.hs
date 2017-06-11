@@ -13,18 +13,20 @@ data Fn a = Fn {
   name_ :: String,
   value_ :: a -> a,
   inverse_ :: Expression a -> Expression a,
+--  derivative0_:: a -> a,
   derivative_:: Expression a -> Expression a
 }
 
 instance Eq (Fn a) where
-  Fn name1 _ _ _ == Fn name2 _ _ _ = name1 == name2
+  Fn name1 _ _ _ == Fn name2 _ _ _= name1 == name2
 
 instance Show (Fn a) where
   show (Fn name1 _ _ _) = name1
 
 data Expression a = Const a
                   | Var String
-                  | App (Fn a) (Expression a)
+                  | Fun (Fn a)
+                  | App (Expression a) (Expression a)
                   | Sum (Expression a) (Expression a)
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
@@ -35,6 +37,7 @@ data Expression a = Const a
 instance (Show a) => Show (Expression a) where
  show (Const a) = show a
  show (Var a)   = a
+ show (Fun f)   = name_ f
  show (App f a) = "(" ++ show f ++ " " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
@@ -96,43 +99,44 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
                     | otherwise = Pow (Const a) b
   a       ^ b       = Pow a b
   ln (Const a)      = Const (ln a)
-  ln a              = App (Fn "ln" ln exp (\x -> one / x)) a
+  ln a              = App (Fun (Fn "ln" ln exp (\x -> one / x))) a
   exp (Const a)     = Const (exp a)
-  exp a             = App (Fn "exp" exp ln exp) a
-  sqrt              = App (Fn "sqrt" sqrt (^ two) (\x -> one / (two * sqrt x)))
+  exp a             = App (Fun (Fn "exp" exp ln exp)) a
+  sqrt              = App (Fun (Fn "sqrt" sqrt (^ two) (\x -> one / (two * sqrt x))))
   two               = Const two
 
 
 -- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin = App (Fn "sin" sin asin cos)
-  cos = App (Fn "cos" cos acos (neg . sin))
-  tan = App (Fn "tan" tan atan (\x -> one / cos x^two))
-  asin = App (Fn "asin" asin sin (\x -> one / sqrt (one - x^two)))
-  acos = App (Fn "acos" acos cos (\x -> neg one / sqrt (one - x^two)))
-  atan = App (Fn "atan" atan tan (\x -> one / (one + x^two)))
+  sin = App (Fun (Fn "sin" sin asin cos))
+  cos = App (Fun (Fn "cos" cos acos (neg . sin)))
+  tan = App (Fun (Fn "tan" tan atan (\x -> one / cos x^two)))
+  asin = App (Fun (Fn "asin" asin sin (\x -> one / sqrt (one - x^two))))
+  acos = App (Fun (Fn "acos" acos cos (\x -> neg one / sqrt (one - x^two))))
+  atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
-ev fun e = App fun e
+ev fun e = App (Fun fun) e
 
-evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> Expression a
-evalExpr nm val =
+evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> (b -> a) -> Expression b -> a
+evalExpr nm val f =
   rec where
   rec e = case e of
-                         Const a      -> Const a
-                         Var a        -> if a == nm then Const val else Var a
-                         App fun a    -> ev fun (rec a)
+                         Const a      -> f a
+                         Var a        -> if a == nm then val else undefined
+--                         App fun a    -> ((value_ fun) (rec a))
+                         App fun a    -> rec a
                          Neg a        -> neg (rec a)
                          Sum a b      -> rec a + rec b
                          Prd a b      -> rec a * rec b
                          Div a b      -> rec a / rec b
                          Pow a b      -> rec a ^ rec b
 
-derivative :: (Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
 derivative (Var _)              = one
-derivative (App f a)            = derivative a * derivative_ f a -- chain rule
+derivative (App (Fun f) a)            = derivative a * derivative_ f a -- chain rule
 derivative (Neg a)              = neg (derivative a)
 derivative (Sum a b)            = derivative a + derivative b
 derivative (Prd a b)            = a * derivative b + derivative a * b --product rule (ab' + a'b)
