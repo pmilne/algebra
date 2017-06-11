@@ -46,9 +46,11 @@ run = do
           testDerivative (sin x1) (cos x1)
           testDerivative (x1 + sin x1) (one + cos x1)
           testDerivative (sin (sin x1))  (cos x1 * cos (sin x1))
-          testDerivative (tan (tan x1))  ((one/(cos x1 ^ two))*(one/(cos (tan x1) ^ two)))
+          testDerivative (tan (tan x1))  (one/((cos x1 ^ two)*(cos (tan x1) ^ two)))
           testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
           testDerivative (derivative (x1 + sin x1)) (neg (sin x1))
+
+          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
 
           putStrLn ("sin (1) = " ++ show (evalExpr "x1" (Const 1.0) Const (sin x1)))
 

@@ -126,7 +126,8 @@ evalExpr nm val f =
                          Const a      -> f a
                          Var a        -> if a == nm then val else undefined
 --                         App fun a    -> ((value_ fun) (rec a))
-                         App fun a    -> rec a
+--                         Fun fun      -> f fun
+--                         App (Fun f) a -> rec a
                          Neg a        -> neg (rec a)
                          Sum a b      -> rec a + rec b
                          Prd a b      -> rec a * rec b
@@ -136,7 +137,7 @@ evalExpr nm val f =
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
 derivative (Var _)              = one
-derivative (App (Fun f) a)            = derivative a * derivative_ f a -- chain rule
+derivative (App (Fun f) a)      = derivative a * derivative_ f a -- chain rule
 derivative (Neg a)              = neg (derivative a)
 derivative (Sum a b)            = derivative a + derivative b
 derivative (Prd a b)            = a * derivative b + derivative a * b --product rule (ab' + a'b)
