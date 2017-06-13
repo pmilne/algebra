@@ -14,6 +14,7 @@ import TestRational
 import TestExpression
 import TestPolynomial
 import TestTypes
+import TestLambda
 
 main :: IO ()
 main = do
@@ -25,6 +26,7 @@ main = do
           TestPolynomial.run
           TestTypes.run
           TestExpression.run
+          TestLambda.run
 
 
 
