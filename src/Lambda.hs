@@ -1,3 +1,10 @@
+{-
+An evaluator for lambda expressions. The evaluator uses lexical scoping and removes all
+symbolic (name-based) references in a compile-like first pass over the expression.
+
+Translated from original Java sources here: https://github.com/pmilne/lambda/blob/master/src/lambda/Evaluator.java
+-}
+
 module Lambda where
 
 import Data.List
@@ -17,10 +24,10 @@ data Primitive = Int0 Int
 
 
 data Expression = Constant !Primitive
-                 | Symbol String
-                 | Lambda !Expression !Expression
-                 | Application !Expression !Expression
-                 deriving (Eq, Show)
+                | Symbol String
+                | Lambda !Expression !Expression
+                | Application !Expression !Expression
+                deriving (Eq, Show)
 
 varName :: Expression -> String
 varName (Symbol s) = s
