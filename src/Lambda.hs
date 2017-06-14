@@ -37,6 +37,9 @@ toFunction :: Primitive -> Fun
 toFunction (Fun0 f) = f
 toFunction p = undefined
 
+toFunction2 :: Primitive -> (Primitive -> Primitive)
+toFunction2 f = function_ (toFunction f)
+
 toInt :: Primitive -> Int
 toInt (Int0 i) = i
 toInt p = undefined
@@ -59,7 +62,7 @@ createCompiler nameStack {-exp-} =
                     Application fun arg ->
                         let fun0 = rec fun in
                         let arg0 = rec arg in
-                        \env -> function_ (toFunction (fun0 env)) (arg0 env)
+                        \env -> toFunction2 (fun0 env) (arg0 env)
 
                     Lambda var exp ->
                         let var0 = varName var in
