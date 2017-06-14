@@ -37,6 +37,9 @@ toFunction :: Primitive -> Fun
 toFunction (Fun0 f) = f
 toFunction p = undefined
 
+toFunction2 :: Primitive -> (Primitive -> Primitive)
+toFunction2 f = function_ (toFunction f)
+
 toInt :: Primitive -> Int
 toInt (Int0 i) = i
 toInt p = undefined
@@ -47,13 +50,13 @@ getOrFail Nothing = error "This didin't happen"
 
 createCompiler :: [String] -> Expression -> [Primitive] -> Primitive
 createCompiler nameStack exp env =
-    rec env exp where
-    rec env exp = case exp of
+    rec exp where
+    rec exp = case exp of
                     Constant value -> value
 
                     Symbol name -> env !! getOrFail (elemIndex name nameStack)
 
-                    Application fun arg -> function_ (toFunction (rec env fun)) (rec env arg)
+                    Application fun arg -> toFunction2 (rec fun) (rec arg)
 
                     Lambda var body ->
                         let var0 = varName var in
