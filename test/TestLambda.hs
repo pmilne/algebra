@@ -24,5 +24,5 @@ run = do
           putStrLn (show (eval (Application (Application (Application c2 c2) inc) z)))
           putStrLn (show (eval (Application (Application (Application (Application c2 c2) c2) inc) z)))
           putStrLn (show (eval (Application (Application (Application (Application (Application c2 c2) c2) c2) inc) z)))
-          putStrLn (show (eval (Application (Application (Application (Application (Application c2 c2) c2) (Application c2 c2)) inc) z)))
+--          putStrLn (show (eval (Application (Application (Application (Application (Application c2 c2) c2) (Application c2 c2)) inc) z)))
 

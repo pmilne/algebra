@@ -46,25 +46,19 @@ getOrFail (Just x) = x
 getOrFail Nothing = error "This didin't happen"
 
 createCompiler :: [String] -> Expression -> [Primitive] -> Primitive
-createCompiler nameStack {-exp-} =
-    rec {-exp-} where
-    rec exp = case exp of
-                    Constant value ->
-                        \env -> value
+createCompiler nameStack exp env =
+    rec env exp where
+    rec env exp = case exp of
+                    Constant value -> value
 
-                    Symbol name ->
-                        let index = getOrFail (elemIndex name nameStack) in
-                        \env -> env !! index
+                    Symbol name -> env !! getOrFail (elemIndex name nameStack)
 
-                    Application fun arg ->
-                        let fun0 = rec fun in
-                        let arg0 = rec arg in
-                        \env -> function_ (toFunction (fun0 env)) (arg0 env)
+                    Application fun arg -> function_ (toFunction (rec env fun)) (rec env arg)
 
-                    Lambda var exp ->
+                    Lambda var body ->
                         let var0 = varName var in
-                        let exp0 = createCompiler (var0 : nameStack) exp in
-                        \env -> Fun0 (Fun "hello" (\arg -> exp0 (arg : env)))
+                        let body0 = createCompiler (var0 : nameStack) body in
+                        Fun0 (Fun "hello" (\arg -> body0 (arg : env)))
 
 
 eval :: Expression -> Primitive
