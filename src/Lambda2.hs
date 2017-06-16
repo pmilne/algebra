@@ -30,7 +30,7 @@ data Expression a = Constant !(Primitive a)
 
 varName :: Expression a -> String
 varName (Symbol s) = s
-varName _ = error "Formal parameter wasn't a symbol"
+varName _          = error "Formal parameter wasn't a symbol"
 
 toValue :: Primitive a -> a
 toValue (Val0 x) = x
