@@ -23,10 +23,10 @@ instance (Show a) => Show (Primitive a) where
   show (Fun0 n _) = n
 
 data Expression a = Constant !(Primitive a)
-                | Symbol String
-                | Lambda !(Expression a)!(Expression a)
-                | Application !(Expression a) !(Expression a)
-                deriving (Eq, Show)
+                  | Symbol String
+                  | Lambda !(Expression a)!(Expression a)
+                  | Application !(Expression a) !(Expression a)
+                  deriving (Eq, Show)
 
 varName :: Expression a -> String
 varName (Symbol s) = s
