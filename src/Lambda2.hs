@@ -10,18 +10,17 @@ module Lambda2 where
 import Prelude hiding (exp)
 import Data.List
 
-data (Fun a) = Fun {name_ :: String, function_ :: Primitive a -> Primitive a}
-
-instance Eq (Fun a) where
-  Fun n1 _ == Fun n2 _ = n1 == n2
-
-instance Show (Fun a) where
-  show (Fun n _) = n
-
 data Primitive a = Val0 a
-               | Fun0 (Fun a)
-               deriving (Eq, Show)
+               | Fun0 {name_ :: String, function_ :: Primitive a -> Primitive a}
+--               deriving (Eq, Show)
 
+instance (Eq a) => Eq (Primitive a) where
+  Val0 v1 == Val0 v2 = v1 == v2
+  Fun0 n1 _ == Fun0 n2 _ = n1 == n2
+
+instance (Show a) => Show (Primitive a) where
+  show (Val0 v) = show v
+  show (Fun0 n _) = n
 
 data Expression a = Constant !(Primitive a)
                 | Symbol String
@@ -33,12 +32,8 @@ varName :: Expression a -> String
 varName (Symbol s) = s
 varName _ = error "variable wasn't a variable!!!"
 
-toFunction :: Primitive a -> Fun a
-toFunction (Fun0 f) = f
-toFunction _ = undefined
-
 toFunction2 :: Primitive a -> Primitive a -> Primitive a
-toFunction2 f = function_ (toFunction f)
+toFunction2 f = function_ f
 
 toInt :: Primitive a -> a
 toInt (Val0 x) = x
@@ -67,7 +62,7 @@ createCompiler nameStack {-exp-} =
                     Lambda var body ->
                         let var0 = varName var in
                         let exp0 = createCompiler (var0 : nameStack) body in
-                        \env -> Fun0 (Fun "hello" (\arg -> exp0 (arg : env)))
+                        \env -> Fun0 "hello" (\arg -> exp0 (arg : env))
 
 
 eval :: Expression a -> Primitive a
