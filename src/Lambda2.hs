@@ -19,7 +19,6 @@ instance Show (Fun a) where
   show (Fun n _) = n
 
 data (Primitive a) = Int0 a
-               | Str0 String
                | Fun0 (Fun a)
                deriving (Eq, Show)
 
