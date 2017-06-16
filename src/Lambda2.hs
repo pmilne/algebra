@@ -12,11 +12,11 @@ import Data.List
 
 data Primitive a = Val0 a
                | Fun0 {name_ :: String, function_ :: Primitive a -> Primitive a}
---               deriving (Eq, Show)
 
 instance (Eq a) => Eq (Primitive a) where
   Val0 v1 == Val0 v2 = v1 == v2
   Fun0 n1 _ == Fun0 n2 _ = n1 == n2
+  _ == _ = False
 
 instance (Show a) => Show (Primitive a) where
   show (Val0 v) = show v
@@ -30,10 +30,7 @@ data Expression a = Constant !(Primitive a)
 
 varName :: Expression a -> String
 varName (Symbol s) = s
-varName _ = error "variable wasn't a variable!!!"
-
-toFunction2 :: Primitive a -> Primitive a -> Primitive a
-toFunction2 f = function_ f
+varName _ = error "Formal parameter wasn't a symbol"
 
 toInt :: Primitive a -> a
 toInt (Val0 x) = x
@@ -57,7 +54,7 @@ createCompiler nameStack {-exp-} =
                     Application fun arg ->
                         let fun0 = rec fun in
                         let arg0 = rec arg in
-                        \env -> toFunction2 (fun0 env) (arg0 env)
+                        \env -> function_ (fun0 env) (arg0 env)
 
                     Lambda var body ->
                         let var0 = varName var in
