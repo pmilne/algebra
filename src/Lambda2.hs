@@ -14,7 +14,7 @@ data Primitive a = Val0 {value_ :: a}
                  | Fun0 {function_ :: Primitive a -> Primitive a}
 
 instance (Show a) => Show (Primitive a) where
-  show (Val0 v)   = show v
+  show (Val0 v) = show v
   show (Fun0 _) = "<function>"
 
 data Expression a = Constant !(Primitive a)
