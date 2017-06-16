@@ -18,7 +18,7 @@ instance Eq (Fun a) where
 instance Show (Fun a) where
   show (Fun n _) = n
 
-data (Primitive a) = Int0 Int
+data (Primitive a) = Int0 a
                | Str0 String
                | Fun0 (Fun a)
                deriving (Eq, Show)
@@ -41,7 +41,7 @@ toFunction _ = undefined
 toFunction2 :: Primitive a -> Primitive a -> Primitive a
 toFunction2 f = function_ (toFunction f)
 
-toInt :: Primitive a -> Int
+toInt :: Primitive a -> a
 toInt (Int0 i) = i
 toInt _ = undefined
 
