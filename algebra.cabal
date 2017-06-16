@@ -21,7 +21,9 @@ executable algebra
                        Collins,
                        TestUtil,
                        TestFactorial, TestTypes
-                       TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1
+                       TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1,
+                       Lambda, TestLambda,
+                       Lambda2, TestLambda2
   hs-source-dirs:      src, test
   main-is:             Main.hs
   default-language:    Haskell2010
