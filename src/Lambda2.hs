@@ -24,7 +24,7 @@ instance (Show a) => Show (Primitive a) where
 
 data Expression a = Constant !(Primitive a)
                   | Symbol String
-                  | Lambda !(Expression a)!(Expression a)
+                  | Lambda !(Expression a) !(Expression a)
                   | Application !(Expression a) !(Expression a)
                   deriving (Eq, Show)
 
