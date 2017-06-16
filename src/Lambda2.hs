@@ -10,12 +10,12 @@ module Lambda2 where
 import Prelude hiding (exp)
 import Data.List
 
-data Primitive a = Val0 {value_ :: a}
-                 | Fun0 {function_ :: Primitive a -> Primitive a}
+data Primitive a = Value {value_ :: a}
+                 | Function {function_ :: Primitive a -> Primitive a}
 
 instance (Show a) => Show (Primitive a) where
-  show (Val0 v) = show v
-  show (Fun0 _) = "<function>"
+  show (Value v) = show v
+  show (Function _) = "<function>"
 
 data Expression a = Constant !(Primitive a)
                   | Symbol String
@@ -50,7 +50,7 @@ createCompiler nameStack {-exp-} =
                     Lambda var body ->
                         let var0 = varName var in
                         let exp0 = createCompiler (var0 : nameStack) body in
-                        \env -> Fun0 (\arg -> exp0 (arg : env))
+                        \env -> Function (\arg -> exp0 (arg : env))
 
 eval :: Expression a -> Primitive a
 eval input = createCompiler [] input []

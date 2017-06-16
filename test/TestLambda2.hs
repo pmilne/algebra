@@ -11,8 +11,8 @@ f = Symbol "f"
 c0 = Lambda f (Lambda x x)
 c1 = Lambda x x
 c2 = Lambda f (Lambda x (Application f (Application f x)))
-z = Constant (Val0 0)
-inc = Constant (Fun0 (\p -> Val0 (1 + (value_ p))))
+z = Constant (Value 0)
+inc = Constant (Function (\p -> Value (1 + (value_ p))))
 id1 = Application c1 z
 
 run :: IO ()
