@@ -48,9 +48,9 @@ createCompiler nameStack {-exp-} =
                         \env -> function_ (fun0 env) (arg0 env)
 
                     Lambda var body ->
-                        let var0 = varName var in
-                        let exp0 = createCompiler (var0 : nameStack) body in
-                        \env -> Function (\arg -> exp0 (arg : env))
+                        let var0  = varName var in
+                        let body0 = createCompiler (var0 : nameStack) body in
+                        \env -> Function (\arg -> body0 (arg : env))
 
 eval :: Expression a -> Primitive a
 eval input = createCompiler [] input []
