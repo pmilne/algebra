@@ -5,24 +5,24 @@ import Lambda2
 
 --import TestUtil
 
-f, x, c0, c1, c2, id1 :: Expression Int
+f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Symbol "x"
 f = Symbol "f"
 c0 = Lambda f (Lambda x x)
 c1 = Lambda x x
 c2 = Lambda f (Lambda x (Application f (Application f x)))
 z = Constant (Value 0)
-inc = Constant (Function (\p -> Value (1 + (value_ p))))
+inc = Constant (Function (\p -> Value (1 + value_ p)))
 id1 = Application c1 z
 
 run :: IO ()
 run = do
-          putStrLn (show (eval c1))
-          putStrLn (show (eval id1))
+          print (eval c1)
+          print (eval id1)
 
-          putStrLn (show (eval (Application (Application c2 inc) z)))
-          putStrLn (show (eval (Application (Application (Application c2 c2) inc) z)))
-          putStrLn (show (eval (Application (Application (Application (Application c2 c2) c2) inc) z)))
-          putStrLn (show (eval (Application (Application (Application (Application (Application c2 c2) c2) c2) inc) z)))
---          putStrLn (show (eval (Application (Application (Application (Application (Application c2 c2) c2) (Application c2 c2)) inc) z)))
+          print (eval (Application (Application c2 inc) z))
+          print (eval (Application (Application (Application c2 c2) inc) z))
+          print (eval (Application (Application (Application (Application c2 c2) c2) inc) z))
+          print (eval (Application (Application (Application (Application (Application c2 c2) c2) c2) inc) z))
+--          print (eval (Application (Application (Application (Application (Application c2 c2) c2) (Application c2 c2)) inc) z))
 
