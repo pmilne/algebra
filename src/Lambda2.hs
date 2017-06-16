@@ -29,7 +29,7 @@ varName _          = error "Formal parameter wasn't a symbol. "
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
-getOrFail Nothing = error "This didin't happen. "
+getOrFail Nothing = error "This didn't happen. "
 
 createCompiler :: [String] -> Expression a -> [Primitive a] -> Primitive a
 createCompiler nameStack {-exp-} =

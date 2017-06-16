@@ -46,7 +46,7 @@ toInt p = undefined
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
-getOrFail Nothing = error "This didin't happen"
+getOrFail Nothing = error "This didn't happen"
 
 createCompiler :: [String] -> Expression -> [Primitive] -> Primitive
 createCompiler nameStack {-exp-} =
