@@ -10,7 +10,7 @@ module Lambda2 where
 import Prelude hiding (exp)
 import Data.List
 
-data Primitive a = Value {value_ :: a}
+data Primitive a = Value    {value_    :: a}
                  | Function {function_ :: Primitive a -> Primitive a}
 
 instance (Show a) => Show (Primitive a) where
