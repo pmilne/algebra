@@ -10,7 +10,7 @@ module Lambda2 where
 import Prelude hiding (exp)
 import Data.List
 
-data Primitive a = Val0 a
+data Primitive a = Val0 {value_ :: a}
                  | Fun0 {function_ :: Primitive a -> Primitive a}
 
 instance (Show a) => Show (Primitive a) where
@@ -26,10 +26,6 @@ data Expression a = Constant !(Primitive a)
 varName :: Expression a -> String
 varName (Symbol s) = s
 varName _          = error "Formal parameter wasn't a symbol. "
-
-toValue :: Primitive a -> a
-toValue (Val0 x) = x
-toValue _        = undefined
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
