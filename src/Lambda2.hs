@@ -11,15 +11,15 @@ import Prelude hiding (exp)
 import Data.List
 
 data Primitive a = Val0 a
-               | Fun0 {name_ :: String, function_ :: Primitive a -> Primitive a}
+                 | Fun0 {name_ :: String, function_ :: Primitive a -> Primitive a}
 
 instance (Eq a) => Eq (Primitive a) where
-  Val0 v1 == Val0 v2 = v1 == v2
+  Val0 v1   == Val0 v2   = v1 == v2
   Fun0 n1 _ == Fun0 n2 _ = n1 == n2
-  _ == _ = False
+  _         == _         = False
 
 instance (Show a) => Show (Primitive a) where
-  show (Val0 v) = show v
+  show (Val0 v)   = show v
   show (Fun0 n _) = n
 
 data Expression a = Constant !(Primitive a)
