@@ -52,6 +52,5 @@ createCompiler nameStack {-exp-} =
                         let exp0 = createCompiler (var0 : nameStack) body in
                         \env -> Fun0 (\arg -> exp0 (arg : env))
 
-
 eval :: Expression a -> Primitive a
 eval input = createCompiler [] input []
