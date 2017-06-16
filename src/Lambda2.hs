@@ -11,26 +11,21 @@ import Prelude hiding (exp)
 import Data.List
 
 data Primitive a = Val0 a
-                 | Fun0 {name_ :: String, function_ :: Primitive a -> Primitive a}
-
-instance (Eq a) => Eq (Primitive a) where
-  Val0 v1   == Val0 v2   = v1 == v2
-  Fun0 n1 _ == Fun0 n2 _ = n1 == n2
-  _         == _         = False
+                 | Fun0 {function_ :: Primitive a -> Primitive a}
 
 instance (Show a) => Show (Primitive a) where
   show (Val0 v)   = show v
-  show (Fun0 n _) = n
+  show (Fun0 _) = "<function>"
 
 data Expression a = Constant !(Primitive a)
                   | Symbol String
                   | Lambda !(Expression a) !(Expression a)
                   | Application !(Expression a) !(Expression a)
-                  deriving (Eq, Show)
+                  deriving (Show)
 
 varName :: Expression a -> String
 varName (Symbol s) = s
-varName _          = error "Formal parameter wasn't a symbol"
+varName _          = error "Formal parameter wasn't a symbol. "
 
 toValue :: Primitive a -> a
 toValue (Val0 x) = x
@@ -38,7 +33,7 @@ toValue _        = undefined
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
-getOrFail Nothing = error "This didin't happen"
+getOrFail Nothing = error "This didin't happen. "
 
 createCompiler :: [String] -> Expression a -> [Primitive a] -> Primitive a
 createCompiler nameStack {-exp-} =
@@ -59,7 +54,7 @@ createCompiler nameStack {-exp-} =
                     Lambda var body ->
                         let var0 = varName var in
                         let exp0 = createCompiler (var0 : nameStack) body in
-                        \env -> Fun0 "hello" (\arg -> exp0 (arg : env))
+                        \env -> Fun0 (\arg -> exp0 (arg : env))
 
 
 eval :: Expression a -> Primitive a
