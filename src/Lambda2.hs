@@ -32,9 +32,9 @@ varName :: Expression a -> String
 varName (Symbol s) = s
 varName _ = error "Formal parameter wasn't a symbol"
 
-toInt :: Primitive a -> a
-toInt (Val0 x) = x
-toInt _ = undefined
+toValue :: Primitive a -> a
+toValue (Val0 x) = x
+toValue _        = undefined
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
