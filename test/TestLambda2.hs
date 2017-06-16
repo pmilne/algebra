@@ -3,8 +3,6 @@ module TestLambda2 where
 import Prelude hiding (id)
 import Lambda2
 
---import TestUtil
-
 f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Symbol "x"
 f = Symbol "f"
