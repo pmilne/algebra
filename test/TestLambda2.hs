@@ -8,9 +8,9 @@ import Lambda2
 f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Symbol "x"
 f = Symbol "f"
-c0 = Lambda f (Lambda x x)
-c1 = Lambda x x
-c2 = Lambda f (Lambda x (Application f (Application f x)))
+c0 = Lambda "f" (Lambda "x" x)
+c1 = Lambda "x" x
+c2 = Lambda "f" (Lambda "x" (Application f (Application f x)))
 z = Constant (Value 0)
 inc = Constant (Function (\p -> Value (1 + value_ p)))
 id1 = Application c1 z

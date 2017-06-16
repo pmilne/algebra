@@ -18,14 +18,10 @@ instance (Show a) => Show (Primitive a) where
   show (Function _) = "<function>"
 
 data Expression a = Constant !(Primitive a)
-                  | Symbol String
-                  | Lambda !(Expression a) !(Expression a)
+                  | Symbol !String
+                  | Lambda !String !(Expression a)
                   | Application !(Expression a) !(Expression a)
                   deriving (Show)
-
-varName :: Expression a -> String
-varName (Symbol s) = s
-varName _          = error "Formal parameter wasn't a symbol. "
 
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
@@ -48,8 +44,7 @@ createCompiler nameStack {-exp-} =
                         \env -> function_ (fun0 env) (arg0 env)
 
                     Lambda var body ->
-                        let var0  = varName var in
-                        let body0 = createCompiler (var0 : nameStack) body in
+                        let body0 = createCompiler (var : nameStack) body in
                         \env -> Function (\arg -> body0 (arg : env))
 
 eval :: Expression a -> Primitive a
