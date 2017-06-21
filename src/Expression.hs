@@ -163,6 +163,7 @@ evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String ->
 evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id value_ {-exp-}
 
 evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> Expression a -> Expression a -> Expression a
+{-
 evalExpr2 nm val {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
@@ -176,6 +177,8 @@ evalExpr2 nm val {-exp-} =
                          Inv a          -> inv (rec a)
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
+-}
+evalExpr2 nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) Const undefined {-exp-}
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
@@ -194,7 +197,8 @@ inverse (Const _)            = undefined
 inverse (Var x)              = Var x
 --inverse (App (Fun f) a)      = inverse_ f (inverse a) -- todo these need to be applied in reverse order
 --inverse (App (Fun f) a)      = evalExpr "y" (inverse a) (Const (inverse_ f (Var "y")))
-inverse (App (Fun f) a)      = evalExpr "y" (inverse_ f (Var "y")) (Const (inverse a))
+--inverse (App (Fun f) a)      = evalExpr2 "x1" (inverse_ f (Var "x1")) (inverse a)
+inverse (App (Fun f) a)      = evalExpr0 (\nm -> if nm == "x1" then inverse_ f (Var "x1") else undefined) Const inverse_ a
 --inverse (App (Fun f) a)      = let foo = evalExpr "y" (inverse_ f (Var "y")) (inverse a) in undefined
 --inverse (App (Fun f) a)      = let result = evalExpr "x1" (inverse_ f (Var "x1")) (Const (inverse a)) in trace ("inverse result: " ++ show result) result
 --inverse (App (Fun f) a)      = inverse a
