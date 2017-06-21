@@ -54,6 +54,8 @@ run = do
 
           putStrLn ("sin (1) = " ++ show (evalExpr "x1" 1.0 (sin x1)))
 
-          putStrLn ("inv sin = " ++ show (inverse (sin x1)))
-          putStrLn ("inv sin = " ++ show (inverse (sin (cos x1))))
+          putStrLn ("inverse (- (1 / x)) = " ++ show (inverse (neg (inv x1))))
+
+          putStrLn ("inverse (sin x1) = " ++ show (inverse (sin x1)))
+          putStrLn ("inverse (sin (cos x1)) = " ++ show (inverse (sin (cos x1))))
 
