@@ -7,7 +7,13 @@ import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan
 import Field
 import Exponentiative
 import Trigonometric
+--import Applicable
 import Debug.Trace
+
+--convertfn :: (a -> b) -> (b -> a) -> Fn a -> Fn b
+--convertfn a2b b2a fn = Fn (name_ fn) (\b0 -> a2b (value_ fn (b2a b0))) (inverse_ fn) (derivative_ fn)
+
+-- Applicable
 
 data Fn a = Fn {
   name_ :: String,
@@ -16,8 +22,19 @@ data Fn a = Fn {
   derivative_:: Expression a -> Expression a
 }
 
---convertfn :: (a -> b) -> (b -> a) -> Fn a -> Fn b
---convertfn a2b b2a fn = Fn (name_ fn) (\b0 -> a2b (value_ fn (b2a b0))) (inverse_ fn) (derivative_ fn)
+class Applicable a where
+    apply      :: a -> a -> a
+
+instance Applicable Int where
+    apply       = undefined
+
+instance Applicable Integer where
+    apply       = undefined
+
+instance Applicable Double where
+    apply       = undefined
+
+-- Applicable
 
 instance Eq (Fn a) where
   Fn name1 _ _ _ == Fn name2 _ _ _= name1 == name2
@@ -120,9 +137,27 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   acos = App (Fun (Fn "acos" acos cos (\x -> neg one / sqrt (one - x^two))))
   atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
+instance (Applicable a) => Applicable (Expression a) where
+  apply f x = App f x
+
 ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
+
+evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> Expression a -> b
+evalExpr0 var2out const2out {-exp-} =
+--  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
+  rec {-exp-} where
+  rec e = case e of
+                         Const a        -> const2out a
+                         Var a          -> var2out a
+                         App f a        -> apply (rec f) (rec a)
+                         Neg a          -> neg (rec a)
+                         Sum a b        -> rec a + rec b
+                         Prd a b        -> rec a * rec b
+                         Inv a          -> inv (rec a)
+                         Div a b        -> rec a / rec b
+                         Pow a b        -> rec a ^ rec b
 
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> a
 evalExpr nm val exp =
@@ -139,29 +174,14 @@ evalExpr nm val exp =
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
 
-evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a) => String -> Expression a -> Expression a -> Expression a
+evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> Expression a -> Expression a -> Expression a
 evalExpr2 nm val {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
                          Const a        -> Const a
                          Var a          -> if a == nm then val else undefined
---                         App (Fun fn) a -> value_ fn (rec a)
-                         Neg a          -> neg (rec a)
-                         Sum a b        -> rec a + rec b
-                         Prd a b        -> rec a * rec b
-                         Inv a          -> inv (rec a)
-                         Div a b        -> rec a / rec b
-                         Pow a b        -> rec a ^ rec b
-
-mapExpr :: (Show b, Eq b, Field b, Exponentiative b) => (a -> b) -> Expression a -> Expression b
-mapExpr f {-exp-} =
---  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
-  rec {-exp-} where
-  rec e = case e of
-                         Const a        -> Const (f a)
-                         Var a          -> Var a
---                         App (Fun fn) a -> value_ fn (rec a)
+                         App (Fun fn) a -> apply (Fun fn) (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
@@ -181,7 +201,7 @@ derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ tw
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
-inverse :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
 --inverse (App (Fun f) a)      = inverse_ f (inverse a) -- todo these need to be applied in reverse order
