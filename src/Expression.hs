@@ -181,7 +181,7 @@ evalExpr2 nm val {-exp-} =
   rec e = case e of
                          Const a        -> Const a
                          Var a          -> if a == nm then val else undefined
-                         App (Fun fn) a -> apply (Fun fn) (rec a)
+                         App f a        -> apply f (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
