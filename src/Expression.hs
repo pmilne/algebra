@@ -195,13 +195,7 @@ derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g *
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
---inverse (App (Fun f) a)      = inverse_ f (inverse a) -- todo these need to be applied in reverse order
---inverse (App (Fun f) a)      = evalExpr "y" (inverse a) (Const (inverse_ f (Var "y")))
---inverse (App (Fun f) a)      = evalExpr2 "x1" (inverse_ f (Var "x1")) (inverse a)
 inverse (App (Fun f) a)      = evalExpr0 (\nm -> if nm == "x1" then inverse_ f (Var "x1") else undefined) Const inverse_ a
---inverse (App (Fun f) a)      = let foo = evalExpr "y" (inverse_ f (Var "y")) (inverse a) in undefined
---inverse (App (Fun f) a)      = let result = evalExpr "x1" (inverse_ f (Var "x1")) (Const (inverse a)) in trace ("inverse result: " ++ show result) result
---inverse (App (Fun f) a)      = inverse a
 inverse (Neg a)              = evalExpr2 "x1" (neg (Var "x1")) (inverse a)
 --inverse (Sum a b)            =
 --inverse (Prd a b)            =

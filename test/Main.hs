@@ -19,16 +19,16 @@ import TestLambda2
 
 main :: IO ()
 main = do
-          TestFactorial.run
-          Numeral.TestNumeral1.run
-          TestComplex.run
-          TestModular.run
-          TestRational.run
-          TestPolynomial.run
-          TestTypes.run
+--          TestFactorial.run
+--          Numeral.TestNumeral1.run
+--          TestComplex.run
+--          TestModular.run
+--          TestRational.run
+--          TestPolynomial.run
+--          TestTypes.run
           TestExpression.run
-          TestLambda.run
-          TestLambda2.run
+--          TestLambda.run
+--          TestLambda2.run
 
 
 
