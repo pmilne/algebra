@@ -144,14 +144,14 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
-evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> Expression a -> b
-evalExpr0 var2out const2out {-exp-} =
+evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> (Fn a -> b -> b) -> Expression a -> b
+evalExpr0 var2out const2out fun2out {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
                          Const a        -> const2out a
                          Var a          -> var2out a
-                         App f a        -> apply (rec f) (rec a)
+                         App (Fun f) a  -> fun2out f (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
@@ -159,20 +159,8 @@ evalExpr0 var2out const2out {-exp-} =
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
 
-evalExpr :: (Show a, Eq a, Field a, Exponentiative a) => String -> a -> Expression a -> a
-evalExpr nm val exp =
-  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
-  rec exp where
-  rec e = case e of
-                         Const a        -> a
-                         Var a          -> if a == nm then val else undefined
-                         App (Fun fn) a -> value_ fn (rec a)
-                         Neg a          -> neg (rec a)
-                         Sum a b        -> rec a + rec b
-                         Prd a b        -> rec a * rec b
-                         Inv a          -> inv (rec a)
-                         Div a b        -> rec a / rec b
-                         Pow a b        -> rec a ^ rec b
+evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
+evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id value_ {-exp-}
 
 evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> Expression a -> Expression a -> Expression a
 evalExpr2 nm val {-exp-} =
@@ -181,7 +169,7 @@ evalExpr2 nm val {-exp-} =
   rec e = case e of
                          Const a        -> Const a
                          Var a          -> if a == nm then val else undefined
-                         App f a        -> apply f (rec a)
+                         App f a        -> apply (rec f) (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
