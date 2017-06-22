@@ -144,7 +144,7 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
-evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> (Fn a -> b -> b) -> Expression a -> b
+evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b -> b) -> Expression a -> b
 evalExpr0 var2out const2out fun2out {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where

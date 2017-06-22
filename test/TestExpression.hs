@@ -58,4 +58,5 @@ run = do
 
           putStrLn ("inverse (sin x1) = " ++ show (inverse (sin x1)))
           putStrLn ("inverse (sin (cos x1)) = " ++ show (inverse (sin (cos x1))))
+          putStrLn ("inverse (sin (cos (tan x1))) = " ++ show (inverse (sin (cos (tan x1)))))
 
