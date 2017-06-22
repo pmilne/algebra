@@ -159,17 +159,14 @@ evalExpr0 var2out const2out fun2out {-exp-} =
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
 
-evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
-evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id value_ {-exp-}
-
-evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> Expression a -> Expression a -> Expression a
-{-
-evalExpr2 nm val {-exp-} =
+evalExpr1 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> Expression a -> b
+evalExpr1 var2out const2out fun2out {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
-                         Const a        -> Const a
-                         Var a          -> if a == nm then val else undefined
+                         Const a        -> const2out a
+                         Var a          -> var2out a
+                         Fun f          -> fun2out f
                          App f a        -> apply (rec f) (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
@@ -177,7 +174,11 @@ evalExpr2 nm val {-exp-} =
                          Inv a          -> inv (rec a)
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
--}
+
+evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
+evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id value_ {-exp-}
+
+evalExpr2 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> Expression a -> Expression a -> Expression a
 evalExpr2 nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) Const undefined {-exp-}
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
@@ -195,7 +196,7 @@ derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g *
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Const _)            = undefined
 inverse (Var x)              = Var x
-inverse (App (Fun f) a)      = evalExpr0 (\nm -> if nm == "x1" then inverse_ f (Var "x1") else undefined) Const inverse_ a
+inverse (App (Fun f) a)      = evalExpr1 (\nm -> if nm == "x1" then inverse_ f (Var "x1") else undefined) Const Fun (inverse a)
 inverse (Neg a)              = evalExpr2 "x1" (neg (Var "x1")) (inverse a)
 --inverse (Sum a b)            =
 --inverse (Prd a b)            =
