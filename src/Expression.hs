@@ -51,7 +51,6 @@ data Expression a = Const a
                   | Neg (Expression a)
                   | Prd (Expression a) (Expression a)
                   | Inv (Expression a)
-                  | Div (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
                   | Log (Expression a) (Expression a)
                   deriving (Eq)
@@ -67,7 +66,6 @@ instance (Show a) => Show (Expression a) where
  show (Pow a b) = "(" ++ show a ++ "^" ++ show b ++ ")"
  show (Log a b) = "(log (base " ++ show a ++ ") " ++ show b ++ ")"
  show (Inv a)   = "(" ++ "/" ++ show a ++ ")"
- show (Div a b) = "(" ++ show a ++ "/" ++ show b ++ ")"
 
 instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
@@ -78,7 +76,8 @@ instance (Eq a, Additive a) => Additive (Expression a) where
 
 instance (Negatable a) => Negatable (Expression a) where
   neg (Const a) = Const (neg a)
-  neg a = Neg a
+  neg (Neg a)   = a
+  neg a         = Neg a
 
 instance (Eq a, Subtractive a) => Subtractive (Expression a) where
 
@@ -89,12 +88,13 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
                     | otherwise = Prd (Const b) a -- if commutative we can move the constant to the front
   Const a * (Prd (Const b) c)  -- if associative, gather constants
                     = Prd (Const (a * b)) c
-  (Div n1 d1) * (Div n2 d2)
-                    = Div (n1 * n2) (d1 * d2)
   Const a * b       | a == zero = zero
                     | a == one = b
                     | otherwise = Prd (Const a) b
-  a       * b       = Prd a b
+  (Inv a) * (Inv b) = Inv (a * b)
+  a * (Prd b (Inv c)) = Prd (a * b) (Inv c)
+  a * (Inv b)       = if a == b then one else Prd a (Inv b)
+  a       * b       = if a == b then Pow a (Const one + Const one) else Prd a b
   one               = Const one
 
 instance (Eq a, Ring a) => Ring (Expression a) where
@@ -104,15 +104,7 @@ instance (Eq a, Field a) => Invertable (Expression a) where
   inv a = Inv a
 
 instance (Eq a, Field a) => Field (Expression a) where
-  Const a / Const b = Const (a / b)
-  a       / Const b | b == zero = error "Divide by zero!"
-                    | b == one = a
-                    | otherwise = Div a (Const b)
-  Const a / b       | a == zero = zero
-                    | otherwise = Div (Const a) b
-  Div a b / c       = Div a (b * c)
-  a       / Div b c = Div (a * c) b
-  a       / b       = if a == b then one else Div a b
+  a / b             = a * inv b
 
 instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
@@ -162,7 +154,6 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
                          Inv a          -> inv (rec a)
-                         Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
                          Log a b        -> log (rec a) (rec b)
 
@@ -179,8 +170,8 @@ derivative (App (Fun f) a)      = derivative a * derivative_ f a -- chain rule
 derivative (Neg a)              = neg (derivative a)
 derivative (Sum a b)            = derivative a + derivative b
 derivative (Prd a b)            = a * derivative b + derivative a * b --product rule (ab' + a'b)
-derivative (Inv a)              = Neg (derivative a) / (a ^ two)
-derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
+derivative (Inv a)              = neg (derivative a) / (a ^ two)
+--derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
 derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
@@ -201,7 +192,7 @@ inverse (Prd _ _)               = undefined
 
 inverse (Inv a)                 = substitute inv (inverse a)
 
-inverse (Div a b)               = inverse (a * inv b)
+--inverse (Div a b)               = inverse (a * inv b)
 
 inverse (Pow a (Const n))       = substitute (\e -> e ^ inv (Const n)) (inverse a)
 inverse (Pow (Const a) n)       = substitute (\e -> log (Const a) e) (inverse n)

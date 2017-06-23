@@ -54,6 +54,8 @@ run = do
           testDerivative (sin (sin x))  (cos x * cos (sin x))
           testDerivative (tan (tan x))  (one/((cos x ^ two)*(cos (tan x) ^ two)))
           testDerivative (asin x)   (one / sqrt (one + neg (x ^ two)))
+          testDerivative (tan x) (one / cos x^two)
+          testDerivative (sin x / cos x) (((sin x ^ two) /(cos x ^ two)) + one)
           testDerivative (derivative (x + sin x)) (neg (sin x))
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
