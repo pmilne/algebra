@@ -189,11 +189,11 @@ inverse (Const _)               = undefined
 inverse (Var x)                 = Var x
 inverse (App (Fun f) a)         = substitute (inverse_ f) (inverse a)
 
-inverse (Neg a)                 = substitute neg (inverse a)
-
 inverse (Sum (Const a) b)       = substitute (\e -> neg (Const a) + e) (inverse b)
 inverse (Sum a (Const b))       = substitute (\e -> e - Const b) (inverse a)
 inverse (Sum _ _)               = undefined
+
+inverse (Neg a)                 = substitute neg (inverse a)
 
 inverse (Prd (Const a) b)       = substitute (\e -> inv (Const a) * e) (inverse b)
 inverse (Prd a (Const b))       = substitute (\e -> e / Const b) (inverse a)
