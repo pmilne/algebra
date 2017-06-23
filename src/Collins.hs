@@ -40,7 +40,7 @@ subresultant rtn u v =
              else
                let delta = deg u - deg v in
                let lcv = lc v in
-               -- in the first iteration, delta may be zero, which needs an explicit check.
+               -- The first clause is only required in the first iteration where delta may be zero, requiring an explicit check.
                let nh = if delta == 0 && h == one then lcv else (lcv ^ delta) /! (h ^ (delta - 1)) in
                if deg v == 0 then
                    rtn one nh
