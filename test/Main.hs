@@ -7,11 +7,12 @@ cabal repl
 -}
 
 import TestFactorial
-import Numeral.TestNumeral1
+import qualified Numeral.TestNumeral1 as TestNumeral1
 import TestComplex
 import TestModular
 import TestRational
 import TestExpression
+import qualified Expression.TestEval as TestEval
 import TestPolynomial
 import TestTypes
 import TestLambda
@@ -21,16 +22,17 @@ import TestLambda3
 main :: IO ()
 main = do
 --          TestFactorial.run
---          Numeral.TestNumeral1.run
+--          TestNumeral1.run
 --          TestComplex.run
 --          TestModular.run
 --          TestRational.run
 --          TestPolynomial.run
 --          TestTypes.run
-          TestExpression.run
+--          TestExpression.run
+          TestEval.run
 --          TestLambda.run
 --          TestLambda2.run
-          TestLambda3.run
+--          TestLambda3.run
 
 
 

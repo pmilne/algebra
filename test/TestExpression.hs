@@ -62,7 +62,7 @@ run = do
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
 
-          putStrLn ("sin (1) = " ++ show (eval "x" 1.0 (sin x)))
+          putStrLn ("sin (1) = " ++ show (eval1 "x" 1.0 (sin x)))
 
           testInverse (x / two) (two * x)
           testInverse (two / x) (inv (half * x))
