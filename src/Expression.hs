@@ -180,19 +180,19 @@ inverse (Const _)               = undefined
 inverse (Var x)                 = Var x
 inverse (App (Fun f) a)         = substitute (inverse_ f) (inverse a)
 
-inverse (Sum (Const a) b)       = substitute (\e -> neg (Const a) + e) (inverse b)
-inverse (Sum a (Const b))       = substitute (\e -> e - Const b) (inverse a)
+inverse (Sum (Const a) b)       = substitute (\x -> neg (Const a) + x) (inverse b)
+inverse (Sum a (Const b))       = substitute (\x -> x - Const b) (inverse a)
 inverse (Sum _ _)               = undefined
 
 inverse (Neg a)                 = substitute neg (inverse a)
 
-inverse (Prd (Const a) b)       = substitute (\e -> inv (Const a) * e) (inverse b)
-inverse (Prd a (Const b))       = substitute (\e -> e / Const b) (inverse a)
+inverse (Prd (Const a) b)       = substitute (\x -> inv (Const a) * x) (inverse b)
+inverse (Prd a (Const b))       = substitute (\x -> x / Const b) (inverse a)
 inverse (Prd _ _)               = undefined
 
 inverse (Inv a)                 = substitute inv (inverse a)
 
-inverse (Pow a (Const n))       = substitute (\e -> e ^ inv (Const n)) (inverse a)
-inverse (Pow (Const a) n)       = substitute (\e -> log (Const a) e) (inverse n)
+inverse (Pow a (Const n))       = substitute (\x -> x ^ inv (Const n)) (inverse a)
+inverse (Pow (Const a) n)       = substitute (\x -> log (Const a) x) (inverse n)
 inverse (Pow _ _)               = undefined
 
