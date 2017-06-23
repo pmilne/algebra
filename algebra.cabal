@@ -23,7 +23,8 @@ executable algebra
                        TestFactorial, TestTypes
                        TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1,
                        Lambda, TestLambda,
-                       Lambda2, TestLambda2
+                       Lambda2, TestLambda2,
+                       Lambda3, TestLambda3
   hs-source-dirs:      src, test
   main-is:             Main.hs
   default-language:    Haskell2010

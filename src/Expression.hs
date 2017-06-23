@@ -27,7 +27,7 @@ instance Eq (Fn a) where
 instance Show (Fn a) where
   show (Fn name1 _ _ _) = name1
 
-data Expression a = Const a
+data Expression a = Const !a
                   | Var !String
                   | Fun !(Fn a)
                   | App !(Expression a) !(Expression a)
