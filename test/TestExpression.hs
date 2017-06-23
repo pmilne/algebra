@@ -60,6 +60,9 @@ run = do
 
           putStrLn ("sin (1) = " ++ show (eval "x" 1.0 (sin x)))
 
+          testInverse (x / two) (two * x)
+          testInverse (two / x) (inv (half * x))
+
           testInverse (neg (inv x)) (inv (neg x))
           testInverse (sin x) (asin x)
           testInverse (sin (cos x)) (acos (asin x))
@@ -75,6 +78,4 @@ run = do
           testInverse (two ^ sin x) (asin (log two x))
           testInverse (x^two) (x ^ inv two)
           testInverse (sin x ^ two) (asin (x ^ inv two))
-          testInverse (x / two) (two * x)
-          testInverse (two / x) (inv (half * x))
 
