@@ -180,14 +180,14 @@ derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) -
 derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
-inverse (Const _)            = undefined
-inverse (Var x)              = Var x
-inverse (App (Fun f) a)      = substitute (inverse_ f) (inverse a)
-inverse (Neg a)              = substitute neg (inverse a)
---inverse (Sum a b)            =
---inverse (Prd a b)            =
-inverse (Inv a)              = substitute inv (inverse a)
---inverse (Div a b)            =
---inverse (Pow a (Const n))    =
---inverse (Pow f g)            =
+inverse (Const _)               = undefined
+inverse (Var x)                 = Var x
+inverse (App (Fun f) a)         = substitute (inverse_ f) (inverse a)
+inverse (Neg a)                 = substitute neg (inverse a)
+--inverse (Sum a b)             =
+--inverse (Prd a b)             =
+inverse (Inv a)                 = substitute inv (inverse a)
+--inverse (Div a b)             =
+--inverse (Pow a (Const n))     =
+--inverse (Pow f g)             =
 
