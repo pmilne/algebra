@@ -19,6 +19,10 @@ data Fn a = Fn {
   derivative_:: Expression a -> Expression a
 }
 
+fnValue :: Expression a -> a -> a
+fnValue (Fun f) = value_ f
+fnValue e = undefined
+
 class Applicable a where
     apply      :: a -> a -> a
 
@@ -141,7 +145,7 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
-evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> (Fn a -> b -> b) -> Expression a -> b
+evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> ((Expression a -> b) -> Expression a -> b -> b) -> Expression a -> b
 evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
@@ -149,7 +153,8 @@ evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Const a        -> mapConst a
                          Var a          -> mapVar a
                          Fun f          -> mapFun f
-                         App (Fun f) a  -> mapApplyFun f (rec a)
+--                         App (Fun f) a  -> mapApplyFun f (rec a)
+                         App f a        -> mapApplyFun rec f (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
@@ -158,7 +163,7 @@ evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Pow a b        -> rec a ^ rec b
 
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
-evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id undefined value_ {-exp-}
+evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id undefined (\_ f -> fnValue f) {-exp-}
 
 substitute0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> ((Expression a -> b) -> Expression a -> b -> b) -> Expression a -> b
 substitute0 mapVar mapConst mapFun mapApplyFun {-exp-} =
