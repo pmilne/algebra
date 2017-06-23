@@ -10,7 +10,7 @@ import Trigonometric
 import Applicable
 --import Debug.Trace
 
-infixl 9 ~>
+infixl 1 ~>
 
 data Fn a = Fn {
   name_ :: String,
@@ -171,23 +171,26 @@ derivative (Lambda var body) = Lambda var (rec body) where
 derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
-inverse (Const _)               = undefined
-inverse (Var x)                 = Var x
-inverse (App (Fun f) a)         = substitute (inverse_ f) (inverse a)
+inverse (Lambda var body) = Lambda var (rec body) where
+                    rec e = case e of
+                          (Const _)               -> undefined
+                          (Var x)                 -> Var x
+                          (App (Fun f) a)         -> substitute (inverse_ f) (rec a)
 
-inverse (Sum (Const a) b)       = substitute (\x -> neg (Const a) + x) (inverse b)
-inverse (Sum a (Const b))       = substitute (\x -> x - Const b) (inverse a)
-inverse (Sum _ _)               = undefined
+                          (Sum (Const a) b)       -> substitute (\x -> neg (Const a) + x) (rec b)
+                          (Sum a (Const b))       -> substitute (\x -> x - Const b) (rec a)
+                          (Sum _ _)               -> undefined
 
-inverse (Neg a)                 = substitute neg (inverse a)
+                          (Neg a)                 -> substitute neg (rec a)
 
-inverse (Prd (Const a) b)       = substitute (\x -> inv (Const a) * x) (inverse b)
-inverse (Prd a (Const b))       = substitute (\x -> x / Const b) (inverse a)
-inverse (Prd _ _)               = undefined
+                          (Prd (Const a) b)       -> substitute (\x -> inv (Const a) * x) (rec b)
+                          (Prd a (Const b))       -> substitute (\x -> x / Const b) (rec a)
+                          (Prd _ _)               -> undefined
 
-inverse (Inv a)                 = substitute inv (inverse a)
+                          (Inv a)                 -> substitute inv (rec a)
 
-inverse (Pow a (Const n))       = substitute (\x -> x ^ inv (Const n)) (inverse a)
-inverse (Pow (Const a) n)       = substitute (\x -> log (Const a) x) (inverse n)
-inverse (Pow _ _)               = undefined
+                          (Pow a (Const n))       -> substitute (\x -> x ^ inv (Const n)) (rec a)
+                          (Pow (Const a) n)       -> substitute (\x -> log (Const a) x) (rec n)
+                          (Pow _ _)               -> undefined
+inverse e               = error $ "Error: inverse " ++ show e
 
