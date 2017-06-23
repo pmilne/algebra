@@ -61,3 +61,5 @@ run = do
           testInverse (sin x1) (asin x1)
           testInverse (sin (cos x1)) (acos (asin x1))
           testInverse (sin (cos (tan x1))) (atan (acos (asin x1)))
+          testInverse (sin (x1 + one)) (asin x1 - one)
+          testInverse (sin (one + x1)) (neg one + asin x1)
