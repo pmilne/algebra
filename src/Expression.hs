@@ -45,6 +45,10 @@ data Expression a = Const !a
 (~>) :: Expression a -> Expression a -> Expression a
 x ~> body = Lambda x body
 
+varName :: Expression a -> String
+varName (Var s) = s
+varName _ = error "Formal parameter to Lambda wasn't a symbol!"
+
 instance (Show a) => Show (Expression a) where
  show (Const a) = show a
  show (Var a)   = a
@@ -126,7 +130,7 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
 instance (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Applicable (Expression a) where
-  apply (Lambda x body) exp = substitute exp body
+  apply (Lambda x body) exp = substitute (varName x) exp body
   apply f x = App f x
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
@@ -152,8 +156,8 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-} =
 eval1 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
 eval1 name value {-exp-} = map0 (\varName -> if name == varName then value else undefined) id undefined fnValue {-exp-}
 
-substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => Expression a -> Expression a -> Expression a
-substitute val {-exp-} = map0 (\nm -> val) Const Fun (\f -> apply (substitute val f)) {-exp-}
+substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => String -> Expression a -> Expression a -> Expression a
+substitute name val {-exp-} = map0 (\nm -> val) Const Fun (\f -> apply (substitute name val f)) {-exp-}
 
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a -- todo shouldn't have applicable here
@@ -173,26 +177,28 @@ derivative (Fun f)         = let var = Var "d" in var ~> (derivative_ f var)
 derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
-inverse (Lambda var body) = Lambda var (rec body) where
-                    rec e = case e of
+inverse (Lambda var body) =
+          Lambda var (rec body) where
+                    rec e =
+                      let vName = varName var in case e of
                           (Const _)               -> undefined
                           (Var x)                 -> Var x
-                          (App (Fun f) a)         -> substitute (inverse_ f var) (rec a)
+                          (App (Fun f) a)         -> substitute vName (inverse_ f var) (rec a)
 
-                          (Sum (Const a) b)       -> substitute (neg (Const a) + var) (rec b)
-                          (Sum a (Const b))       -> substitute (var - Const b) (rec a)
+                          (Sum (Const a) b)       -> substitute vName (neg (Const a) + var) (rec b)
+                          (Sum a (Const b))       -> substitute vName (var - Const b) (rec a)
                           (Sum _ _)               -> undefined
 
-                          (Neg a)                 -> substitute (neg var) (rec a)
+                          (Neg a)                 -> substitute vName (neg var) (rec a)
 
-                          (Prd (Const a) b)       -> substitute (inv (Const a) * var) (rec b)
-                          (Prd a (Const b))       -> substitute (var / Const b) (rec a)
+                          (Prd (Const a) b)       -> substitute vName (inv (Const a) * var) (rec b)
+                          (Prd a (Const b))       -> substitute vName (var / Const b) (rec a)
                           (Prd _ _)               -> undefined
 
-                          (Inv a)                 -> substitute (inv var) (rec a)
+                          (Inv a)                 -> substitute vName (inv var) (rec a)
 
-                          (Pow a (Const n))       -> substitute (var ^ inv (Const n)) (rec a)
-                          (Pow (Const a) n)       -> substitute (log (Const a) var) (rec n)
+                          (Pow a (Const n))       -> substitute vName (var ^ inv (Const n)) (rec a)
+                          (Pow (Const a) n)       -> substitute vName (log (Const a) var) (rec n)
                           (Pow _ _)               -> undefined
 inverse e               = error $ "Error: inverse " ++ show e
 

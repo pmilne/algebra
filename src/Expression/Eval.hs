@@ -3,10 +3,6 @@ module Expression.Eval where
 import Expression
 import Data.List
 
-varName :: Expression a -> String
-varName (Var s) = s
-varName _ = error "Formal parameter to Lambda wasn't a symbol!"
-
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
 getOrFail Nothing = error "This didn't happen. "
