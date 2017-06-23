@@ -33,7 +33,7 @@ x :: Expression Double
 x = Var "x"
 
 testDerivative :: (Eq a, Field a, Exponentiative a, Show a) => Expression a -> Expression a -> IO ()
-testDerivative e d = test ("derivative " ++ show e) d (dd e)
+testDerivative e d = test ("derivative " ++ show e) d (derivative e)
 
 testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
 testInverse e d = test ("inverse " ++ show e) d (inverse e)

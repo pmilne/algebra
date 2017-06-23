@@ -161,9 +161,9 @@ rec (Inv a)              = neg (rec a) / (a ^ two)
 rec (Pow a (Const n))    = Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
 rec (Pow f g)            = f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
-dd :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-dd (Lambda x body) = rec body
-dd e               = error $ "Error: dd " ++ show e
+derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+derivative (Lambda x body) = rec body
+derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Const _)               = undefined
