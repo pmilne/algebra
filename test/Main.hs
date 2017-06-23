@@ -29,7 +29,7 @@ main = do
 --          TestPolynomial.run
 --          TestTypes.run
           TestExpression.run
---          TestEval.run
+          TestEval.run
 --          TestLambda.run
 --          TestLambda2.run
 --          TestLambda3.run

@@ -157,7 +157,7 @@ eval1 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a 
 eval1 name value {-exp-} = map0 (\varName -> if name == varName then value else undefined) id undefined fnValue {-exp-}
 
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => String -> Expression a -> Expression a -> Expression a
-substitute name val {-exp-} = map0 (\nm -> val) Const Fun (\f -> apply (substitute name val f)) {-exp-}
+substitute name val {-exp-} = map0 (\nm -> if nm == name then val else undefined) Const Fun (\f -> apply (substitute name val f)) {-exp-}
 
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a -- todo shouldn't have applicable here
