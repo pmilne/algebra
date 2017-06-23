@@ -151,10 +151,10 @@ substitute val {-exp-} = map0 (\nm -> if nm == "x" then val (Var "x") else undef
 
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-derivative (Lambda x body) = rec body where
+derivative (Lambda var body) = rec body where
                              rec e = case e of
                                   (Const _)            -> zero
-                                  (Var _)              -> one
+                                  (Var _)              -> if e == var then one else zero
                                   (App (Fun f) a)      -> rec a * derivative_ f a -- chain rule
                                   (Neg a)              -> neg (rec a)
                                   (Sum a b)            -> rec a + rec b
