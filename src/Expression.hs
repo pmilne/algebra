@@ -185,7 +185,7 @@ inverse (Lambda var body) =
                       let vName = varName var in case e of
                           (Const _)               -> undefined
                           (Var x)                 -> Var x
-                          (App f a)         -> apply (var ~> rec a) (apply (inverse f) var)
+                          (App f a)               -> apply (var ~> rec a) (apply (inverse f) var)
 
                           (Sum (Const a) b)       -> apply (var ~> rec b) (neg (Const a) + var)
                           (Sum a (Const b))       -> apply (var ~> rec a) (var - Const b)
