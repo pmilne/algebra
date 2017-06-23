@@ -12,13 +12,13 @@ import Applicable
 
 data Fn a = Fn {
   name_ :: String,
-  value_ :: a -> a,
+  fun_ :: a -> a,
   inverse_ :: Expression a -> Expression a,
   derivative_:: Expression a -> Expression a
 }
 
 fnValue :: Expression a -> a -> a
-fnValue (Fun f) = value_ f
+fnValue (Fun f) = fun_ f
 fnValue _ = undefined
 
 instance Eq (Fn a) where
@@ -30,6 +30,7 @@ instance Show (Fn a) where
 data Expression a = Const !a
                   | Var !String
                   | Fun !(Fn a)
+                  | Lambda !String !(Expression a)
                   | App !(Expression a) !(Expression a)
                   | Sum !(Expression a) !(Expression a)
                   | Neg !(Expression a)
@@ -122,7 +123,7 @@ instance (Applicable a) => Applicable (Expression a) where
   apply {-f x-} = App {-f x-}
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
-ev fun (Const x) = Const (value_ fun x)
+ev fun (Const x) = Const (fun_ fun x)
 ev fun e = App (Fun fun) e
 
 map0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> (Expression a -> b -> b) -> Expression a -> b
