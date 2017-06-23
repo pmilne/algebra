@@ -28,15 +28,15 @@ instance Show (Fn a) where
   show (Fn name1 _ _ _) = name1
 
 data Expression a = Const a
-                  | Var String
-                  | Fun (Fn a)
-                  | App (Expression a) (Expression a)
-                  | Sum (Expression a) (Expression a)
-                  | Neg (Expression a)
-                  | Prd (Expression a) (Expression a)
-                  | Inv (Expression a)
-                  | Pow (Expression a) (Expression a)
-                  | Log (Expression a) (Expression a)
+                  | Var !String
+                  | Fun !(Fn a)
+                  | App !(Expression a) !(Expression a)
+                  | Sum !(Expression a) !(Expression a)
+                  | Neg !(Expression a)
+                  | Prd !(Expression a) !(Expression a)
+                  | Inv !(Expression a)
+                  | Pow !(Expression a) !(Expression a)
+                  | Log !(Expression a) !(Expression a)
                   deriving (Eq)
 
 instance (Show a) => Show (Expression a) where

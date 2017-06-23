@@ -24,7 +24,7 @@ data Primitive = Int0 Int
 
 
 data Expression = Constant !Primitive
-                | Symbol String
+                | Symbol !String
                 | Lambda !Expression !Expression
                 | Application !Expression !Expression
                 deriving (Eq, Show)
