@@ -165,25 +165,8 @@ evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
 evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
 evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id undefined (\_ f -> fnValue f) {-exp-}
 
-substitute0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> ((Expression a -> b) -> Expression a -> b -> b) -> Expression a -> b
-substitute0 mapVar mapConst mapFun mapApplyFun {-exp-} =
---  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
-  rec {-exp-} where
-  rec e = case e of
-                         Const a        -> mapConst a
-                         Var a          -> mapVar a
-                         Fun f          -> mapFun f
---                         App f a        -> mapApplyFun (rec f) (rec a)
-                         App f a        -> mapApplyFun rec f (rec a)
-                         Neg a          -> neg (rec a)
-                         Sum a b        -> rec a + rec b
-                         Prd a b        -> rec a * rec b
-                         Inv a          -> inv (rec a)
-                         Div a b        -> rec a / rec b
-                         Pow a b        -> rec a ^ rec b
-
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
-substitute val {-exp-} = substitute0 (\nm -> if nm == "x1" then val (Var "x1") else undefined) Const Fun (\rec f -> apply (rec f)) {-exp-}
+substitute val {-exp-} = evalExpr0 (\nm -> if nm == "x1" then val (Var "x1") else undefined) Const Fun (\rec f -> apply (rec f)) {-exp-}
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
