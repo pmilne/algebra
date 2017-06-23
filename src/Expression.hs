@@ -153,7 +153,6 @@ evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Const a        -> mapConst a
                          Var a          -> mapVar a
                          Fun f          -> mapFun f
---                         App (Fun f) a  -> mapApplyFun f (rec a)
                          App f a        -> mapApplyFun f (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
