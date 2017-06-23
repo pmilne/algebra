@@ -8,7 +8,7 @@ import Field
 import Exponentiative
 import Trigonometric
 import Applicable
---import Debug.Trace
+import Debug.Trace
 
 infixl 1 ~>
 
@@ -130,7 +130,9 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
 instance (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Applicable (Expression a) where
-  apply (Lambda x body) exp = substitute (varName x) exp body
+  apply (Lambda x body) arg =
+--             trace ("apply " ++ "\tx: " ++ show x ++ "\tbody: " ++ show body) $
+             substitute (varName x) arg body
   apply f x = App f x
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
@@ -189,7 +191,7 @@ inverse (Lambda var body) =
                           (Sum a (Const b))       -> substitute vName (var - Const b) (rec a)
                           (Sum _ _)               -> undefined
 
-                          (Neg a)                 -> substitute vName (neg var) (rec a)
+                          (Neg a)                 -> apply (var ~> rec a) (neg var)
 
                           (Prd (Const a) b)       -> substitute vName (inv (Const a) * var) (rec b)
                           (Prd a (Const b))       -> substitute vName (var / Const b) (rec a)
@@ -200,5 +202,6 @@ inverse (Lambda var body) =
                           (Pow a (Const n))       -> substitute vName (var ^ inv (Const n)) (rec a)
                           (Pow (Const a) n)       -> substitute vName (log (Const a) var) (rec n)
                           (Pow _ _)               -> undefined
+inverse (Fun f)         = let var = Var "x" in var ~> (inverse_ f var)
 inverse e               = error $ "Error: inverse " ++ show e
 
