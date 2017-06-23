@@ -75,4 +75,6 @@ run = do
           testInverse (two ^ sin x) (asin (log two x))
           testInverse (x^two) (x ^ inv two)
           testInverse (sin x ^ two) (asin (x ^ inv two))
+          testInverse (x / two) (two * x)
+          testInverse (two / x) (inv (half * x))
 
