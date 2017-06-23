@@ -8,7 +8,7 @@ import Field
 import Exponentiative
 import Trigonometric
 --import Applicable
-import Debug.Trace
+--import Debug.Trace
 
 -- Applicable
 
@@ -21,7 +21,7 @@ data Fn a = Fn {
 
 fnValue :: Expression a -> a -> a
 fnValue (Fun f) = value_ f
-fnValue e = undefined
+fnValue _ = undefined
 
 class Applicable a where
     apply      :: a -> a -> a
@@ -145,8 +145,8 @@ ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
-evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> (Expression a -> b -> b) -> Expression a -> b
-evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
+map0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> (Expression a -> b -> b) -> Expression a -> b
+map0 mapVar mapConst mapFun mapApplyFun {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
@@ -161,11 +161,11 @@ evalExpr0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
 
-evalExpr :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
-evalExpr nm val {-exp-} = evalExpr0 (\nm2 -> if nm == nm2 then val else undefined) id undefined fnValue {-exp-}
+eval :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
+eval name value {-exp-} = map0 (\varName -> if name == varName then value else undefined) id undefined fnValue {-exp-}
 
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
-substitute val {-exp-} = evalExpr0 (\nm -> if nm == "x1" then val (Var "x1") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
+substitute val {-exp-} = map0 (\nm -> if nm == "x1" then val (Var "x1") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
