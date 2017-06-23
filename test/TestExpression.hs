@@ -33,7 +33,7 @@ x :: Expression Double
 x = Var "x"
 
 testDerivative :: (Eq a, Field a, Exponentiative a, Show a) => Expression a -> Expression a -> IO ()
-testDerivative e d = test ("derivative " ++ show e) d (derivative e)
+testDerivative e d = test ("derivative " ++ show e) d (dd e)
 
 testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
 testInverse e d = test ("inverse " ++ show e) d (inverse e)
@@ -46,23 +46,23 @@ half = Const 0.5
 
 run :: IO ()
 run = do
-          testDerivative (y + pc 1) (pc 1)
-          testDerivative (pc 3 * y ^ pc 2) (pc 6 * y)
-          testDerivative (y ^ y) (y ^ y * (pc 1 + ln y))
-          testDerivative (ln (ln y)) (pc 1 / (y * ln y))
+          putStrLn ("sin (1) = " ++ show (eval1 "x" 1.0 (sin x)))
 
-          testDerivative (sin x) (cos x)
-          testDerivative (x + sin x) (one + cos x)
-          testDerivative (sin (sin x))  (cos x * cos (sin x))
-          testDerivative (tan (tan x))  (one/((cos x ^ two)*(cos (tan x) ^ two)))
-          testDerivative (asin x)   (one / sqrt (one + neg (x ^ two)))
-          testDerivative (tan x) (one / cos x^two)
-          testDerivative (sin x / cos x) (((sin x ^ two) /(cos x ^ two)) + one)
-          testDerivative (derivative (x + sin x)) (neg (sin x))
+          testDerivative (Lambda y (y + pc 1)) (pc 1)
+          testDerivative (Lambda y (pc 3 * y ^ pc 2)) (pc 6 * y)
+          testDerivative (Lambda y (y ^ y)) (y ^ y * (pc 1 + ln y))
+          testDerivative (Lambda y (ln (ln y))) (pc 1 / (y * ln y))
+
+          testDerivative (Lambda x (sin x)) (cos x)
+          testDerivative (Lambda x (x + sin x)) (one + cos x)
+          testDerivative (Lambda x (sin (sin x)))  (cos x * cos (sin x))
+          testDerivative (Lambda x (tan (tan x)))  (one/((cos x ^ two)*(cos (tan x) ^ two)))
+          testDerivative (Lambda x (asin x))   (one / sqrt (one + neg (x ^ two)))
+          testDerivative (Lambda x (tan x)) (one / cos x^two)
+          testDerivative (Lambda x (sin x / cos x)) (((sin x ^ two) /(cos x ^ two)) + one)
+--          testDD (Lambda y  (derivative (x + sin x))) (neg (sin x))
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
-
-          putStrLn ("sin (1) = " ++ show (eval1 "x" 1.0 (sin x)))
 
           testInverse (x / two) (two * x)
           testInverse (two / x) (inv (half * x))

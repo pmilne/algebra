@@ -30,7 +30,7 @@ instance Show (Fn a) where
 data Expression a = Const !a
                   | Var !String
                   | Fun !(Fn a)
-                  | Lambda !String !(Expression a)
+                  | Lambda !(Expression a) !(Expression a)
                   | App !(Expression a) !(Expression a)
                   | Sum !(Expression a) !(Expression a)
                   | Neg !(Expression a)
@@ -44,6 +44,7 @@ instance (Show a) => Show (Expression a) where
  show (Const a) = show a
  show (Var a)   = a
  show (Fun f)   = name_ f
+ show (Lambda var body) = "(" ++ show var ++ " -> " ++ show body ++ ")"
  show (App f a) = "(" ++ show f ++ " " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
@@ -148,17 +149,21 @@ eval1 name value {-exp-} = map0 (\varName -> if name == varName then value else 
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
 substitute val {-exp-} = map0 (\nm -> if nm == "x" then val (Var "x") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
 
-derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-derivative (Const _)            = zero
-derivative (Var _)              = one
-derivative (App (Fun f) a)      = derivative a * derivative_ f a -- chain rule
-derivative (Neg a)              = neg (derivative a)
-derivative (Sum a b)            = derivative a + derivative b
-derivative (Prd a b)            = a * derivative b + derivative a * b --product rule (ab' + a'b)
-derivative (Inv a)              = neg (derivative a) / (a ^ two)
+rec :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+rec (Const _)            = zero
+rec (Var _)              = one
+rec (App (Fun f) a)      = rec a * derivative_ f a -- chain rule
+rec (Neg a)              = neg (rec a)
+rec (Sum a b)            = rec a + rec b
+rec (Prd a b)            = a * rec b + rec a * b --product rule (ab' + a'b)
+rec (Inv a)              = neg (rec a) / (a ^ two)
 --derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
-derivative (Pow a (Const n))    = Const n * derivative a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-derivative (Pow f g)            = f ^ g * (derivative f * g / f + derivative g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+rec (Pow a (Const n))    = Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
+rec (Pow f g)            = f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+
+dd :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+dd (Lambda x body) = rec body
+dd e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Const _)               = undefined

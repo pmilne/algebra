@@ -3,6 +3,10 @@ module Expression.Eval where
 import Expression
 import Data.List
 
+varName :: Expression a -> String
+varName (Var s) = s
+varName _ = error "Formal parameter to Lambda wasn't a symbol!"
+
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
 getOrFail Nothing = error "This didn't happen. "
@@ -38,7 +42,7 @@ createCompiler nameStack {-exp-} =
                         \env -> function_ (fun0 env) (arg0 env)
 
                     Lambda var body ->
-                        let body0 = createCompiler (var : nameStack) body in
+                        let body0 = createCompiler (varName var : nameStack) body in
                         \env -> Function (\arg -> body0 (arg : env))
 
 eval :: Expression a -> Primitive a
