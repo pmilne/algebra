@@ -10,7 +10,7 @@ c0 = Lambda "f" (Lambda "x" x)
 c1 = Lambda "x" x
 c2 = Lambda "f" (Lambda "x" (Application f (Application f x)))
 z = Constant 0
-inc = Fun (Fn "inc" (\ p -> 1 + p))
+inc = Fun (Fn "inc" (+1))
 id1 = Application c1 z
 
 run :: IO ()
