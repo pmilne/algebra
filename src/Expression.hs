@@ -10,9 +10,6 @@ import Trigonometric
 --import Applicable
 import Debug.Trace
 
---convertfn :: (a -> b) -> (b -> a) -> Fn a -> Fn b
---convertfn a2b b2a fn = Fn (name_ fn) (\b0 -> a2b (value_ fn (b2a b0))) (inverse_ fn) (derivative_ fn)
-
 -- Applicable
 
 data Fn a = Fn {
@@ -138,20 +135,20 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
 instance (Applicable a) => Applicable (Expression a) where
-  apply f x = App f x
+  apply {-f x-} = App {-f x-}
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (value_ fun x)
 ev fun e = App (Fun fun) e
 
 evalExpr0 :: (Show b, Eq b, Field b, Exponentiative b) => (String -> b) -> (a -> b) -> (Fn a -> b -> b) -> Expression a -> b
-evalExpr0 var2out const2out fun2out {-exp-} =
+evalExpr0 mapVar mapConst mapApply {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
-                         Const a        -> const2out a
-                         Var a          -> var2out a
-                         App (Fun f) a  -> fun2out f (rec a)
+                         Const a        -> mapConst a
+                         Var a          -> mapVar a
+                         App (Fun f) a  -> mapApply f (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
                          Prd a b        -> rec a * rec b
@@ -160,13 +157,13 @@ evalExpr0 var2out const2out fun2out {-exp-} =
                          Pow a b        -> rec a ^ rec b
 
 evalExpr1 :: (Show b, Eq b, Field b, Exponentiative b, Applicable b) => (String -> b) -> (a -> b) -> (Fn a -> b) -> Expression a -> b
-evalExpr1 var2out const2out fun2out {-exp-} =
+evalExpr1 mapVar mapConst mapFun {-exp-} =
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
   rec {-exp-} where
   rec e = case e of
-                         Const a        -> const2out a
-                         Var a          -> var2out a
-                         Fun f          -> fun2out f
+                         Const a        -> mapConst a
+                         Var a          -> mapVar a
+                         Fun f          -> mapFun f
                          App f a        -> apply (rec f) (rec a)
                          Neg a          -> neg (rec a)
                          Sum a b        -> rec a + rec b
