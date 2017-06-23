@@ -149,20 +149,20 @@ eval1 name value {-exp-} = map0 (\varName -> if name == varName then value else 
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
 substitute val {-exp-} = map0 (\nm -> if nm == "x" then val (Var "x") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
 
-rec :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-rec (Const _)            = zero
-rec (Var _)              = one
-rec (App (Fun f) a)      = rec a * derivative_ f a -- chain rule
-rec (Neg a)              = neg (rec a)
-rec (Sum a b)            = rec a + rec b
-rec (Prd a b)            = a * rec b + rec a * b --product rule (ab' + a'b)
-rec (Inv a)              = neg (rec a) / (a ^ two)
---derivative (Div a b)            = (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
-rec (Pow a (Const n))    = Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-rec (Pow f g)            = f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
-derivative (Lambda x body) = rec body
+derivative (Lambda x body) = rec body where
+                             rec e = case e of
+                                  (Const _)            -> zero
+                                  (Var _)              -> one
+                                  (App (Fun f) a)      -> rec a * derivative_ f a -- chain rule
+                                  (Neg a)              -> neg (rec a)
+                                  (Sum a b)            -> rec a + rec b
+                                  (Prd a b)            -> a * rec b + rec a * b --product rule (ab' + a'b)
+                                  (Inv a)              -> neg (rec a) / (a ^ two)
+                                  --derivative (Div a b)            -> (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
+                                  (Pow a (Const n))    -> Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
+                                  (Pow f g)            -> f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
