@@ -20,6 +20,9 @@ instance Exponentiative (Rational a) where
   sqrt    = undefined
   two     = undefined
 
+instance Applicable (Rational a) where
+  apply _ _ = undefined
+
 y :: Expression (Rational Integer)
 y = Var "y"
 
@@ -32,7 +35,7 @@ xp1 = y + pc 1
 x :: Expression Double
 x = Var "x"
 
-testDerivative :: (Eq a, Field a, Exponentiative a, Show a) => Expression a -> Expression a -> IO ()
+testDerivative :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
 testDerivative e d = test ("derivative " ++ show e) d (derivative e)
 
 testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()

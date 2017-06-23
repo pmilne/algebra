@@ -125,8 +125,9 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Ex
   acos = App (Fun (Fn "acos" acos cos (\x -> neg one / sqrt (one - x^two))))
   atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x^two))))
 
-instance (Applicable a) => Applicable (Expression a) where
-  apply {-f x-} = App {-f x-}
+instance (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Applicable (Expression a) where
+  apply (Lambda x body) exp = substitute exp body
+  apply f x = App f x
 
 ev :: (Show a) => Fn a -> Expression a -> Expression a
 ev fun (Const x) = Const (fun_ fun x)
@@ -151,16 +152,16 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-} =
 eval1 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
 eval1 name value {-exp-} = map0 (\varName -> if name == varName then value else undefined) id undefined fnValue {-exp-}
 
-substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
-substitute val {-exp-} = map0 (\nm -> if nm == "x" then val (Var "x") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
+substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => Expression a -> Expression a -> Expression a
+substitute val {-exp-} = map0 (\nm -> val) Const Fun (\f -> apply (substitute val f)) {-exp-}
 
 
-derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
+derivative :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a -- todo shouldn't have applicable here
 derivative (Lambda var body) = Lambda var (rec body) where
                              rec e = case e of
                                   (Const _)            -> zero
                                   (Var _)              -> if e == var then one else zero
-                                  (App (Fun f) a)      -> rec a * derivative_ f a -- chain rule
+                                  (App f a)            -> rec a * (apply (derivative f) a) -- chain rule
                                   (Neg a)              -> neg (rec a)
                                   (Sum a b)            -> rec a + rec b
                                   (Prd a b)            -> a * rec b + rec a * b --product rule (ab' + a'b)
@@ -168,6 +169,7 @@ derivative (Lambda var body) = Lambda var (rec body) where
                                   --derivative (Div a b)            -> (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
                                   (Pow a (Const n))    -> Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
                                   (Pow f g)            -> f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
+derivative (Fun f)         = let var = Var "d" in var ~> (derivative_ f var)
 derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
@@ -175,22 +177,22 @@ inverse (Lambda var body) = Lambda var (rec body) where
                     rec e = case e of
                           (Const _)               -> undefined
                           (Var x)                 -> Var x
-                          (App (Fun f) a)         -> substitute (inverse_ f) (rec a)
+                          (App (Fun f) a)         -> substitute (inverse_ f var) (rec a)
 
-                          (Sum (Const a) b)       -> substitute (\x -> neg (Const a) + x) (rec b)
-                          (Sum a (Const b))       -> substitute (\x -> x - Const b) (rec a)
+                          (Sum (Const a) b)       -> substitute (neg (Const a) + var) (rec b)
+                          (Sum a (Const b))       -> substitute (var - Const b) (rec a)
                           (Sum _ _)               -> undefined
 
-                          (Neg a)                 -> substitute neg (rec a)
+                          (Neg a)                 -> substitute (neg var) (rec a)
 
-                          (Prd (Const a) b)       -> substitute (\x -> inv (Const a) * x) (rec b)
-                          (Prd a (Const b))       -> substitute (\x -> x / Const b) (rec a)
+                          (Prd (Const a) b)       -> substitute (inv (Const a) * var) (rec b)
+                          (Prd a (Const b))       -> substitute (var / Const b) (rec a)
                           (Prd _ _)               -> undefined
 
-                          (Inv a)                 -> substitute inv (rec a)
+                          (Inv a)                 -> substitute (inv var) (rec a)
 
-                          (Pow a (Const n))       -> substitute (\x -> x ^ inv (Const n)) (rec a)
-                          (Pow (Const a) n)       -> substitute (\x -> log (Const a) x) (rec n)
+                          (Pow a (Const n))       -> substitute (var ^ inv (Const n)) (rec a)
+                          (Pow (Const a) n)       -> substitute (log (Const a) var) (rec n)
                           (Pow _ _)               -> undefined
 inverse e               = error $ "Error: inverse " ++ show e
 
