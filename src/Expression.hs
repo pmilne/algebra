@@ -10,6 +10,8 @@ import Trigonometric
 import Applicable
 --import Debug.Trace
 
+infixl 9 ~>
+
 data Fn a = Fn {
   name_ :: String,
   fun_ :: a -> a,
@@ -40,11 +42,14 @@ data Expression a = Const !a
                   | Log !(Expression a) !(Expression a)
                   deriving (Eq)
 
+(~>) :: Expression a -> Expression a -> Expression a
+x ~> body = Lambda x body
+
 instance (Show a) => Show (Expression a) where
  show (Const a) = show a
  show (Var a)   = a
  show (Fun f)   = name_ f
- show (Lambda var body) = "(" ++ show var ++ " -> " ++ show body ++ ")"
+ show (Lambda var body) = "(" ++ show var ++ " ~> " ++ show body ++ ")"
  show (App f a) = "(" ++ show f ++ " " ++ show a ++ ")"
  show (Sum a b) = "(" ++ show a ++ " + " ++ show b ++ ")"
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
