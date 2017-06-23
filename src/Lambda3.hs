@@ -10,8 +10,7 @@ module Lambda3 where
 import Prelude hiding (exp)
 import Data.List
 
-data Primitive a = Value    {value_    :: a}
-                 | Function {function_ :: Primitive a -> Primitive a}
+-- Fn: 'Foreign' fuctions
 
 data Fn a = Fn {
   name_ :: String,
@@ -24,9 +23,7 @@ instance Eq (Fn a) where
 instance Show (Fn a) where
   show (Fn name1 _) = name1
 
-instance (Show a) => Show (Primitive a) where
-  show (Value v) = show v
-  show (Function _) = "<function>"
+-- The expression data structure
 
 data Expression a = Constant !a
                   | Fun !(Fn a)
@@ -38,6 +35,17 @@ data Expression a = Constant !a
 getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
 getOrFail Nothing = error "This didn't happen. "
+
+-- Primitives, these will appear on the 'evaluation' stack
+
+data Primitive a = Value    {value_    :: a}
+                 | Function {function_ :: Primitive a -> Primitive a}
+
+instance (Show a) => Show (Primitive a) where
+  show (Value v) = show v
+  show (Function _) = "<function>"
+
+-- Evaluator / compiler
 
 createCompiler :: [String] -> Expression a -> [Primitive a] -> Primitive a
 createCompiler nameStack {-exp-} =
