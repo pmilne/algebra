@@ -12,11 +12,12 @@ import Expression
 import TestUtil
 
 instance Exponentiative (Rational a) where
-  _ ^ _ = undefined
-  ln _  = undefined
-  exp _ = undefined
-  sqrt  = undefined
-  two   = undefined
+  _ ^ _   = undefined
+  log _ _ = undefined
+  ln _    = undefined
+  exp _   = undefined
+  sqrt    = undefined
+  two     = undefined
 
 y :: Expression (Rational Integer)
 y = Var "y"

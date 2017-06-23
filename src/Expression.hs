@@ -192,8 +192,6 @@ inverse (Prd _ _)               = undefined
 
 inverse (Inv a)                 = substitute inv (inverse a)
 
---inverse (Div a b)               = inverse (a * inv b)
-
 inverse (Pow a (Const n))       = substitute (\e -> e ^ inv (Const n)) (inverse a)
 inverse (Pow (Const a) n)       = substitute (\e -> log (Const a) e) (inverse n)
 inverse (Pow _ _)               = undefined
