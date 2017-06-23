@@ -5,6 +5,7 @@ import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sqrt, sin
 import Field
 import Exponentiative
 import Trigonometric
+import Applicable
 
 import Rational
 import Expression

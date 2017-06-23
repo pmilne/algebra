@@ -7,10 +7,8 @@ import Prelude hiding ((+), (-), negate, (*), (/), (^), exp, log, sin , cos, tan
 import Field
 import Exponentiative
 import Trigonometric
---import Applicable
+import Applicable
 --import Debug.Trace
-
--- Applicable
 
 data Fn a = Fn {
   name_ :: String,
@@ -22,20 +20,6 @@ data Fn a = Fn {
 fnValue :: Expression a -> a -> a
 fnValue (Fun f) = value_ f
 fnValue _ = undefined
-
-class Applicable a where
-    apply      :: a -> a -> a
-
-instance Applicable Int where
-    apply       = undefined
-
-instance Applicable Integer where
-    apply       = undefined
-
-instance Applicable Double where
-    apply       = undefined
-
--- Applicable
 
 instance Eq (Fn a) where
   Fn name1 _ _ _ == Fn name2 _ _ _= name1 == name2

@@ -14,7 +14,7 @@ cabal-version:       >=1.10
 extra-source-files:  README.md
 
 executable algebra
-  other-modules:       Additive, Negatable, Subtractive, Multiplicative, Invertable, Ring, Field, Euclidean, Exponentiative, Trigonometric
+  other-modules:       Additive, Negatable, Subtractive, Multiplicative, Invertable, Ring, Field, Euclidean, Exponentiative, Trigonometric, Applicable,
                        Rational, Complex, Modular, Expression, Polynomial, Numeral.Numeral1,
                        Composite,
                        Factorial,
