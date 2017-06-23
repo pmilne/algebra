@@ -53,6 +53,7 @@ data Expression a = Const a
                   | Inv (Expression a)
                   | Div (Expression a) (Expression a)
                   | Pow (Expression a) (Expression a)
+                  | Log (Expression a) (Expression a)
                   deriving (Eq)
 
 instance (Show a) => Show (Expression a) where
@@ -64,6 +65,7 @@ instance (Show a) => Show (Expression a) where
  show (Neg a)   = "(" ++ "-" ++ show a ++ ")"
  show (Prd a b) = "(" ++ show a ++ "*" ++ show b ++ ")"
  show (Pow a b) = "(" ++ show a ++ "^" ++ show b ++ ")"
+ show (Log a b) = "(log (base " ++ show a ++ ") " ++ show b ++ ")"
  show (Inv a)   = "(" ++ "/" ++ show a ++ ")"
  show (Div a b) = "(" ++ show a ++ "/" ++ show b ++ ")"
 
@@ -121,6 +123,8 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
                     | a == one = one
                     | otherwise = Pow (Const a) b
   a       ^ b       = Pow a b
+  log a b           | b == one = zero
+                    | otherwise = Log a b
   ln (Const a)      = Const (ln a)
   ln a              = App (Fun (Fn "ln" ln exp (\x -> one / x))) a
   exp (Const a)     = Const (exp a)
@@ -160,12 +164,13 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-} =
                          Inv a          -> inv (rec a)
                          Div a b        -> rec a / rec b
                          Pow a b        -> rec a ^ rec b
+                         Log a b        -> log (rec a) (rec b)
 
 eval :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
 eval name value {-exp-} = map0 (\varName -> if name == varName then value else undefined) id undefined fnValue {-exp-}
 
 substitute :: (Applicable a, Exponentiative a, Field a, Eq a, Show a) => (Expression a -> Expression a) -> Expression a -> Expression a
-substitute val {-exp-} = map0 (\nm -> if nm == "x1" then val (Var "x1") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
+substitute val {-exp-} = map0 (\nm -> if nm == "x" then val (Var "x") else undefined) Const Fun (\f -> apply (substitute val f)) {-exp-}
 
 derivative :: (Show a, Eq a, Field a, Exponentiative a) => Expression a -> Expression a
 derivative (Const _)            = zero
@@ -183,12 +188,22 @@ inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression
 inverse (Const _)               = undefined
 inverse (Var x)                 = Var x
 inverse (App (Fun f) a)         = substitute (inverse_ f) (inverse a)
+
 inverse (Neg a)                 = substitute neg (inverse a)
+
 inverse (Sum (Const a) b)       = substitute (\e -> neg (Const a) + e) (inverse b)
-inverse (Sum a (Const b))       = substitute (\e -> e + neg (Const b)) (inverse a)
---inverse (Prd a b)             =
+inverse (Sum a (Const b))       = substitute (\e -> e - Const b) (inverse a)
+inverse (Sum _ _)               = undefined
+
+inverse (Prd (Const a) b)       = substitute (\e -> inv (Const a) * e) (inverse b)
+inverse (Prd a (Const b))       = substitute (\e -> e / Const b) (inverse a)
+inverse (Prd _ _)               = undefined
+
 inverse (Inv a)                 = substitute inv (inverse a)
+
 --inverse (Div a b)             =
---inverse (Pow a (Const n))     =
---inverse (Pow f g)             =
+
+inverse (Pow a (Const n))       = substitute (\e -> e ^ inv (Const n)) (inverse a)
+inverse (Pow (Const a) n)       = substitute (\e -> log (Const a) e) (inverse n)
+inverse (Pow _ _)               = undefined
 

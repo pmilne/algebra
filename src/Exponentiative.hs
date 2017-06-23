@@ -4,6 +4,7 @@ infixr 8 ^
 
 class Exponentiative a where
     (^)      :: a -> a -> a
+    log      :: a -> a -> a
     exp      :: a -> a
     ln       :: a -> a
     sqrt     :: a -> a
@@ -11,6 +12,7 @@ class Exponentiative a where
 
 instance Exponentiative Int where
     (^)       = (Prelude.^)
+    log       = undefined
     exp       = undefined
     ln        = undefined
     sqrt      = undefined
@@ -18,6 +20,7 @@ instance Exponentiative Int where
 
 instance Exponentiative Double where
     (^)       = (Prelude.**)
+    log       = Prelude.logBase
     exp       = Prelude.exp
     ln        = Prelude.log
     sqrt      = Prelude.sqrt

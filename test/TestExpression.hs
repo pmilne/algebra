@@ -1,6 +1,6 @@
 module TestExpression where
 
-import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sqrt, sin, cos, tan, asin, acos, atan)
+import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational, sqrt, sin, cos, tan, asin, acos, atan, log)
 
 import Field
 import Exponentiative
@@ -18,17 +18,17 @@ instance Exponentiative (Rational a) where
   sqrt  = undefined
   two   = undefined
 
-x :: Expression (Rational Integer)
-x = Var "x"
+y :: Expression (Rational Integer)
+y = Var "y"
 
 pc :: (Euclidean a, Ring a) => a -> Expression (Rational a)
 pc xx = Const (rational1 xx)
 
 xp1 :: Expression (Rational Integer)
-xp1 = x + pc 1
+xp1 = y + pc 1
 
-x1 :: Expression Double
-x1 = Var "x1"
+x :: Expression Double
+x = Var "x"
 
 testDerivative :: (Eq a, Field a, Exponentiative a, Show a) => Expression a -> Expression a -> IO ()
 testDerivative e d = test ("derivative " ++ show e) d (derivative e)
@@ -39,27 +39,40 @@ testInverse e d = test ("inverse " ++ show e) d (inverse e)
 --inv2 :: (a -> a) -> (a -> a)
 --inv2 f = case
 
+half :: Expression Double
+half = Const 0.5
+
 run :: IO ()
 run = do
-          testDerivative (x + pc 1) (pc 1)
-          testDerivative (pc 3 * x ^ pc 2) (pc 6 * x)
-          testDerivative (x ^ x) (x ^ x * (pc 1 + ln x))
-          testDerivative (ln (ln x)) (pc 1 / (x * ln x))
+          testDerivative (y + pc 1) (pc 1)
+          testDerivative (pc 3 * y ^ pc 2) (pc 6 * y)
+          testDerivative (y ^ y) (y ^ y * (pc 1 + ln y))
+          testDerivative (ln (ln y)) (pc 1 / (y * ln y))
 
-          testDerivative (sin x1) (cos x1)
-          testDerivative (x1 + sin x1) (one + cos x1)
-          testDerivative (sin (sin x1))  (cos x1 * cos (sin x1))
-          testDerivative (tan (tan x1))  (one/((cos x1 ^ two)*(cos (tan x1) ^ two)))
-          testDerivative (asin x1)   (one / sqrt (one + neg (x1 ^ two)))
-          testDerivative (derivative (x1 + sin x1)) (neg (sin x1))
+          testDerivative (sin x) (cos x)
+          testDerivative (x + sin x) (one + cos x)
+          testDerivative (sin (sin x))  (cos x * cos (sin x))
+          testDerivative (tan (tan x))  (one/((cos x ^ two)*(cos (tan x) ^ two)))
+          testDerivative (asin x)   (one / sqrt (one + neg (x ^ two)))
+          testDerivative (derivative (x + sin x)) (neg (sin x))
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))
 
-          putStrLn ("sin (1) = " ++ show (eval "x1" 1.0 (sin x1)))
+          putStrLn ("sin (1) = " ++ show (eval "x" 1.0 (sin x)))
 
-          testInverse (neg (inv x1)) (inv (neg x1))
-          testInverse (sin x1) (asin x1)
-          testInverse (sin (cos x1)) (acos (asin x1))
-          testInverse (sin (cos (tan x1))) (atan (acos (asin x1)))
-          testInverse (sin (x1 + one)) (asin x1 - one)
-          testInverse (sin (one + x1)) (neg one + asin x1)
+          testInverse (neg (inv x)) (inv (neg x))
+          testInverse (sin x) (asin x)
+          testInverse (sin (cos x)) (acos (asin x))
+          testInverse (sin (cos (tan x))) (atan (acos (asin x)))
+
+          testInverse (sin (x + one)) (asin x - one)
+          testInverse (sin (one + x)) (neg one + asin x)
+
+          testInverse (sin (x * two)) (half * asin x)
+          testInverse (sin (two * x)) (half * asin x)
+
+          testInverse (two^x) (log two x)
+          testInverse (two ^ sin x) (asin (log two x))
+          testInverse (x^two) (x ^ inv two)
+          testInverse (sin x ^ two) (asin (x ^ inv two))
+
