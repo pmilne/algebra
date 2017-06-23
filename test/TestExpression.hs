@@ -30,8 +30,11 @@ xp1 = x + pc 1
 x1 :: Expression Double
 x1 = Var "x1"
 
-testDerivative :: (Exponentiative a, Field a, Eq a, Show a) => Expression a -> Expression a -> IO ()
+testDerivative :: (Eq a, Field a, Exponentiative a, Show a) => Expression a -> Expression a -> IO ()
 testDerivative e d = test ("derivative " ++ show e) d (derivative e)
+
+testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
+testInverse e d = test ("inverse " ++ show e) d (inverse e)
 
 --inv2 :: (a -> a) -> (a -> a)
 --inv2 f = case
@@ -54,9 +57,7 @@ run = do
 
           putStrLn ("sin (1) = " ++ show (eval "x1" 1.0 (sin x1)))
 
-          putStrLn ("inverse (- (1 / x)) = " ++ show (inverse (neg (inv x1))))
-
-          putStrLn ("inverse (sin x1) = " ++ show (inverse (sin x1)))
-          putStrLn ("inverse (sin (cos x1)) = " ++ show (inverse (sin (cos x1))))
-          putStrLn ("inverse (sin (cos (tan x1))) = " ++ show (inverse (sin (cos (tan x1)))))
-
+          testInverse (neg (inv x1)) (inv (neg x1))
+          testInverse (sin x1) (asin x1)
+          testInverse (sin (cos x1)) (acos (asin x1))
+          testInverse (sin (cos (tan x1))) (atan (acos (asin x1)))
