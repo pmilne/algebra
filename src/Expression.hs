@@ -187,20 +187,20 @@ inverse (Lambda var body) =
                           (Var x)                 -> Var x
                           (App (Fun f) a)         -> substitute vName (inverse_ f var) (rec a)
 
-                          (Sum (Const a) b)       -> substitute vName (neg (Const a) + var) (rec b)
-                          (Sum a (Const b))       -> substitute vName (var - Const b) (rec a)
+                          (Sum (Const a) b)       -> apply (var ~> rec b) (neg (Const a) + var)
+                          (Sum a (Const b))       -> apply (var ~> rec a) (var - Const b)
                           (Sum _ _)               -> undefined
 
                           (Neg a)                 -> apply (var ~> rec a) (neg var)
 
-                          (Prd (Const a) b)       -> substitute vName (inv (Const a) * var) (rec b)
-                          (Prd a (Const b))       -> substitute vName (var / Const b) (rec a)
+                          (Prd (Const a) b)       -> apply (var ~> rec b) (inv (Const a) * var)
+                          (Prd a (Const b))       -> apply (var ~> rec a) (var / Const b)
                           (Prd _ _)               -> undefined
 
-                          (Inv a)                 -> substitute vName (inv var) (rec a)
+                          (Inv a)                 -> apply (var ~> rec a) (inv var)
 
-                          (Pow a (Const n))       -> substitute vName (var ^ inv (Const n)) (rec a)
-                          (Pow (Const a) n)       -> substitute vName (log (Const a) var) (rec n)
+                          (Pow a (Const n))       -> apply (var ~> rec a) (var ^ inv (Const n))
+                          (Pow (Const a) n)       -> apply (var ~> rec n)  (log (Const a) var)
                           (Pow _ _)               -> undefined
 inverse (Fun f)         = let var = Var "x" in var ~> (inverse_ f var)
 inverse e               = error $ "Error: inverse " ++ show e
