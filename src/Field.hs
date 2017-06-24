@@ -8,7 +8,7 @@ infixl 7 /
 
 class (Ring a, Invertable a) => Field a where
     (/)      :: a -> a -> a
-    x / y     = x * inv y
+    x / y     = x * reciprocal y
 
 instance Field Double where
     (/)       = (Prelude./)

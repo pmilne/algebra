@@ -35,6 +35,6 @@ instance (Ring a, Euclidean a) => Subtractive (Rational a) where
 instance (Ring a, Euclidean a) => Ring (Rational a) where
 
 instance (Ring a, Euclidean a) => Invertable (Rational a) where
-    inv (Rational n d) = rational d n -- this could be optimised; there is no need for a gcd in this case -- just signum
+    reciprocal (Rational n d) = rational d n -- this could be optimised; there is no need for a gcd in this case -- just signum
 
 instance (Ring a, Euclidean a) => Field (Rational a) where

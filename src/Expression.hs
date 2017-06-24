@@ -118,11 +118,11 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
 instance (Eq a, Ring a) => Ring (Expression a)
 
 instance (Eq a, Field a) => Invertable (Expression a) where
-  inv (Const a) = Const (inv a)
-  inv a         = Inv a
+  reciprocal (Const a) = Const (reciprocal a)
+  reciprocal a         = Inv a
 
 instance (Eq a, Field a) => Field (Expression a) where
-  a / b = a * inv b
+  a / b = a * reciprocal b
 
 instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) where
   Const a ^ Const b = Const (a ^ b)
@@ -177,7 +177,7 @@ map0 mapVar mapConst mapFun mapApplyFun e0 = rec e0
         Neg a   -> neg (rec a)
         Sum a b -> rec a + rec b
         Prd a b -> rec a * rec b
-        Inv a   -> inv (rec a)
+        Inv a   -> reciprocal (rec a)
         Pow a b -> rec a ^ rec b
         Log a b -> log (rec a) (rec b)
 

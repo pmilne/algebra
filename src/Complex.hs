@@ -33,7 +33,7 @@ instance (Ring a) => Multiplicative (Complex a) where
 instance (Ring a) => Ring (Complex a) where
 
 instance (Field a) => Invertable (Complex a) where
-    inv (a :+ b)            =  let d = a * a + b * b in a / d :+ neg b / d
+    reciprocal (a :+ b)            =  let d = a * a + b * b in a / d :+ neg b / d
 
 instance (Field a) => Field (Complex a) where
 

@@ -29,8 +29,8 @@ run
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))))
  = do
   testInverse (x ~> x / two) (x ~> two * x)
-  testInverse (x ~> two / x) (x ~> inv (half * x))
-  testInverse (x ~> neg (inv x)) (x ~> inv (neg x))
+  testInverse (x ~> two / x) (x ~> reciprocal (half * x))
+  testInverse (x ~> neg (reciprocal x)) (x ~> reciprocal (neg x))
   testInverse (x ~> sin x) (x ~> asin x)
   testInverse (x ~> sin (cos x)) (x ~> acos (asin x))
   testInverse (x ~> sin (cos (tan x))) (x ~> atan (acos (asin x)))
@@ -40,5 +40,5 @@ run
   testInverse (x ~> sin (two * x)) (x ~> half * asin x)
   testInverse (x ~> two ^ x) (x ~> log two x)
   testInverse (x ~> two ^ sin x) (x ~> asin (log two x))
-  testInverse (x ~> x ^ two) (x ~> x ^ inv two)
-  testInverse (x ~> sin x ^ two) (x ~> asin (x ^ inv two))
+  testInverse (x ~> x ^ two) (x ~> x ^ reciprocal two)
+  testInverse (x ~> sin x ^ two) (x ~> asin (x ^ reciprocal two))
