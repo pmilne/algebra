@@ -16,6 +16,8 @@ infixl 1 ~>
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
 
+{-# ANN module "HLint: ignore Eta reduce" #-}
+
 {-# ANN module "HLint: ignore Avoid lambda" #-}
 
 {-# ANN module "HLint: ignore Unused matches" #-}
@@ -175,8 +177,7 @@ map0 ::
   -> (Expression a -> b -> b)
   -> Expression a
   -> b
-map0 mapVar mapConst mapFun mapApplyFun {-exp-}
- = rec {-exp-}
+map0 mapVar mapConst mapFun mapApplyFun exp0 = rec exp0
   where
     rec e =
       case e of
@@ -193,7 +194,7 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-}
 
 --  trace ("evalExpr: " ++ nm ++ " -> " ++ show val ++ " in " ++ show exp) $
 eval1 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
-eval1 name value =
+eval1 name value exp0 =
   map0
     (\vName ->
        if name == vName
@@ -201,12 +202,12 @@ eval1 name value =
          else undefined)
     id
     undefined
-    fnValue {-exp-}
- {-exp-}
+    fnValue
+    exp0
 
 substitute ::
      (Applicable a, Exponentiative a, Field a, Eq a, Show a) => String -> Expression a -> Expression a -> Expression a
-substitute name val =
+substitute name val exp0 =
   map0
     (\nm ->
        if nm == name
@@ -214,5 +215,5 @@ substitute name val =
          else undefined)
     Const
     Fun
-    (\f -> apply (substitute name val f)) {-exp-}
- {-exp-}
+    (\f -> apply (substitute name val f))
+    exp0
