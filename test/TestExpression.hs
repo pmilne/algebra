@@ -16,27 +16,6 @@ import qualified Expression.TestDerivative as TestDerivative
 
 import Hack
 
-{-
-instance Exponentiative (Rational a) where
-  _ ^ _   = undefined
-  log _ _ = undefined
-  ln _    = undefined
-  exp _   = undefined
-  sqrt    = undefined
-  two     = undefined
-
-instance Trigonometric (Rational a) where
-  sin _ = undefined
-  cos _ = undefined
-  tan _ = undefined
-  asin _ = undefined
-  acos _ = undefined
-  atan _ = undefined
-
-instance Applicable (Rational a) where
-  apply _ _ = undefined
--}
-
 y :: Expression (Rational Integer)
 y = Var "y"
 

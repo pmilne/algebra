@@ -21,7 +21,6 @@ data Fn a = Fn
   { name_       :: String
   , fun_        :: a -> a
   , inverse_    :: Expression a -> Expression a
-  , derivative_ :: Expression a -> Expression a
   }
 
 fnValue :: Expression a -> a -> a
@@ -29,10 +28,10 @@ fnValue (Fun f) = fun_ f
 fnValue _       = undefined
 
 instance Eq (Fn a) where
-  Fn name1 _ _ _ == Fn name2 _ _ _ = name1 == name2
+  Fn name1 _ _ == Fn name2 _ _ = name1 == name2
 
 instance Show (Fn a) where
-  show (Fn name1 _ _ _) = name1
+  show (Fn name1 _ _) = name1
 
 data Expression a
   = Const !a
@@ -142,20 +141,20 @@ instance (Eq a, Field a, Exponentiative a) => Exponentiative (Expression a) wher
     | b == one = zero
     | otherwise = Log a b
   ln (Const a) = Const (ln a)
-  ln a         = App (Fun (Fn "ln" ln exp (\x -> one / x))) a
+  ln a         = App (Fun (Fn "ln" ln exp)) a
   exp (Const a) = Const (exp a)
-  exp a         = App (Fun (Fn "exp" exp ln exp)) a
-  sqrt = App (Fun (Fn "sqrt" sqrt (^ two) (\x -> one / (two * sqrt x))))
+  exp a         = App (Fun (Fn "exp" exp ln)) a
+  sqrt = App (Fun (Fn "sqrt" sqrt (^ two)))
   two = Const two
 
 -- https://en.wikipedia.org/wiki/Differentiation_of_trigonometric_functions
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (Expression a) where
-  sin = App (Fun (Fn "sin" sin asin cos))
-  cos = App (Fun (Fn "cos" cos acos (neg . sin)))
-  tan = App (Fun (Fn "tan" tan atan (\x -> one / cos x ^ two)))
-  asin = App (Fun (Fn "asin" asin sin (\x -> one / sqrt (one - x ^ two))))
-  acos = App (Fun (Fn "acos" acos cos (\x -> neg one / sqrt (one - x ^ two))))
-  atan = App (Fun (Fn "atan" atan tan (\x -> one / (one + x ^ two))))
+  sin = App (Fun (Fn "sin" sin asin))
+  cos = App (Fun (Fn "cos" cos acos))
+  tan = App (Fun (Fn "tan" tan atan))
+  asin = App (Fun (Fn "asin" asin sin))
+  acos = App (Fun (Fn "acos" acos cos))
+  atan = App (Fun (Fn "atan" atan tan))
 
 instance (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Applicable (Expression a) where
   apply (Lambda x body) arg = substitute (varName x) arg body
