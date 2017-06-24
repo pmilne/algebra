@@ -7,8 +7,8 @@ import           Applicable
 import           Debug.Trace
 import           Exponentiative
 import           Field
-import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate,
-                                 sin, sqrt, tan, (*), (+), (-), (/), (^))
+import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
+                                 (^))
 import           Trigonometric
 
 infixl 1 ~>
