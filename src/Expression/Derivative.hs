@@ -14,27 +14,6 @@ import           Trigonometric
 
 {-# ANN module "HLint: ignore Redundant lambda" #-}
 
--- not used
-data DD a =
-  DD !(Expression a)
-
--- not used
-getExp :: DD a -> Expression a
-getExp (DD a) = a
-
--- not used
-instance (Eq a, Negatable a) => Negatable (DD a) where
-  neg (DD x) = DD (neg x)
-
--- not used
-instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (DD a) where
-  sin = \(DD x) -> DD (cos x)
-  cos (DD x) = DD (neg (sin x))
-  tan (DD x) = DD (one / cos x ^ two)
-  asin (DD x) = DD (one / sqrt (one - x ^ two))
-  acos (DD x) = DD (neg one / sqrt (one - x ^ two))
-  atan (DD x) = DD (one / (one + x ^ two))
-
 deriv :: (Eq a, Field a, Exponentiative a, Trigonometric a) => Fn a -> (Expression a -> Expression a)
 deriv f =
   case (name_ f) of
