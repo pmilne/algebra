@@ -18,7 +18,7 @@ import           Expression
 deriv :: (Eq a, Field a, Exponentiative a, Trigonometric a) => Fn a -> (Expression a -> Expression a)
 deriv f =
   case (name_ f) of
-    "ln"   -> (\x -> one / x)
+    "ln"   -> inv
     "exp"  -> exp
     "sqrt" -> (\x -> one / (two * sqrt x))
     "sin"  -> cos
