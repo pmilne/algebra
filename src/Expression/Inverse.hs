@@ -1,14 +1,16 @@
 module Expression.Inverse where
 
+import           Prelude        (Eq, Show, String, error, id, otherwise, show, undefined, ($), (++), (==))
+
 import           Applicable
 import           Exponentiative
-import           Expression
 import           Field
-import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
-                                 (^))
 import           Trigonometric
 
+import           Expression
+
 {-# ANN module "HLint: ignore Redundant bracket" #-}
+
 {-# ANN module "HLint: ignore Avoid lambda" #-}
 
 inv2 :: (Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Fn a -> (Expression a -> Expression a)
