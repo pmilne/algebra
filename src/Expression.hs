@@ -79,14 +79,12 @@ instance (Show a) => Show (Expression a) where
 
 instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
-  Const a + b =
-    if a == zero
-      then b
-      else Sum (Const a) b
-  a + Const b =
-    if b == zero
-      then a
-      else Sum a (Const b)
+  Const a + b
+    | a == zero = b
+    | otherwise = Sum (Const a) b
+  a + Const b
+    | b == zero = a
+    | otherwise = Sum a (Const b)
   a + b = Sum a b
   zero = Const zero
 
@@ -111,14 +109,12 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
     | otherwise = Prd (Const a) b
   (Inv a) * (Inv b) = Inv (a * b)
   a * (Prd b (Inv c)) = Prd (a * b) (Inv c)
-  a * (Inv b) =
-    if a == b
-      then one
-      else Prd a (Inv b)
-  a * b =
-    if a == b
-      then Pow a (Const one + Const one)
-      else Prd a b
+  a * (Inv b)
+    | a == b = one
+    | otherwise = Prd a (Inv b)
+  a * b
+    | a == b = Pow a (Const one + Const one)
+    | otherwise = Prd a b
   one = Const one
 
 instance (Eq a, Ring a) => Ring (Expression a)
