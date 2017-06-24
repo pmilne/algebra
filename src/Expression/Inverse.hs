@@ -11,8 +11,20 @@ import           Trigonometric
 {-# ANN module "HLint: ignore Redundant bracket" #-}
 {-# ANN module "HLint: ignore Avoid lambda" #-}
 
+inv2 :: (Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Fn a -> (Expression a -> Expression a)
+inv2 f =
+  case (name_ f) of
+    "ln"   -> exp
+    "exp"  -> ln
+    "sin"  -> asin
+    "cos"  -> acos
+    "tan"  -> atan
+    "asin" -> sin
+    "acos" -> cos
+    "atan" -> tan
 
-inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
+
+inverse :: (Show a, Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Expression a -> Expression a
 inverse (Lambda var body) = rec body
   where
     rec e =
@@ -33,5 +45,5 @@ inverse (Lambda var body) = rec body
         (Pow _ _)         -> undefined
 inverse (Fun f) =
   let var = Var "x"
-  in var ~> inverse_ f var
+  in var ~> inv2 f var
 inverse e = error $ "Error: inverse " ++ show e

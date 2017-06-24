@@ -16,7 +16,7 @@ import           TestUtil
 x :: Expression Double
 x = Var "x"
 
-testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
+testInverse :: (Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
 testInverse e d = test ("inverse " ++ show e) d (inverse e)
 
 --inv2 :: (a -> a) -> (a -> a)

@@ -19,6 +19,7 @@ executable algebra
                        Hack,
                        Expression.Eval,
                        Expression.Derivative,
+                       Expression.Inverse,
                        Composite,
                        Factorial,
                        Collins,
@@ -27,6 +28,7 @@ executable algebra
                        TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1,
                        Expression.TestEval,
                        Expression.TestDerivative,
+                       Expression.TestInverse,
                        Lambda, TestLambda,
                        Lambda2, TestLambda2,
                        Lambda3, TestLambda3
