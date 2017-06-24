@@ -32,7 +32,7 @@ instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (DD
   acos (DD x) = DD (neg one / sqrt (one - x ^ two))
   atan (DD x) = DD (one / (one + x ^ two))
 
-deriv :: (Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Fn a -> (Expression a -> Expression a)
+deriv :: (Eq a, Field a, Exponentiative a, Trigonometric a) => Fn a -> (Expression a -> Expression a)
 deriv f =
   case (name_ f) of
     "ln"   -> (\x -> one / x)
@@ -45,7 +45,7 @@ deriv f =
     "acos" -> (\x -> (neg one / sqrt (one - x ^ two)))
     "atan" -> (\x -> (one / (one + x ^ two)))
 
-derivative :: (Show a, Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Expression a -> Expression a -- todo shouldn't have applicable here
+derivative :: (Show a, Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Expression a -> Expression a
 derivative (Lambda var body) = Lambda var (rec body)
   where
     rec e =
