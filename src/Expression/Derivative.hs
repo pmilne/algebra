@@ -1,12 +1,13 @@
 module Expression.Derivative where
 
+import           Prelude(Eq, (==), Show, (++), show, otherwise, error, ($))
+
 import           Applicable
 import           Exponentiative
-import           Expression
 import           Field
-import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
-                                 (^))
 import           Trigonometric
+
+import           Expression
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
 
@@ -45,6 +46,6 @@ derivative (Lambda var body) = Lambda var (rec body)
         (Pow a (Const n)) -> Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
         (Pow f g) -> f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
 derivative (Fun f) =
-  let var = Var "d"
+  let var = Var "x"
   in var ~> (deriv f var)
 derivative e = error $ "Error: dd " ++ show e
