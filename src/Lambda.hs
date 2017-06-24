@@ -7,6 +7,7 @@ Translated from original Java sources here: https://github.com/pmilne/lambda/blo
 module Lambda where
 
 import           Data.List
+import           Prelude   hiding (exp)
 
 data Fun = Fun
   { name_     :: String
@@ -53,14 +54,22 @@ getOrFail :: Maybe a -> a
 getOrFail (Just x) = x
 getOrFail Nothing  = error "This didn't happen"
 
+{-
+{-# ANN module "HLint: ignore Use id" #-}
+{-# ANN module "HLint: ignore Use Control.Exception.catch" #-}
+{-# ANN module "HLint: ignore Defined but not used" #-}
+-}
+
+{-# ANN module "HLint: ignore Avoid lambda" #-}
+{-# ANN module "HLint: ignore Use const" #-}
+{-# ANN module "HLint: ignore Eta reduce" #-}
+
 createCompiler :: [String] -> Expression -> [Primitive] -> Primitive
-createCompiler nameStack {-exp-}
- = rec {-exp-}
+createCompiler nameStack exp0 = rec exp0
   where
-    rec exp =
-      case exp of
-        Constant value ->
-          \env -> value
+    rec e =
+      case e of
+        Constant value -> \env -> value
         Symbol name ->
           let index = getOrFail (elemIndex name nameStack)
           in \env -> env !! index
@@ -70,8 +79,8 @@ createCompiler nameStack {-exp-}
              in \env -> toFunction2 (fun0 env) (arg0 env)
         Lambda var exp ->
           let var0 = varName var
-          in let exp0 = createCompiler (var0 : nameStack) exp
-             in \env -> Fun0 (Fun "hello" (\arg -> exp0 (arg : env)))
+          in let body0 = createCompiler (var0 : nameStack) exp
+             in \env -> Fun0 (Fun "hello" (\arg -> body0 (arg : env)))
 
 eval :: Expression -> Primitive
 eval input = createCompiler [] input []
