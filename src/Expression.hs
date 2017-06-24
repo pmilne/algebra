@@ -101,8 +101,7 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
     | b == zero = zero
     | b == one = a
     | otherwise = Prd (Const b) a -- if commutative we can move the constant to the front
-  Const a * (Prd (Const b) c) -- if associative, gather constants
-   = Prd (Const (a * b)) c
+  Const a * (Prd (Const b) c) = Prd (Const (a * b)) c -- if associative, gather constants
   Const a * b
     | a == zero = zero
     | a == one = b
