@@ -164,11 +164,6 @@ instance (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Applicable (
   apply (Lambda x body) arg = substitute (varName x) arg body
   apply f x                 = App f x
 
---             trace ("apply " ++ "\tx: " ++ show x ++ "\tbody: " ++ show body) $
-ev :: (Show a) => Fn a -> Expression a -> Expression a
-ev fun (Const x) = Const (fun_ fun x)
-ev fun e         = App (Fun fun) e
-
 map0 ::
      (Show b, Eq b, Field b, Exponentiative b)
   => (String -> b)
@@ -177,7 +172,7 @@ map0 ::
   -> (Expression a -> b -> b)
   -> Expression a
   -> b
-map0 mapVar mapConst mapFun mapApplyFun exp0 = rec exp0
+map0 mapVar mapConst mapFun mapApplyFun e0 = rec e0
   where
     rec e =
       case e of
