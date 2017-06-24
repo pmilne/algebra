@@ -37,6 +37,7 @@ deriv f =
   case (name_ f) of
     "ln"   -> (\x -> one / x)
     "exp"  -> exp
+    "sqrt" -> (\x -> one / (two * sqrt x))
     "sin"  -> cos
     "cos"  -> (\x -> neg (sin x))
     "tan"  -> (\x -> one / cos x ^ two)

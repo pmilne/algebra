@@ -25,7 +25,7 @@ createCompiler nameStack {-exp-} =
                     Const value ->
                         \env -> Value value
 
-                    Fun (Fn _ f _) ->
+                    Fun (Fn _ f) ->
                         \env -> Function (\p -> Value (f (value_ p)))
 
                     Var name ->

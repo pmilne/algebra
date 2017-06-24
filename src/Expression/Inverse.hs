@@ -16,6 +16,7 @@ inv2 f =
   case (name_ f) of
     "ln"   -> exp
     "exp"  -> ln
+    "sqrt" -> \x -> x ^ two
     "sin"  -> asin
     "cos"  -> acos
     "tan"  -> atan

@@ -12,7 +12,7 @@ c0 = Lambda f (Lambda x x)
 c1 = Lambda x x
 c2 = Lambda f (Lambda x (App f (App f x)))
 z = Const 0
-inc = Fun (Fn "inc" (+1) undefined)
+inc = Fun (Fn "inc" (+1))
 id1 = App c1 z
 
 d :: Expression Double
