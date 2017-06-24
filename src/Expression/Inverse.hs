@@ -43,7 +43,7 @@ inverse (Lambda var body) = rec body
         (Prd (Const a) b) -> var ~> apply (rec b) (reciprocal (Const a) * var)
         (Prd a (Const b)) -> var ~> apply (rec a) (var / Const b)
         (Prd _ _)         -> undefined
-        (Inv a)           -> var ~> apply (rec a) (reciprocal var)
+        (Rcp a)           -> var ~> apply (rec a) (reciprocal var)
         (Pow a (Const n)) -> var ~> apply (rec a) (var ^ reciprocal (Const n))
         (Pow (Const a) n) -> var ~> apply (rec n) (log (Const a) var)
         (Pow _ _)         -> undefined

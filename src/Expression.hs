@@ -49,7 +49,7 @@ data Expression a
   | Neg !(Expression a)
   | Prd !(Expression a)
         !(Expression a)
-  | Inv !(Expression a)
+  | Rcp !(Expression a)
   | Pow !(Expression a)
         !(Expression a)
   | Log !(Expression a)
@@ -74,7 +74,7 @@ instance (Show a) => Show (Expression a) where
   show (Prd a b)         = "(" ++ show a ++ "*" ++ show b ++ ")"
   show (Pow a b)         = "(" ++ show a ++ "^" ++ show b ++ ")"
   show (Log a b)         = "(log (base " ++ show a ++ ") " ++ show b ++ ")"
-  show (Inv a)           = "(" ++ "/" ++ show a ++ ")"
+  show (Rcp a)           = "(" ++ "/" ++ show a ++ ")"
 
 instance (Eq a, Additive a) => Additive (Expression a) where
   Const a + Const b = Const (a + b)
@@ -105,11 +105,11 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
     | a == zero = zero
     | a == one = b
     | otherwise = Prd (Const a) b
-  (Inv a) * (Inv b) = Inv (a * b)
-  a * (Prd b (Inv c)) = Prd (a * b) (Inv c)
-  a * (Inv b)
+  (Rcp a) * (Rcp b) = Rcp (a * b)
+  a * (Prd b (Rcp c)) = Prd (a * b) (Rcp c)
+  a * (Rcp b)
     | a == b = one
-    | otherwise = Prd a (Inv b)
+    | otherwise = Prd a (Rcp b)
   a * b
     | a == b = Pow a (Const one + Const one)
     | otherwise = Prd a b
@@ -119,7 +119,7 @@ instance (Eq a, Ring a) => Ring (Expression a)
 
 instance (Eq a, Field a) => Invertable (Expression a) where
   reciprocal (Const a) = Const (reciprocal a)
-  reciprocal a         = Inv a
+  reciprocal a         = Rcp a
 
 instance (Eq a, Field a) => Field (Expression a) where
   a / b = a * reciprocal b
@@ -177,7 +177,7 @@ map0 mapVar mapConst mapFun mapApplyFun e0 = rec e0
         Neg a   -> neg (rec a)
         Sum a b -> rec a + rec b
         Prd a b -> rec a * rec b
-        Inv a   -> reciprocal (rec a)
+        Rcp a   -> reciprocal (rec a)
         Pow a b -> rec a ^ rec b
         Log a b -> log (rec a) (rec b)
 
