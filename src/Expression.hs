@@ -3,8 +3,7 @@ Originally from: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.
 -}
 module Expression where
 
-import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
-                                 (^))
+import           Prelude(Eq, (==), Show, show, String, (++), otherwise, error, undefined, ($), id)
 
 import           Applicable
 import           Exponentiative
@@ -12,6 +11,7 @@ import           Field
 import           Trigonometric
 
 --import           Debug.Trace
+
 infixl 1 ~>
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
