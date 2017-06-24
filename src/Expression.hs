@@ -3,7 +3,7 @@ Originally from: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.
 -}
 module Expression where
 
-import           Prelude(Eq, (==), Show, show, String, (++), otherwise, error, undefined, ($), id)
+import           Prelude        (Eq, Show, String, error, id, otherwise, show, undefined, ($), (++), (==))
 
 import           Applicable
 import           Exponentiative
@@ -11,7 +11,6 @@ import           Field
 import           Trigonometric
 
 --import           Debug.Trace
-
 infixl 1 ~>
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
