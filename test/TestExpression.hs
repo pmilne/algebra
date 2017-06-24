@@ -12,6 +12,7 @@ import Expression
 
 import TestUtil
 
+import qualified Expression.TestEval as TestEval
 import qualified Expression.TestDerivative as TestDerivative
 
 import Hack
@@ -41,6 +42,7 @@ run :: IO ()
 run = do
           putStrLn ("sin (1) = " ++ show (eval1 "x" 1.0 (sin x)))
 
+          TestEval.run
           TestDerivative.run
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))))
