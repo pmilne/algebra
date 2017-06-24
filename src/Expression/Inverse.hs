@@ -1,6 +1,6 @@
 module Expression.Inverse where
 
-import           Prelude        (Eq, Show, error, show, undefined, ($), (++))
+import           Prelude        (Eq, Show, error, otherwise, show, undefined, ($), (++), (==))
 
 import           Applicable
 import           Exponentiative
@@ -32,7 +32,9 @@ inverse (Lambda var body) = rec body
     rec e =
       case e of
         (Const _)         -> undefined
-        (Var x)           -> var ~> var
+        (Var x)
+          | e == var      -> var ~> var
+          | otherwise     -> undefined
         (App f a)         -> var ~> apply (rec a) (apply (inverse f) var)
         (Sum (Const a) b) -> var ~> apply (rec b) (neg (Const a) + var)
         (Sum a (Const b)) -> var ~> apply (rec a) (var - Const b)
