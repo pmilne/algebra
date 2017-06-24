@@ -198,7 +198,7 @@ inverse (Lambda var body) = rec body where
                                         (Inv a)                 -> var ~> apply (rec a) (inv var)
 
                                         (Pow a (Const n))       -> var ~> apply (rec a) (var ^ inv (Const n))
-                                        (Pow (Const a) n)       -> var ~> apply (rec n)  (log (Const a) var)
+                                        (Pow (Const a) n)       -> var ~> apply (rec n) (log (Const a) var)
                                         (Pow _ _)               -> undefined
 inverse (Fun f)         = let var = Var "x" in var ~> inverse_ f var
 inverse e               = error $ "Error: inverse " ++ show e
