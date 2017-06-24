@@ -13,6 +13,10 @@ import           Trigonometric
 
 infixl 1 ~>
 
+{-# ANN module "HLint: ignore Redundant bracket" #-}
+{-# ANN module "HLint: ignore Avoid lambda" #-}
+{-# ANN module "HLint: ignore Unused matches" #-}
+
 data Fn a = Fn
   { name_       :: String
   , fun_        :: a -> a
@@ -190,8 +194,8 @@ map0 mapVar mapConst mapFun mapApplyFun {-exp-}
 eval1 :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => String -> a -> Expression a -> a
 eval1 name value =
   map0
-    (\varName ->
-       if name == varName
+    (\vName ->
+       if name == vName
          then value
          else undefined)
     id
