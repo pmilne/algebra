@@ -24,7 +24,6 @@ inv2 f =
     "acos" -> cos
     "atan" -> tan
 
-
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Trigonometric a, Applicable a) => Expression a -> Expression a
 inverse (Lambda var body) = rec body
   where
