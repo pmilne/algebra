@@ -16,7 +16,9 @@ extra-source-files:  README.md
 executable algebra
   other-modules:       Additive, Negatable, Subtractive, Multiplicative, Invertable, Ring, Field, Euclidean, Exponentiative, Trigonometric, Applicable,
                        Rational, Complex, Modular, Expression, Polynomial, Numeral.Numeral1,
+                       Hack,
                        Expression.Eval,
+                       Expression.Derivative,
                        Composite,
                        Factorial,
                        Collins,
@@ -24,6 +26,7 @@ executable algebra
                        TestFactorial, TestTypes
                        TestRational, TestComplex, TestModular, TestExpression, TestPolynomial, Numeral.TestNumeral1,
                        Expression.TestEval,
+                       Expression.TestDerivative,
                        Lambda, TestLambda,
                        Lambda2, TestLambda2,
                        Lambda3, TestLambda3

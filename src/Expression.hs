@@ -4,7 +4,7 @@ Originally from: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.
 module Expression where
 
 import           Applicable
-import           Debug.Trace
+--import           Debug.Trace
 import           Exponentiative
 import           Field
 import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
@@ -215,29 +215,6 @@ substitute name val =
     Fun
     (\f -> apply (substitute name val f)) {-exp-}
  {-exp-}
-
-derivative :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a -- todo shouldn't have applicable here
-derivative (Lambda var body) = Lambda var (rec body)
-  where
-    rec e =
-      case e of
-        (Const _) -> zero
-        (Var _) ->
-          if e == var
-            then one
-            else zero
-        (App f a) -> rec a * (apply (derivative f) a) -- chain rule
-        (Neg a) -> neg (rec a)
-        (Sum a b) -> rec a + rec b
-        (Prd a b) -> a * rec b + rec a * b --product rule (ab' + a'b)
-        (Inv a) -> neg (rec a) / (a ^ two)
-                                  --derivative (Div a b)            -> (derivative a * b - a * derivative b) / b ^ two -- quotient rule ( (a'b - b'a) / b^2 )
-        (Pow a (Const n)) -> Const n * rec a * a ^ Const (n - one) --specialised power rule (xa^(n-1) * a')
-        (Pow f g) -> f ^ g * (rec f * g / f + rec g * ln f) --general power rule: https://en.wikipedia.org/wiki/Differentiation_rules#Generalized_power_rule
-derivative (Fun f) =
-  let var = Var "d"
-  in var ~> (derivative_ f var)
-derivative e = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Lambda var body) = rec body

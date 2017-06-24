@@ -12,6 +12,11 @@ import Expression
 
 import TestUtil
 
+import qualified Expression.TestDerivative as TestDerivative
+
+import Hack
+
+{-
 instance Exponentiative (Rational a) where
   _ ^ _   = undefined
   log _ _ = undefined
@@ -20,8 +25,17 @@ instance Exponentiative (Rational a) where
   sqrt    = undefined
   two     = undefined
 
+instance Trigonometric (Rational a) where
+  sin _ = undefined
+  cos _ = undefined
+  tan _ = undefined
+  asin _ = undefined
+  acos _ = undefined
+  atan _ = undefined
+
 instance Applicable (Rational a) where
   apply _ _ = undefined
+-}
 
 y :: Expression (Rational Integer)
 y = Var "y"
@@ -34,9 +48,6 @@ xp1 = y + pc 1
 
 x :: Expression Double
 x = Var "x"
-
-testDerivative :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
-testDerivative e d = test ("derivative " ++ show e) d (derivative e)
 
 testInverse :: (Eq a, Field a, Exponentiative a, Applicable a, Show a) => Expression a -> Expression a -> IO ()
 testInverse e d = test ("inverse " ++ show e) d (inverse e)
@@ -51,19 +62,7 @@ run :: IO ()
 run = do
           putStrLn ("sin (1) = " ++ show (eval1 "x" 1.0 (sin x)))
 
-          testDerivative (y ~> (y + pc 1)) (y ~> pc 1)
-          testDerivative (y ~> (pc 3 * y ^ pc 2)) (y ~> pc 6 * y)
-          testDerivative (y ~> y ^ y) (y ~> y ^ y * (pc 1 + ln y))
-          testDerivative (y ~> ln (ln y)) (y ~> (pc 1 / (y * ln y)))
-
-          testDerivative (x ~> sin x) (x ~> cos x)
-          testDerivative (x ~> (x + sin x)) (x ~> (one + cos x))
-          testDerivative (x ~> sin(sin x)) (x ~> (cos x * cos (sin x)))
-          testDerivative (x ~> tan (tan x)) (x ~> (one/((cos x ^ two)*(cos (tan x) ^ two))))
-          testDerivative (x ~> asin x) (x ~> (one / sqrt (one + neg (x ^ two))))
-          testDerivative (x ~> tan x) (x ~> (one / cos x^two))
-          testDerivative (x ~> (sin x / cos x)) (x ~> (((sin x ^ two) /(cos x ^ two)) + one))
---          testDD (y ~>  (derivative (x + sin x))) (neg (sin x)))
+          TestDerivative.run
 
 --          putStrLn ("derivative^2 (tan (tan x1)) = " ++ show (derivative (derivative (tan (tan x1)))))))
 
