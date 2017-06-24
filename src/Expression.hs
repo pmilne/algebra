@@ -3,23 +3,26 @@ Originally from: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.
 -}
 module Expression where
 
-import           Applicable
---import           Debug.Trace
-import           Exponentiative
-import           Field
 import           Prelude        hiding (acos, asin, atan, cos, exp, log, negate, sin, sqrt, tan, (*), (+), (-), (/),
                                  (^))
+
+import           Applicable
+import           Exponentiative
+import           Field
 import           Trigonometric
 
+--import           Debug.Trace
 infixl 1 ~>
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
+
 {-# ANN module "HLint: ignore Avoid lambda" #-}
+
 {-# ANN module "HLint: ignore Unused matches" #-}
 
 data Fn a = Fn
-  { name_       :: String
-  , fun_        :: a -> a
+  { name_ :: String
+  , fun_  :: a -> a
   }
 
 fnValue :: Expression a -> a -> a
