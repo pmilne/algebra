@@ -1,6 +1,6 @@
 module Expression.Inverse where
 
-import           Prelude        (Eq, Show, String, error, id, otherwise, show, undefined, ($), (++), (==))
+import           Prelude        (Eq, Show, error, show, undefined, ($), (++))
 
 import           Applicable
 import           Exponentiative
