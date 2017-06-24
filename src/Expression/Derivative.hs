@@ -12,6 +12,8 @@ import           Trigonometric
 
 {-# ANN module "HLint: ignore Avoid lambda" #-}
 
+{-# ANN module "HLint: ignore Redundant lambda" #-}
+
 -- not used
 data DD a =
   DD !(Expression a)
@@ -26,7 +28,7 @@ instance (Eq a, Negatable a) => Negatable (DD a) where
 
 -- not used
 instance (Eq a, Field a, Exponentiative a, Trigonometric a) => Trigonometric (DD a) where
-  sin (DD x) = DD (cos x)
+  sin = \(DD x) -> DD (cos x)
   cos (DD x) = DD (neg (sin x))
   tan (DD x) = DD (one / cos x ^ two)
   asin (DD x) = DD (one / sqrt (one - x ^ two))
@@ -52,10 +54,9 @@ derivative (Lambda var body) = Lambda var (rec body)
     rec e =
       case e of
         (Const _) -> zero
-        (Var _) ->
-          if e == var
-            then one
-            else zero
+        (Var _)
+          | e == var -> one
+          | otherwise -> zero
         (App f a) -> rec a * (apply (derivative f) a) -- chain rule
         (Neg a) -> neg (rec a)
         (Sum a b) -> rec a + rec b

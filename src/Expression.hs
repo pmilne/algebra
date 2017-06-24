@@ -202,7 +202,7 @@ substitute name val exp0 =
     (\nm ->
        if nm == name
          then val
-         else undefined)
+         else Var nm)
     Const
     Fun
     (\f -> apply (substitute name val f))
