@@ -180,10 +180,9 @@ derivative e               = error $ "Error: dd " ++ show e
 
 inverse :: (Show a, Eq a, Field a, Exponentiative a, Applicable a) => Expression a -> Expression a
 inverse (Lambda var body) = rec body where
-                    rec e =
-                      let vName = varName var in case e of
+                    rec e = case e of
                           (Const _)               -> undefined
-                          (Var x)                 -> var ~> Var x
+                          (Var x)                 -> var ~> var
                           (App f a)               -> var ~> apply (rec a) (apply (inverse f) var)
 
                           (Sum (Const a) b)       -> var ~> apply (rec b) (neg (Const a) + var)
