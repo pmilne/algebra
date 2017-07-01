@@ -117,7 +117,7 @@ instance (Eq a, Additive a, Multiplicative a) => Multiplicative (Expression a) w
 
 instance (Eq a, Ring a) => Ring (Expression a)
 
-instance (Eq a, Field a) => Invertable (Expression a) where
+instance (Eq a, Field a) => Reciprocative (Expression a) where
   reciprocal (Const a) = Const (reciprocal a)
   reciprocal a         = Rcp a
 
