@@ -4,9 +4,10 @@ module Domains.Field
   , module Domains.Field
   ) where
 
+import           Prelude               hiding ((*))
+
 import           Domains.Reciprocative
 import           Domains.Ring
-import           Prelude               hiding ((*))
 
 infixl 7 /
 
