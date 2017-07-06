@@ -1,12 +1,11 @@
 module TestExpression where
 
-import Expression.TestEval
-import Expression.TestDerivative
-import Expression.TestInverse
+import           Expression.TestDerivative
+import           Expression.TestEval
+import           Expression.TestInverse
 
 run :: IO ()
 run = do
-          Expression.TestEval.run
-          Expression.TestDerivative.run
-          Expression.TestInverse.run
-
+  Expression.TestEval.run
+  Expression.TestDerivative.run
+  Expression.TestInverse.run

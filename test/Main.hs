@@ -1,6 +1,5 @@
 module Main where
 
-import           Expression.TestEval
 import           Numeral.TestNumeral1
 import           TestComplex
 import           TestExpression
@@ -22,7 +21,7 @@ import           TestTypes
 main :: IO ()
 main = do
   TestFactorial.run
-  TestNumeral1.run
+  Numeral.TestNumeral1.run
   TestComplex.run
   TestModular.run
   TestRational.run
