@@ -4,7 +4,7 @@ symbolic (name-based) references in a compile-like first pass over the expressio
 
 Translated from original Java sources here: https://github.com/pmilne/lambda/blob/master/src/lambda/Evaluator.java
 -}
-module Lambda where
+module Lambda.Lambda1 where
 
 import           Data.List
 import           Prelude   hiding (exp)

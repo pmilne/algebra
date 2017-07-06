@@ -39,9 +39,12 @@ executable algebra
                        Expression.TestEval,
                        Expression.TestDerivative,
                        Expression.TestInverse,
-                       Lambda, TestLambda,
-                       Lambda2, TestLambda2,
-                       Lambda3, TestLambda3
+                       Lambda.Lambda1,
+                       Lambda.Lambda2,
+                       Lambda.Lambda3,
+                       Lambda.TestLambda1,
+                       Lambda.TestLambda2,
+                       Lambda.TestLambda3
   hs-source-dirs:      src, test
   main-is:             Main.hs
   default-language:    Haskell2010

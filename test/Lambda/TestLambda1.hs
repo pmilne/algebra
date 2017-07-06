@@ -1,7 +1,8 @@
-module TestLambda where
+module Lambda.TestLambda1 where
 
 import Prelude hiding (id)
-import Lambda
+
+import Lambda.Lambda1
 
 --import TestUtil
 

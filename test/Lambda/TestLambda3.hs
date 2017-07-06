@@ -1,7 +1,8 @@
-module TestLambda2 where
+module Lambda.TestLambda3 where
 
 import Prelude hiding (id)
-import Lambda2
+
+import Lambda.Lambda3
 
 f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Symbol "x"
@@ -9,8 +10,8 @@ f = Symbol "f"
 c0 = Lambda "f" (Lambda "x" x)
 c1 = Lambda "x" x
 c2 = Lambda "f" (Lambda "x" (Application f (Application f x)))
-z = Constant (Value 0)
-inc = Constant (Function (\p -> Value (1 + value_ p)))
+z = Constant 0
+inc = Fun (Fn "inc" (+1))
 id1 = Application c1 z
 
 run :: IO ()

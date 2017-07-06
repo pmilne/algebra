@@ -10,9 +10,9 @@ cabal repl
 :info Ratio
 -}
 import           TestFactorial
-import           TestLambda
-import           TestLambda2
-import           TestLambda3
+import           Lambda.TestLambda1
+import           Lambda.TestLambda2
+import           Lambda.TestLambda3
 import           TestModular
 import           TestPolynomial
 import           TestRational
@@ -28,6 +28,6 @@ main = do
   TestPolynomial.run
   TestTypes.run
   TestExpression.run
-  TestLambda.run
-  TestLambda2.run
-  TestLambda3.run
+  Lambda.TestLambda1.run
+  Lambda.TestLambda2.run
+  Lambda.TestLambda3.run
