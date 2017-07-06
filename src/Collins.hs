@@ -37,17 +37,16 @@ subresultant rtn u v =
         -- degree u >= degree v
         rec u v g h =
              trace ("subresultant " ++ "\t\tu: " ++ show u ++ "\t\tv: " ++ show v ++ "\t\tv: " ++ show g ++ "\t\tv: " ++ show h) $
-             if v == zero then
-                rtn u zero
-             else
-               let delta = deg u - deg v in
-               let lcv = lc v in
-               -- The first clause is only required in the first iteration where delta may be zero, requiring an explicit check.
-               let nh = if delta == 0 && h == one then lcv else (lcv ^ delta) /! (h ^ (delta - 1)) in
-               if deg v == 0 then
-                   rtn one nh
+             if v == zero
+               then rtn u zero
                else
-                   rec v (pseudoRem u v /! Const (g * (h ^ delta))) lcv nh
+                 let delta = deg u - deg v in
+                 let lcv = lc v in
+                 -- The first clause is only required in the first iteration where delta may be zero, requiring an explicit check.
+                 let nh = if delta == 0 && h == one then lcv else (lcv ^ delta) /! (h ^ (delta - 1)) in
+                 if deg v == 0
+                   then rtn one nh
+                   else rec v (pseudoRem u v /! Const (g * (h ^ delta))) lcv nh
 
 resultant :: (Show a, Eq a, Ring a, Euclidean a) => Polynomial a -> Polynomial a -> a
 resultant = subresultant _resultant
