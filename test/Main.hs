@@ -1,9 +1,10 @@
 module Main where
 
 import           Expression.TestEval
-import qualified Numeral.TestNumeral1 as TestNumeral1
+import           Numeral.TestNumeral1
 import           TestComplex
 import           TestExpression
+
 {-
 stack build && .stack-work/install/x86_64-osx/lts-8.15/8.0.2/bin/algebra
 cabal repl
