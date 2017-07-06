@@ -3,7 +3,12 @@ module Domains.Euclidean where
 --import Prelude hiding (return)
 import Domains.Additive
 
+-- Accessor-like functions for the rtn argument of divide
+
+_quo :: t -> t -> t
 _quo q r = q
+
+_rem :: t -> t -> t
 _rem q r = r
 
 infixl 7 /! -- divide or fail
