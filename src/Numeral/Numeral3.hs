@@ -2,10 +2,11 @@
 
 module Numeral3 where
 
-import Domains.Ring
+import           Domains.Ring
 
-data Numeral3 = forall a. Numeral3 ((a -> a) -> (a -> a))
+data Numeral3 =
+  forall a. Numeral3 ((a -> a) -> (a -> a))
 
-instance Ring Numeral3 where
+--instance Ring Numeral3
 --    Numeral3 n1 + Numeral3 n2 = Numeral3 (\f x -> (n1 f (n2 f x)))
 --    Numeral3 n1 * Numeral3 n2 = Numeral3 (\f -> (n1 (n2 f)))
