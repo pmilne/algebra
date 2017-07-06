@@ -4,9 +4,10 @@ module Domains.Subtractive
   , module Domains.Subtractive
   ) where
 
+import           Prelude           hiding (negate, (*), (+), (-), (/), (^))
+
 import           Domains.Additive
 import           Domains.Negatable
-import           Prelude           hiding (negate, (*), (+), (-), (/), (^))
 
 infixl 6 -
 
