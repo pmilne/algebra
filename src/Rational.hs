@@ -1,8 +1,8 @@
 module Rational(Euclidean, module Rational) where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
-import Euclidean
-import Field
+import Domains.Euclidean
+import Domains.Field
 
 -- A fraction or ratio between two elements of a Euclidean Ring. E.g. Integer or Polynomial
 data Rational a = Rational !a !a deriving (Eq, Read)

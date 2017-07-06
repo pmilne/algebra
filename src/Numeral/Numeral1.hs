@@ -1,6 +1,6 @@
 module Numeral.Numeral1 where
 
-import Ring
+import Domains.Ring
 
 -- A Church Numeral type
 newtype Numeral1 t = Numeral1 ((t -> t) -> (t -> t))

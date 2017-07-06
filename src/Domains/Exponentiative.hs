@@ -1,4 +1,4 @@
-module Exponentiative where
+module Domains.Exponentiative where
 
 infixr 8 ^
 

@@ -5,10 +5,10 @@ module Expression where
 
 import           Prelude        (Eq, Show, String, error, id, otherwise, show, undefined, ($), (++), (==))
 
-import           Applicable
-import           Exponentiative
-import           Field
-import           Trigonometric
+import           Domains.Applicable
+import           Domains.Exponentiative
+import           Domains.Field
+import           Domains.Trigonometric
 
 --import           Debug.Trace
 infixl 1 ~>

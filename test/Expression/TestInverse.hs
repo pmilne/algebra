@@ -3,10 +3,10 @@ module Expression.TestInverse where
 import           Prelude            hiding (Rational, acos, asin, atan, cos, gcd, log, negate, sin, sqrt, tan, (*), (+),
                                      (-), (/), (^))
 
-import           Applicable
-import           Exponentiative
-import           Field
-import           Trigonometric
+import           Domains.Applicable
+import           Domains.Exponentiative
+import           Domains.Field
+import           Domains.Trigonometric
 
 import           Expression
 import           Expression.Inverse

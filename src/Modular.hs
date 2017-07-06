@@ -1,9 +1,10 @@
 module Modular where
 
 import Prelude hiding ((+), (-), negate, rem, (*), (^), (/))
-import Euclidean
-import Ring
-import Field
+
+import Domains.Euclidean
+import Domains.Ring
+import Domains.Field
 
 -- Humph, it looks like we need to use explicit reification to associate the modulus with the class.
 -- Oh dear. Hardcode the modulus for now...

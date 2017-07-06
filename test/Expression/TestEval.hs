@@ -3,7 +3,7 @@ module Expression.TestEval where
 import Prelude hiding (id, sin)
 import Expression
 import Expression.Eval
-import Trigonometric
+import Domains.Trigonometric
 
 f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Var "x"

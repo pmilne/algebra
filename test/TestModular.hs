@@ -2,7 +2,7 @@ module TestModular where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 
-import Ring
+import Domains.Ring
 
 import Modular
 

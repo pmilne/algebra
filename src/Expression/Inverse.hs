@@ -2,10 +2,10 @@ module Expression.Inverse where
 
 import           Prelude        (Eq, Show, error, otherwise, show, undefined, ($), (++), (==))
 
-import           Applicable
-import           Exponentiative
-import           Field
-import           Trigonometric
+import           Domains.Applicable
+import           Domains.Exponentiative
+import           Domains.Field
+import           Domains.Trigonometric
 
 import           Expression
 

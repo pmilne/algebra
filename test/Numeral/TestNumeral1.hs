@@ -1,7 +1,7 @@
 module Numeral.TestNumeral1 where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
-import Ring
+import Domains.Ring
 
 import Numeral.Numeral1
 

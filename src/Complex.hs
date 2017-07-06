@@ -4,8 +4,9 @@
 module Complex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
-import Composite
-import Field
+
+import Domains.Composite
+import Domains.Field
 
 infix  6  :+
 

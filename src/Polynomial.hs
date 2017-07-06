@@ -1,8 +1,8 @@
 module Polynomial where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
-import Ring
-import Euclidean
+import Domains.Ring
+import Domains.Euclidean
 import Debug.Trace
 
 -- A data structure for Polynomials of the form a * x ^ n + r(x)

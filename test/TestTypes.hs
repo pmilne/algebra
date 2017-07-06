@@ -1,6 +1,6 @@
 module TestTypes where
 
-import Ring
+import Domains.Ring
 
 import Polynomial
 

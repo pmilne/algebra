@@ -3,7 +3,7 @@
 
 module Numeral.Numeral2 where
 
-import Ring
+import Domains.Ring
 import Exponentiative
 
 type Numeral2 a = (a -> a) -> (a -> a)

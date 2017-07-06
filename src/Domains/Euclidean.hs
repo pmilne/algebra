@@ -1,7 +1,7 @@
-module Euclidean where
+module Domains.Euclidean where
 
 --import Prelude hiding (return)
-import Additive
+import Domains.Additive
 
 _quo q r = q
 _rem q r = r
@@ -21,7 +21,7 @@ class (Show a, Eq a, Additive a) => Euclidean a where
 
     quo               = divide _quo
     rem               = divide _rem
-    divide rtn n d    = rtn (quo n d) (Euclidean.rem n d)
+    divide rtn n d    = rtn (quo n d) (Domains.Euclidean.rem n d)
     divideOrFail n d  = divide (\q r -> if r /= zero then error ("Fail: " ++ show n ++ " // by " ++ show d) else q) n d
 
 instance Euclidean Int where

@@ -4,7 +4,7 @@
 
 module Numeral4 where
 
-import Ring
+import Domains.Ring
 
 type Numeral4 = forall a. ((a -> a) -> (a -> a))
 

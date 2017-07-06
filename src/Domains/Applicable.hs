@@ -1,4 +1,4 @@
-module Applicable where
+module Domains.Applicable where
 
 -- Applicative is a central construct in Haskell -- use the name Applicable instead
 

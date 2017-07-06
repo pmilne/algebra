@@ -2,7 +2,7 @@
 
 module Numeral3 where
 
-import Ring
+import Domains.Ring
 
 data Numeral3 = forall a. Numeral3 ((a -> a) -> (a -> a))
 
