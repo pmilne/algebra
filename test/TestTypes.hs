@@ -33,9 +33,9 @@ instance (Show a) => Show (Polynomial a) where
     show (Term a n r)   = show a ++ "x" ++ show n ++ " + " ++ show r
 
 instance (Eq a, Additive a) => Additive (Polynomial a) where
-    Const a1      ~+ Const a2                = Const (a1 ~+ a2)
-    Const a1      ~+ Term a2 n2 r2           = Term a2 n2 (Const a1 ~+ r2)
-    Term a1 n1 r1 ~+ Const a2                = Term a1 n1 (r1 ~+ Const a2)
+    Const a1           ~+ Const a2           = Const (a1 ~+ a2)
+    Const a1           ~+ Term a2 n2 r2      = Term a2 n2 (Const a1 ~+ r2)
+    Term a1 n1 r1      ~+ Const a2           = Term a1 n1 (r1 ~+ Const a2)
     p1@(Term a1 n1 r1) ~+ p2@(Term a2 n2 r2) | n1 > n2   = Term a1 n1 (r1 ~+ p2)
                                              | n1 < n2   = Term a2 n2 (p1 ~+ r2)
                                              | otherwise = polynomial (a1 ~+ a2) n1 (r1 ~+ r2)
@@ -50,15 +50,6 @@ foo1 _ = zero
 foo2 :: (Additive a) => Polynomial (Polynomial a) -> a
 foo2 _ = zero
 
-run :: IO ()
-run = do
-  print (foo0 (undefined :: Integer))
-  print (foo0 (undefined :: Polynomial Integer))
-  print (foo0 (undefined :: Polynomial (Polynomial Integer)))
-  print (foo0 (undefined :: Polynomial (Polynomial Integer)))
-  print (foo1 (undefined :: Polynomial (Polynomial Integer)))
-  print (foo2 (undefined :: Polynomial (Polynomial Integer)))
-
 {-
 Output:
 
@@ -69,6 +60,13 @@ Const Const 0
 Const 0
 0
 -}
+run :: IO ()
+run = do
+  print (foo0 (undefined :: Integer))
+  print (foo0 (undefined :: Polynomial Integer))
+  print (foo0 (undefined :: Polynomial (Polynomial Integer)))
+  print (foo1 (undefined :: Polynomial (Polynomial Integer)))
+  print (foo2 (undefined :: Polynomial (Polynomial Integer)))
 
 main :: IO ()
 main = run
