@@ -30,9 +30,7 @@ polynomial a n r
 
 instance (Show a, Eq a, Additive a) => Show (Polynomial a) where
     show (Const a)      = "Const " ++ show a
-    show (Term a n r)   = show a ++ "x" ++
-                          show n ++ " + " ++
-                          (if r /= zero then show r else "")
+    show (Term a n r)   = show a ++ "x" ++ show n ++ " + " ++ show r
 
 instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
     Const a1      ~+ Const a2                = Const (a1 ~+ a2)
