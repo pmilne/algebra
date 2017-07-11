@@ -6,8 +6,9 @@ import           Prelude           hiding (gcd, negate, rem, (*), (+), (-), (/),
 import           Domains.Euclidean
 import           Domains.Ring
 
+import           Data.Polynomial
+
 import           Debug.Trace
-import           Polynomial
 
 infixr 8 ^
 

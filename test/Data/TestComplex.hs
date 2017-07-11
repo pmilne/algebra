@@ -1,11 +1,11 @@
-module TestComplex where
+module Data.TestComplex where
 
 import           Domains.Field
 import           Domains.Ring
 import           Prelude       hiding (Rational, gcd, negate, (*), (+), (-), (/), (^))
 
-import           Complex
-import           Rational
+import           Data.Complex
+import           Data.Rational
 
 import           TestUtil
 

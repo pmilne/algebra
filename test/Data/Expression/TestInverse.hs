@@ -1,4 +1,4 @@
-module Expression.TestInverse where
+module Data.Expression.TestInverse where
 
 import           Prelude            hiding (Rational, acos, asin, atan, cos, gcd, log, negate, sin, sqrt, tan, (*), (+),
                                      (-), (/), (^))
@@ -8,8 +8,8 @@ import           Domains.Exponentiative
 import           Domains.Field
 import           Domains.Trigonometric
 
-import           Expression
-import           Expression.Inverse
+import           Data.Expression
+import           Data.Expression.Inverse
 
 import           TestUtil
 

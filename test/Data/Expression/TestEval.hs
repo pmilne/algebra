@@ -1,9 +1,11 @@
-module Expression.TestEval where
+module Data.Expression.TestEval where
 
 import Prelude hiding (id, sin)
-import Expression
-import Expression.Eval
+
 import Domains.Trigonometric
+
+import Data.Expression
+import Data.Expression.Eval
 
 f, x, c0, c1, c2, id1, z, inc :: Expression Int
 x = Var "x"

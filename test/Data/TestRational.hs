@@ -1,12 +1,13 @@
-module TestRational where
+module Data.TestRational where
 
 import           Prelude       hiding (Rational, gcd, negate, (*), (+), (-), (/), (^))
 
 import           Domains.Field
 import           Domains.Ring
 
-import           Complex
-import           Rational
+import           Data.Complex
+import           Data.Rational
+
 import           TestUtil
 
 fr :: Rational Int

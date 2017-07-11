@@ -1,4 +1,4 @@
-module Expression.Derivative where
+module Data.Expression.Derivative where
 
 import           Prelude                (Eq, Show, error, otherwise, show, ($), (++), (==))
 
@@ -7,7 +7,7 @@ import           Domains.Exponentiative
 import           Domains.Field
 import           Domains.Trigonometric
 
-import           Expression
+import           Data.Expression
 
 {-# ANN module "HLint: ignore Redundant bracket" #-}
 

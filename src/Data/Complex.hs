@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Complex where
+module Data.Complex where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/))
 

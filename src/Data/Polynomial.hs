@@ -1,4 +1,4 @@
-module Polynomial where
+module Data.Polynomial where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd)
 import Domains.Ring

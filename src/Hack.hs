@@ -7,7 +7,7 @@ import           Domains.Exponentiative
 import           Domains.Field
 import           Domains.Trigonometric
 
-import           Rational
+import           Data.Rational
 
 instance Exponentiative (Rational a) where
   _ ^ _ = undefined

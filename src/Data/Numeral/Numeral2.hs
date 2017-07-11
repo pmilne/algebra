@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 
-module Numeral.Numeral2 where
+module Data.Numeral.Numeral2 where
 
 import           Domains.Ring
 import           Exponentiative

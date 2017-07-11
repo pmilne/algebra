@@ -1,4 +1,4 @@
-module Rational(Euclidean, module Rational) where
+module Data.Rational(Euclidean, module Data.Rational) where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Domains.Euclidean

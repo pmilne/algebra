@@ -1,7 +1,7 @@
 {-
 Originally from: http://5outh.blogspot.com/2013/05/symbolic-calculus-in-haskell.html
 -}
-module Expression where
+module Data.Expression where
 
 import           Prelude        (Eq, Show, String, error, id, otherwise, show, undefined, ($), (++), (==))
 

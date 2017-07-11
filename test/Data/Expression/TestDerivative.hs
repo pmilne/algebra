@@ -1,18 +1,17 @@
-module Expression.TestDerivative where
+module Data.Expression.TestDerivative where
 
-import           Expression.Derivative
+import           Data.Expression.Derivative
 import           Prelude                hiding (Rational, acos, asin, atan, cos, gcd, log, negate, sin, sqrt, tan, (*),
                                          (+), (-), (/), (^))
-import           Rational
-
 import           Domains.Applicable
 import           Domains.Exponentiative
 import           Domains.Field
 import           Domains.Trigonometric
 
-import           Hack
+import           Data.Rational
+import           Data.Expression
 
-import           Expression
+import           Hack
 
 import           TestUtil
 

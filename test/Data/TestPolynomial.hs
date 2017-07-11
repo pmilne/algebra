@@ -1,17 +1,18 @@
-module TestPolynomial where
+module Data.TestPolynomial where
 
 import           Prelude           hiding (Rational, gcd, negate, (*), (+), (-), (/), (^))
 
 import           Domains.Euclidean
 import           Domains.Ring
 
+import           Data.Polynomial
+import           Data.Rational
+
 import           Collins
-import           Polynomial
-import           Rational
 import           TestUtil
 
 x, x2, x3, x4, x5, x6, x7, x8 :: Polynomial Integer
-x = Term 1 1 (Polynomial.Const 0)
+x = Term 1 1 (Data.Polynomial.Const 0)
 
 x2 = x * x
 
@@ -28,7 +29,7 @@ x7 = x6 * x
 x8 = x7 * x
 
 p :: Polynomial Integer
-p = Term 1 1 (Polynomial.Const 1)
+p = Term 1 1 (Data.Polynomial.Const 1)
 
 pc :: Integer -> Polynomial Integer
 pc = promote

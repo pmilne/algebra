@@ -1,4 +1,4 @@
-module Modular where
+module Data.Modular where
 
 import Prelude hiding ((+), (-), negate, rem, (*), (^), (/))
 

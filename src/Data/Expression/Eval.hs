@@ -1,7 +1,7 @@
-module Expression.Eval where
+module Data.Expression.Eval where
 
 import           Data.List
-import           Expression
+import           Data.Expression
 
 {-# ANN module "HLint: ignore Avoid lambda" #-}
 

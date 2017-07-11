@@ -1,4 +1,4 @@
-module Numeral.Numeral1 where
+module Data.Numeral.Numeral1 where
 
 import           Domains.Ring
 

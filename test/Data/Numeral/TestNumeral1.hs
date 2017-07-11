@@ -1,9 +1,9 @@
-module Numeral.TestNumeral1 where
+module Data.Numeral.TestNumeral1 where
 
 import Prelude hiding ((+), (-), negate, (*), (^), (/), gcd, Rational)
 import Domains.Ring
 
-import Numeral.Numeral1
+import Data.Numeral.Numeral1
 
 import TestUtil
 
@@ -19,6 +19,6 @@ run = do
           putStrLn ("1 + 2 = " ++ show (n1 + n2))
           putStrLn ("2 * 3 = " ++ show (n2 * n3))
 --          putStrLn ("2 ^ 3 = " ++ show (n2 ^ n3))
---          putStrLn ("(n1 + n1) = " ++ show (Numeral.n1 Ring.+ Numeral.n1))
---          putStrLn ("(n2 * n3) = " ++ show (Numeral.n2 Prelude.* Numeral.n3))
+--          putStrLn ("(n1 + n1) = " ++ show (Data.Numeral.n1 Ring.+ Data.Numeral.n1))
+--          putStrLn ("(n2 * n3) = " ++ show (Data.Numeral.n2 Prelude.* Data.Numeral.n3))
 
