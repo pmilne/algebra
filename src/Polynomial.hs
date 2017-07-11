@@ -22,6 +22,7 @@ red :: (Show a, Eq a, Additive a) => Polynomial a -> Polynomial a
 red (Const _) = zero
 red (Term _ _ r) = r
 
+-- Constructor (with checks)
 polynomial :: (Show a, Eq a, Additive a) => a -> Integer -> Polynomial a -> Polynomial a
 --polynomial a n r | trace ("polynomial " ++ show a ++ " " ++ show n) False = undefined
 polynomial a n r = if a == zero then r else if n == 0 then Const a else Term a n r
@@ -50,7 +51,6 @@ promote1 :: Additive a => a -> Integer -> Polynomial a
 promote1 a n = Term a n (Const zero)
 
 instance (Show a, Eq a, Additive a, Multiplicative a) => Show (Polynomial a) where
---    show (Const a)      = "Const " ++ show a
     show (Const a)      = show a
     show (Term a n r)   = (if a /= one then show a ++ " * "  else "") ++ "x" ++
                           (if n /= one then "^"    ++ show n else "") ++ " + " ++
