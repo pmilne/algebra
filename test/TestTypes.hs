@@ -1,5 +1,12 @@
 module TestTypes (run) where
 
+{-
+Everything below this line can be copy-pasted into: https://repl.it/languages/haskell
+
+The above interpreter doesn't seem to support selective imports of Prelude, so the
+(+) operator is replaced with (~+).
+-}
+
 infixl 6 ~+
 infixl 7 *
 
