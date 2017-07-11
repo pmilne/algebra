@@ -22,17 +22,17 @@ data Polynomial a = Const !a
                   deriving (Eq, Read)
 
 -- Constructor (with checks)
-polynomial :: (Show a, Eq a, Additive a) => a -> Integer -> Polynomial a -> Polynomial a
+polynomial :: (Eq a, Additive a) => a -> Integer -> Polynomial a -> Polynomial a
 polynomial a n r
   | a == zero = r
   | n == 0 = Const a
   | otherwise = Term a n r
 
-instance (Show a, Eq a, Additive a) => Show (Polynomial a) where
+instance (Show a) => Show (Polynomial a) where
     show (Const a)      = "Const " ++ show a
     show (Term a n r)   = show a ++ "x" ++ show n ++ " + " ++ show r
 
-instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
+instance (Eq a, Additive a) => Additive (Polynomial a) where
     Const a1      ~+ Const a2                = Const (a1 ~+ a2)
     Const a1      ~+ Term a2 n2 r2           = Term a2 n2 (Const a1 ~+ r2)
     Term a1 n1 r1 ~+ Const a2                = Term a1 n1 (r1 ~+ Const a2)
