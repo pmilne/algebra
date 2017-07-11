@@ -61,5 +61,16 @@ run = do
   print (foo1 (undefined :: Polynomial (Polynomial Integer)))
   print (foo2 (undefined :: Polynomial (Polynomial Integer)))
 
+{-
+Output:
+
+0
+Const 0
+Const Const 0
+Const Const 0
+Const 0
+0
+-}
+
 main :: IO ()
 main = run
