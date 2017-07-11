@@ -7,7 +7,6 @@ The on-line Haskell REPL doesn't seem to support selective imports of Prelude, s
 -}
 
 infixl 6 ~+
-infixl 7 *
 
 class Additive a where
   (~+) :: a -> a -> a
@@ -16,14 +15,6 @@ class Additive a where
 instance Additive Integer where
   (~+) = (Prelude.+)
   zero = 0
-
-class Multiplicative a where
-  (*) :: a -> a -> a
-  one :: a
-
-instance Multiplicative Integer where
-  (*) = (Prelude.*)
-  one = 1
 
 -- A data structure for Polynomials of the form a * x ^ n + r(x)
 data Polynomial a = Const !a
@@ -39,9 +30,8 @@ polynomial a n r
 
 instance (Show a, Eq a, Additive a) => Show (Polynomial a) where
     show (Const a)      = "Const " ++ show a
---    show (Const a)      = show a
     show (Term a n r)   = show a ++ "x" ++
-                          (if n /= one then "^"    ++ show n else "") ++ " + " ++
+                          show n ++ " + " ++
                           (if r /= zero then show r else "")
 
 instance (Show a, Eq a, Additive a) => Additive (Polynomial a) where
